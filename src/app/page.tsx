@@ -1,3 +1,5 @@
-export default function Home() {
-  return <main></main>;
+import HeroPage from '@/components/HeroPage'
+
+export default function Page() {
+  return <HeroPage />
 }

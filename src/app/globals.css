@@ -137,16 +137,27 @@ header {
   z-index: var(--z-header);
 }
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 0.9vw, 13px);
   font-family: var(--font-caveat), cursive;
   font-size: clamp(30px, 3.4vw, 46px);
   font-weight: 600;
   letter-spacing: 0.5px;
   color: var(--char-deep);
   line-height: 1;
-  filter: url(#rough);
   position: relative;
   text-decoration: none;
 }
+/* the rough filter moves off .brand itself onto its two children — a filter
+   on the flex parent would rasterize mark + text together and blur the gap */
+.brand-mark {
+  width: clamp(26px, 2.8vw, 38px);
+  height: auto;
+  flex-shrink: 0;
+  color: var(--char-deep);
+}
+.brand-text { filter: url(#rough); }
 .brand .dot {
   display: inline-block;
   width: 9px; height: 9px;

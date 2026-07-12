@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { headerRoutes } from '@/lib/routes'
+import BrandMark from './BrandMark'
 
 // Hand-drawn underline squiggle per nav item — viewBox width and path roughly
 // track each label's length so the underline reads as "drawn under this word."
@@ -37,7 +38,8 @@ export default function SiteHeader() {
   return (
     <header>
       <Link href="/" className="brand">
-        Kamlesh<span className="dot" />
+        <BrandMark />
+        <span className="brand-text">Kamlesh<span className="dot" /></span>
       </Link>
 
       <nav id="nav" aria-label="Primary">

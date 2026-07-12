@@ -502,3 +502,7 @@
 
   window.Playground=Playground;
 })();
+
+// Marks this file as an ES module for TypeScript (`import()` call sites are
+// typed .ts/.tsx) — no effect on runtime behavior, the IIFE above is unchanged.
+export {};

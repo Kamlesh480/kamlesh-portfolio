@@ -43,7 +43,10 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#161410',
+  // Match the paper background so mobile browser chrome reads as part of the
+  // light page — a charcoal themeColor here made the whole site feel like a
+  // dark theme on phones even though the page itself is paper-light.
+  themeColor: '#f6f3ec',
 }
 
 const personJsonLd = {

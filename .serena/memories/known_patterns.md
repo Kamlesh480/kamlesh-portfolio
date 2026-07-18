@@ -1,0 +1,105 @@
+# Known Patterns & Debugging History
+
+This file exists because the draw-mode system in particular went through many rounds of
+subtle, hard-to-reproduce bugs. Read this before modifying `src/lib/playground.js`,
+`src/lib/charcoal.js`, `SiteChrome.tsx`, or any z-index/stacking-context-adjacent CSS.
+
+## Verification Approach (no committed test suite)
+This repo has no test runner in `package.json`. Verification has always been done with
+throwaway Playwright scripts, run from a scratchpad directory *outside* the repo (never
+committed) against a local `npx next dev --port 3001` server. The standard pattern used
+repeatedly and successfully:
+1. `npm i playwright` in the scratchpad dir (not the repo).
+2. Write a script that drives real `chromium`/`webkit` browsers — click real DOM elements,
+   read real `getComputedStyle`, sample real canvas pixel data — never assert against
+   assumptions about what the CSS/JS *should* do.
+3. Run against **both Chromium and WebKit** for anything involving pointer events or CSS
+   stacking — several bugs below only reproduced in one engine or were only caught by
+   comparing engines.
+4. For contrast/accessibility work, compute actual luminance ratios in-browser (alpha-blend
+   computed colors against the real layered background), don't eyeball screenshots.
+
+## Bug 1 — Draw-mode toolbar becomes unresponsive after any edit
+**Symptom:** toolbar buttons stop responding to clicks intermittently, especially after a
+StrictMode remount in dev.
+**Root cause:** `SiteChrome`'s `useEffect` called `window.Playground({...})` without a mount
+guard. React StrictMode's dev-mode mount→unmount→remount created **two** `Playground()`
+closures, each with independent `drawMode` state, racing each other.
+**Fix:** `useRef` guard (`if (initialized.current) return`) before calling `Playground()`.
+This pattern is required for any future `useEffect` that does one-time imperative DOM/canvas
+setup in this codebase.
+
+## Bug 2 — Two cursors visible at once in draw mode / can't click toolbar while "drawing"
+**Symptom:** both the system cursor and the custom brush-ring cursor visible simultaneously;
+clicking the side toolbar or top quick-bar sometimes triggered a draw stroke instead.
+**Root cause history (multiple failed fixes before the real one):**
+- First attempt: CSS `pointer-events` toggling on a full-page overlay — toolbar buttons
+  intermittently failed because the overlay and toolbar occupied overlapping z-index space in
+  ways that shifted depending on scroll/zoom state.
+- Second attempt: capture-phase `document.addEventListener('click', ..., true)` with manual
+  hit-testing — fragile, order-dependent.
+- **Actual fix:** `#drawOverlay` is a *geometric draw zone* — a `position: fixed` div covering
+  only the inner drawable region, with explicit reserved strips at the top (quick bar), right
+  (side toolbar), and bottom (mode indicator) subtracted out via `top`/`right`/`bottom`/`left`
+  inset values, not full-viewport `inset: 0`. Draw events (`pointerdown`/`pointermove`) attach
+  to this zone element only, never to `window`. The system cursor and brush ring never conflict
+  because they're spatially exclusive by construction — the toolbar is physically outside the
+  draw zone's bounding box, so it never needs `pointer-events` tricks or z-index arbitration at
+  all. **This is the correct general pattern for any future full-page-interactive-layer +
+  fixed-toolbar UI in this codebase — carve out reserved geometry, don't fight z-index.**
+
+## Bug 3 — Coordinate drift: brush ring / stroke appears offset from the actual cursor
+**Symptom:** especially noticeable when the browser was zoomed or the canvas had been resized.
+**Root cause:** the draw engine mapped `clientX/clientY` to canvas coordinates by multiplying
+by `devicePixelRatio` directly, assuming the canvas's top-left corner sits at the viewport
+origin — breaks under browser zoom, pinch-zoom panning, or a DPI change between monitors.
+**Fix:** `toCanvas(clientX, clientY)` in `playground.js` measures `canvas.getBoundingClientRect()`
+on every event and computes the actual scale factor (`canvas.width / rect.width`), rather than
+trusting a cached/assumed `devicePixelRatio`. Any future coordinate-mapping code in this file
+must follow this "measure, don't assume" pattern.
+
+## Bug 4 — Mobile nav panel invisible/unclickable despite correct z-index on the panel itself
+**Symptom:** the mobile hamburger panel (`.nav-mobile-panel`, `z-index: 2000`) rendered behind
+Home's hero content even though 2000 > any content z-index.
+**Root cause:** `header` (the panel's DOM ancestor) had `position: relative` + its own
+`z-index: var(--z-content)` (4) — this makes header create its own stacking context. `<main>`
+(containing `.home-hero`, also z-index 4) is a **later sibling in DOM order**, so on a z-index
+tie, it paints on top of header's *entire subtree*, including the z-index-2000 panel nested
+inside it — child z-index values never escape a parent stacking context to compete with
+siblings-of-the-parent.
+**Fix:** raised `header`'s own z-index to `--z-header: 1500`, well above page content.
+**General lesson for this codebase:** whenever adding a `position: fixed` element nested inside
+some other positioned container, check whether that container itself creates a stacking context
+that could cap the fixed element's effective z-index — the fixed element's own z-index number
+only matters within whatever stacking context contains it.
+
+## Bug 5 — SVG rough-border renders as a thick, uneven line on wide elements
+**Symptom:** `Card`'s hand-drawn border looked like a bold black cartoon outline on the
+right/bottom edges only.
+**Root cause:** the border path uses `viewBox="0 0 100 100"` with `preserveAspectRatio="none"`
+stretched to fill a wide, short card — non-uniform scaling distorts `stroke-width` per-axis
+(vertical-ish segments pick up the horizontal scale factor, which is much larger on a wide
+card).
+**Fix:** `vector-effect="non-scaling-stroke"` on the path — keeps the stroke a constant
+screen-pixel width regardless of the element's aspect ratio. Apply this to any future
+stretched-SVG-frame technique in this codebase.
+
+## Bug 6 — favicon.ico causes a 500 on every route in dev
+**Symptom:** `GET / 500` immediately after regenerating `favicon.ico`; log showed
+`Format error decoding Ico: The PNG is not in RGBA format!`.
+**Root cause:** the source PNGs packed into the multi-res `.ico` were rendered opaque (RGB, no
+alpha channel) via Playwright screenshot with `omitBackground: false`. Next's ICO decoder
+requires RGBA.
+**Fix:** render favicon source frames with `omitBackground: true` (the tile itself paints its
+own opaque background rect, so only the rounded corners are actually transparent — but the PNG
+format is RGBA either way, which is what Next's decoder needs).
+
+## Content Accuracy Rule
+`src/content/{experience,projects,skills}.ts` must stay strictly grounded in the two source
+resume PDFs and any explicit project briefs the user supplies (e.g. the Lumen project brief) —
+never invent skills, dates, employers, or metrics not evidenced by a source document, even if
+a design brief's example categories suggest them (e.g. an early brief's example skill list
+included Java/Spring Boot/GraphQL/Terraform — none of that is real, none of it was added).
+When facts conflict between sources, the resume/primary source wins, and when a fact (like a
+project's date range or employment classification) isn't stated anywhere, ask the user rather
+than guessing — this happened for the Lumen project's dates and reporting-line details.

@@ -1,11 +1,15 @@
 :root {
-  --paper:      #e8e4da;
-  --paper-hi:   #f2efe8;
-  --paper-lo:   #d9d4c8;
+  /* Contrast-audited (WCAG AA) paper/charcoal set. --graphite-s is the
+     floor: ≥4.5:1 against --paper-lo (the darkest gradient edge any text
+     can sit on). Don't lighten it, or darken --paper-lo, without re-running
+     the contrast audit. */
+  --paper:      #f6f3ec;
+  --paper-hi:   #fbf8f2;
+  --paper-lo:   #eae5da;
   --char-deep:  #161410;
   --char:       #221f1a;
-  --graphite:   #4a4640;
-  --graphite-s: #7d776c;
+  --graphite:   #423e36;
+  --graphite-s: #665f53;
   --edge:       #2a2620;
 
   /* Reference z-index scale — new pages/components should consume these
@@ -56,12 +60,15 @@ body {
     radial-gradient(120% 90% at 70% 20%, var(--paper-hi) 0%, var(--paper) 45%, var(--paper-lo) 100%);
   z-index: 0;
 }
+/* Texture layers multiply-darken the paper — their opacity is the main
+   perceived-brightness lever for the whole site. Lowered from 0.55/0.5
+   deliberately to brighten the page while keeping visible tooth. */
 #grain {
   position: fixed;
   inset: -10%;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.42;
   mix-blend-mode: multiply;
   background-repeat: repeat;
   background-size: 300px 300px;
@@ -71,7 +78,7 @@ body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.38;
   mix-blend-mode: multiply;
   background-repeat: repeat;
   background-size: 600px 600px;
@@ -82,8 +89,8 @@ body {
   z-index: 2;
   pointer-events: none;
   box-shadow:
-    inset 0 0 180px 40px rgba(40, 36, 30, 0.10),
-    inset 0 0 60px 0 rgba(40, 36, 30, 0.06);
+    inset 0 0 180px 40px rgba(40, 36, 30, 0.07),
+    inset 0 0 60px 0 rgba(40, 36, 30, 0.04);
 }
 
 /* ---------- DUST ---------- */
@@ -660,7 +667,7 @@ body.draw-mode-active #drawQuickBar {
   justify-content: center;
   cursor: grab;
   color: var(--graphite-s);
-  opacity: 0.45;
+  opacity: 0.55;
   transition: opacity 0.2s;
   margin-bottom: 2px;
   touch-action: none;
@@ -742,7 +749,6 @@ body.draw-mode-active #drawQuickBar {
   transform: rotate(180deg);
   letter-spacing: 0.1em;
   margin-bottom: 10px;
-  opacity: 0.7;
   filter: url(#rough);
   white-space: nowrap;
   pointer-events: none;
@@ -758,7 +764,9 @@ body.draw-mode-active #drawQuickBar {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.42;
+  /* 0.55 keeps the resting icons ≥3:1 (UI-component AA) on paper;
+     hover/active states below still brighten them further */
+  opacity: 0.55;
   transition: opacity 0.2s;
 }
 .tool:hover { opacity: 0.80; }
@@ -865,7 +873,9 @@ body.draw-mode-active .toolbar {
 
 @media (max-width: 880px) {
   .hero { grid-template-columns: 1fr; }
-  #figure { right: -14%; opacity: 0.6; width: 92vw; }
+  /* Figure drops to a faint watermark on mobile — at 0.6 the headline sat
+     directly on the figure's dark mass and lost contrast/readability. */
+  #figure { right: -14%; opacity: 0.28; width: 92vw; }
   .hero-text { max-width: 90vw; }
   .toolbar { right: 6px; }
 }
@@ -1032,7 +1042,24 @@ body.draw-mode-active .toolbar {
 .card {
   position: relative;
   padding: clamp(24px, 3vw, 36px);
+  transition: transform 0.35s cubic-bezier(.2,.7,.2,1);
 }
+.card:hover { transform: translateY(-3px); }
+/* Hover shadow lives on a pseudo-element with an opacity transition —
+   the SVG frame's url(#rough) filter can't interpolate, so putting a
+   drop-shadow in that filter list would snap instead of fading. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 6% 3%;
+  z-index: -1;
+  border-radius: 12px;
+  box-shadow: 0 14px 30px rgba(40, 36, 30, 0.16);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.card:hover::after { opacity: 1; }
 .card-bg {
   position: absolute;
   inset: 0;
@@ -1152,4 +1179,132 @@ body.draw-mode-active .toolbar {
 .form-field textarea:focus {
   outline: none;
   border-color: var(--char-deep);
+}
+
+/* ===================================================================
+   HOMEPAGE SECTIONS (below the hero) — the scrolling story:
+   stats band → capabilities → featured projects → experience strip → CTA
+   =================================================================== */
+
+.home-sections {
+  position: relative;
+  z-index: var(--z-content);
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 0 clamp(28px, 5vw, 88px);
+}
+
+/* ---- Stats band ---- */
+.stat-band {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(20px, 3vw, 48px);
+  padding: clamp(36px, 6vh, 72px) 0;
+}
+.stat-value {
+  font-family: var(--font-caveat), cursive;
+  font-weight: 700;
+  font-size: clamp(38px, 4.2vw, 64px);
+  color: var(--char-deep);
+  line-height: 1;
+  filter: url(#charcoalText);
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-size: clamp(14px, 1.05vw, 17px);
+  color: var(--graphite);
+  line-height: 1.45;
+  max-width: 22ch;
+}
+@media (max-width: 880px) {
+  .stat-band { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- Capability cards ---- */
+.capability-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--char-deep);
+  margin-bottom: 14px;
+}
+
+/* ---- Sketch icons (shared) ---- */
+.sketch-icon {
+  display: block;
+  overflow: visible;
+}
+.sketch-icon path, .sketch-icon circle, .sketch-icon rect,
+.sketch-icon ellipse, .sketch-icon line {
+  stroke: currentColor;
+  stroke-width: 1.7;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: url(#rough);
+}
+
+/* ---- Featured project cards ---- */
+.featured-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-size: clamp(16px, 1.2vw, 19px);
+  color: var(--graphite);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.featured-link::after {
+  content: "→";
+  margin-left: 8px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+.featured-link:hover { color: var(--char-deep); }
+.featured-link:hover::after { transform: translateX(5px); }
+
+/* ---- Experience strip ---- */
+.exp-strip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  padding: clamp(16px, 2.4vh, 26px) 0;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(to right, var(--graphite-s), transparent 85%) 1;
+  border-image-width: 0 0 1px 0;
+}
+.exp-strip-row:last-of-type { border-image: none; }
+.exp-strip-role {
+  font-family: var(--font-caveat), cursive;
+  font-size: clamp(20px, 1.8vw, 27px);
+  font-weight: 600;
+  color: var(--char-deep);
+  filter: url(#rough);
+}
+.exp-strip-co { color: var(--graphite); font-style: italic; }
+.exp-strip-dates {
+  color: var(--graphite-s);
+  font-style: italic;
+  font-size: clamp(14px, 1vw, 16px);
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .exp-strip-row { flex-direction: column; gap: 2px; }
+}
+
+/* ---- Home CTA ---- */
+.home-cta {
+  text-align: center;
+  padding: clamp(40px, 8vh, 90px) 0 clamp(24px, 4vh, 48px);
+}
+.home-cta .page-title { margin-bottom: clamp(12px, 2vh, 20px); }
+.home-cta .page-lede { margin: 0 auto clamp(28px, 4vh, 44px); }
+.cta-buttons {
+  display: flex;
+  gap: clamp(20px, 2.4vw, 36px);
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }

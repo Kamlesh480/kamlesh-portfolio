@@ -2,8 +2,17 @@ import InkRule from '@/components/ui/InkRule'
 import SectionHeading from '@/components/ui/SectionHeading'
 import RevealSection from '@/components/ui/RevealSection'
 import Card from '@/components/ui/Card'
+import SketchIcon, { type SketchIconName } from '@/components/ui/SketchIcon'
 import { skillGroups } from '@/content/skills'
+import type { SkillCategory } from '@/content/types'
 import { pageMetadata } from '@/lib/seo'
+
+const categoryIcons: Record<SkillCategory, SketchIconName> = {
+  backend: 'server',
+  'data-ai': 'spark',
+  frontend: 'layers',
+  'cloud-devops': 'cloud',
+}
 
 export const metadata = pageMetadata({
   title: 'Skills & Expertise',
@@ -28,6 +37,7 @@ export default function SkillsPage() {
         {skillGroups.map((group) => (
           <RevealSection key={group.category} as="section" className="section-block">
             <Card>
+              <SketchIcon name={categoryIcons[group.category]} className="capability-icon" />
               <SectionHeading level={3}>{group.label}</SectionHeading>
               <p style={{ marginBottom: 16 }}>{group.description}</p>
               <div className="stack-tags">

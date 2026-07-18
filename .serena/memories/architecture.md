@@ -86,6 +86,16 @@ can reuse the same data without a second content-authoring pass.
   `siteName`/`images`/`locale`.
 - `src/app/sitemap.ts` / `src/app/robots.ts` are both derived from `routes.ts` — never hand-list
   routes in either file.
+- **`NEXT_PUBLIC_SITE_URL` must be set wherever the site is actually deployed** (Vercel →
+  Project Settings → Environment Variables, most likely given the `.gitignore` has a `.vercel`
+  entry). Without it, `SITE_URL` in `seo.ts` silently falls back to the placeholder
+  `https://kamlesh-chhipa.example` — sitemap.xml, robots.txt, canonical tags, and OG image URLs
+  will all point at the wrong domain with no error or warning. This happened for real: the site
+  went live at kamlesh-chhipa.com before this env var was ever set anywhere. `.env.example`
+  (committed — note the `!.env.example` negation in `.gitignore`, since the blanket `.env*` rule
+  would otherwise catch it too) documents the required value; `.env.local` (gitignored) holds
+  the actual value for local dev/build. Setting `.env.local` does NOT affect the deployed site —
+  that requires the separate hosting-provider dashboard step.
 - Root layout emits `Person` + `WebSite` JSON-LD once via `src/components/seo/JsonLd.tsx` (a
   Server Component using a manually `<`-escaped `dangerouslySetInnerHTML`, not `next/script`,
   since this is static inline data with no loading-strategy concern).

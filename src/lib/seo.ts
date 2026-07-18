@@ -3,12 +3,41 @@ import type { Metadata } from 'next'
 type OpenGraph = NonNullable<Metadata['openGraph']>
 type Twitter = NonNullable<Metadata['twitter']>
 
+const FALLBACK_SITE_URL = 'https://kamlesh-chhipa.example'
+
 /**
- * Single indirection point for the site's canonical URL. No real domain has
- * been purchased yet — every SEO file imports SITE_URL from here, so buying
- * one later is a single env var change, not a code change.
+ * Resolves the configured site URL defensively. Two failure modes matter
+ * here, not just "unset":
+ *  - Empty string: a `??` fallback does NOT catch this (`??` only triggers on
+ *    null/undefined) — an env var present-but-blank (e.g. saved with an empty
+ *    value in a hosting dashboard) silently produces SITE_URL = '', and
+ *    `new URL('')` in layout.tsx throws `ERR_INVALID_URL` at build time,
+ *    taking down every single page. This happened in production.
+ *  - Malformed value (e.g. missing the `https://` scheme): would also throw
+ *    from `new URL()` downstream. Validated here instead, once, so the
+ *    failure is a clear fallback rather than a cryptic build crash.
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamlesh-chhipa.example'
+function resolveSiteUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+  if (!raw) return FALLBACK_SITE_URL
+  try {
+    // Normalize away any trailing slash so `${SITE_URL}${path}` never
+    // produces a double slash.
+    return new URL(raw).origin
+  } catch {
+    console.warn(
+      `[seo] NEXT_PUBLIC_SITE_URL is set but not a valid URL: "${raw}" — falling back to ${FALLBACK_SITE_URL}`
+    )
+    return FALLBACK_SITE_URL
+  }
+}
+
+/**
+ * Single indirection point for the site's canonical URL. Every SEO file
+ * imports SITE_URL from here, so changing the domain is a single env var
+ * change, not a code change.
+ */
+export const SITE_URL = resolveSiteUrl()
 
 export const SITE_NAME = 'Kamlesh Chhipa'
 

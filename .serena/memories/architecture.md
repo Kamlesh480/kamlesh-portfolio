@@ -96,6 +96,18 @@ can reuse the same data without a second content-authoring pass.
   would otherwise catch it too) documents the required value; `.env.local` (gitignored) holds
   the actual value for local dev/build. Setting `.env.local` does NOT affect the deployed site —
   that requires the separate hosting-provider dashboard step.
+- **`SITE_URL` resolution in `seo.ts` must never do a bare `process.env.NEXT_PUBLIC_SITE_URL ??
+  fallback`.** `??` only triggers on `null`/`undefined` — an env var that's *set but empty*
+  (e.g. saved with a blank value in a hosting dashboard, or a build environment that injects an
+  empty string rather than leaving the var unset) sails straight past `??` and produces
+  `SITE_URL = ''`. `metadataBase: new URL(SITE_URL)` in `layout.tsx` then throws
+  `TypeError: Invalid URL` (`ERR_INVALID_URL`, `input: ''`) during `next build`'s page-data
+  collection — which fails the **entire** production build, not just SEO metadata. This happened
+  for real on Vercel right after adding the env var. Fixed via `resolveSiteUrl()` in `seo.ts`:
+  trims the raw value, treats a blank/whitespace-only result the same as unset, and validates
+  the result is actually a parseable URL (`new URL(raw).origin`) before accepting it — any
+  failure falls back to the placeholder domain instead of throwing. If `SITE_URL`-adjacent code
+  is ever touched again, keep this defensive resolution; do not simplify it back to a bare `??`.
 - Root layout emits `Person` + `WebSite` JSON-LD once via `src/components/seo/JsonLd.tsx` (a
   Server Component using a manually `<`-escaped `dangerouslySetInnerHTML`, not `next/script`,
   since this is static inline data with no loading-strategy concern).

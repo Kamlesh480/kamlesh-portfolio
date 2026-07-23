@@ -32,14 +32,20 @@ copy into it; edit the content files instead. The stats-band numbers are the
 one exception (hand-authored in `HomeSections`), and must obey the same
 resume-accuracy rule as everything else.
 
-`src/components/home/HeroSection.tsx` owns everything hero-specific: the `.rule` divider, the
-figure canvas (`#figure`, `#headline`), the font-ready-gated reveal choreography
-(`document.fonts.ready` → `.ink`/`.reveal`/`.settled` classes on `#homeHero`). This must stay
-strictly Home-scoped — never hoisted into shared chrome/layout — because `HeroSection` is what
-dynamically imports the ~950-line canvas engines (`src/lib/charcoal.js` for the figure,
-`src/lib/playground.js` for the draw system) via `await import()` inside `useEffect`. If this
-import ever moves into a shared layout or chrome component, every route on the site pays the
-cost of loading that code, not just Home.
+`src/components/home/HeroSection.tsx` owns everything hero-specific: the availability badge,
+the `.rule` divider, the real charcoal-sketch portrait (`public/kamlesh-portrait.jpg`, via
+`next/image` with `priority`), and the font-ready-gated reveal choreography
+(`document.fonts.ready` → `.ink`/`.reveal`/`.settled` classes on `#homeHero`).
+
+**The procedural bust is gone from the hero** — replaced by the user's real charcoal-sketch
+portrait for lead-gen trust. `HeroSection` no longer imports `src/lib/charcoal.js` at all
+(`FigureCanvas` is now unused code; only `Dust` is used, by `SiteChrome`). The portrait uses a
+wrapper-blend pattern documented in `theme_and_styling.md` §portraits: `mix-blend-mode:
+multiply` on the img against a `background: var(--paper)` WRAPPER, with the fade mask on the
+wrapper — because `.home-hero`'s z-index creates an isolated stacking context, a blend can
+never reach the fixed `#paper` layer outside it, so blending must target an in-context
+paper-colored backdrop. The About page's dark portrait (`public/kamlesh-portrait-dark.jpg`,
+`.about-portrait-frame`) uses the identical pattern.
 
 ## Draw Marks Do Not Persist Across Navigation
 Since `SiteChrome` never unmounts between routes, the draw canvas content would otherwise

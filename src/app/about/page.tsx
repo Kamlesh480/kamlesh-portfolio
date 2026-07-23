@@ -1,7 +1,9 @@
+import Image from 'next/image'
 import InkRule from '@/components/ui/InkRule'
 import SectionHeading from '@/components/ui/SectionHeading'
 import RevealSection from '@/components/ui/RevealSection'
 import HandDrawnButton from '@/components/ui/HandDrawnButton'
+import SketchIcon from '@/components/ui/SketchIcon'
 import { pageMetadata } from '@/lib/seo'
 
 export const metadata = pageMetadata({
@@ -51,31 +53,50 @@ export default function AboutPage() {
 
       <RevealSection as="section" className="section-block">
         <SectionHeading eyebrow="The journey">My path here</SectionHeading>
-        <p style={{ color: 'var(--graphite)', lineHeight: 1.7, maxWidth: '68ch', marginBottom: 18 }}>
-          I started at DUIT Technologies writing Python ETL scripts and evaluating machine
-          learning APIs — unglamorous work that taught me the thing that&apos;s stuck with me
-          since: most of engineering is making messy, real-world data behave. From there I
-          spent over three years at Hevo Data as a full-stack engineer, where I learned that
-          the line between &quot;backend&quot; and &quot;frontend&quot; matters far less than the line between
-          &quot;shipped and measured&quot; and &quot;not.&quot; I owned APIs, migrated a Django site to Next.js,
-          ran A/B tests, and watched Core Web Vitals move because of decisions I made.
-        </p>
-        <p style={{ color: 'var(--graphite)', lineHeight: 1.7, maxWidth: '68ch', marginBottom: 18 }}>
-          Now at BrightEdge, I architect the LLM infrastructure that processes over 5 billion
-          tokens a month — the kind of scale where a naive design doesn&apos;t just run slowly, it
-          becomes unaffordable. Moving inference onto a self-hosted GPU platform and cutting
-          our AI processing bill 62% is one of the projects I&apos;m proudest of, not because of
-          the percentage, but because it&apos;s exactly the kind of problem I want more of: real
-          constraints, real budget, real consequences for getting the architecture wrong.
-        </p>
-        <p style={{ color: 'var(--graphite)', lineHeight: 1.7, maxWidth: '68ch' }}>
-          Alongside that, I&apos;m the founding engineer on Lumen — a healthcare claims platform
-          that didn&apos;t exist when I joined. No codebase, no architecture, no team. I built the
-          whole thing: frontend, backend, infrastructure, billing, the data pipeline, all of
-          it — then hired and onboarded the engineers who&apos;ve joined since. It&apos;s the clearest
-          proof I have that I can take a product from nothing to production and keep it
-          running once real customers depend on it.
-        </p>
+        <div className="content-grid cols-2" style={{ alignItems: 'center' }}>
+          <div>
+            <p style={{ color: 'var(--graphite)', lineHeight: 1.7, maxWidth: '68ch', marginBottom: 18 }}>
+              I started at DUIT Technologies writing Python ETL scripts and evaluating machine
+              learning APIs — unglamorous work that taught me the thing that&apos;s stuck with me
+              since: most of engineering is making messy, real-world data behave. From there I
+              spent over three years at Hevo Data as a full-stack engineer, where I learned that
+              the line between &quot;backend&quot; and &quot;frontend&quot; matters far less than the line between
+              &quot;shipped and measured&quot; and &quot;not.&quot; I owned APIs, migrated a Django site to Next.js,
+              ran A/B tests, and watched Core Web Vitals move because of decisions I made.
+            </p>
+            <p style={{ color: 'var(--graphite)', lineHeight: 1.7, maxWidth: '68ch', marginBottom: 18 }}>
+              Now at BrightEdge, I architect the LLM infrastructure that processes over 5 billion
+              tokens a month — the kind of scale where a naive design doesn&apos;t just run slowly, it
+              becomes unaffordable. Moving inference onto a self-hosted GPU platform and cutting
+              our AI processing bill 62% is one of the projects I&apos;m proudest of, not because of
+              the percentage, but because it&apos;s exactly the kind of problem I want more of: real
+              constraints, real budget, real consequences for getting the architecture wrong.
+            </p>
+            <p style={{ color: 'var(--graphite)', lineHeight: 1.7, maxWidth: '68ch' }}>
+              Alongside that, I&apos;m the founding engineer on Lumen — a healthcare claims platform
+              that didn&apos;t exist when I joined. No codebase, no architecture, no team. I built the
+              whole thing: frontend, backend, infrastructure, billing, the data pipeline, all of
+              it — then hired and onboarded the engineers who&apos;ve joined since. It&apos;s the clearest
+              proof I have that I can take a product from nothing to production and keep it
+              running once real customers depend on it.
+            </p>
+          </div>
+          <figure className="about-portrait-wrap">
+            <span className="about-portrait-frame">
+              <Image
+                src="/kamlesh-portrait-dark.jpg"
+                alt="Dramatic charcoal portrait of Kamlesh Chhipa"
+                width={1200}
+                height={1200}
+                className="about-portrait"
+                sizes="(max-width: 880px) 84vw, 34vw"
+              />
+            </span>
+            <figcaption className="about-portrait-caption">
+              Charcoal on paper — like the rest of this site.
+            </figcaption>
+          </figure>
+        </div>
       </RevealSection>
 
       <RevealSection as="section" className="section-block">
@@ -93,6 +114,7 @@ export default function AboutPage() {
         <SectionHeading eyebrow="How I work">What I actually care about</SectionHeading>
         <div className="content-grid cols-2">
           <div>
+            <SketchIcon name="server" className="capability-icon" />
             <h3 style={{ fontFamily: 'var(--font-caveat)', fontSize: 24, color: 'var(--char-deep)', marginBottom: 8 }}>
               Deterministic over clever
             </h3>
@@ -103,6 +125,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div>
+            <SketchIcon name="pipeline" className="capability-icon" />
             <h3 style={{ fontFamily: 'var(--font-caveat)', fontSize: 24, color: 'var(--char-deep)', marginBottom: 8 }}>
               Cost is a design constraint
             </h3>
@@ -113,6 +136,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div>
+            <SketchIcon name="layers" className="capability-icon" />
             <h3 style={{ fontFamily: 'var(--font-caveat)', fontSize: 24, color: 'var(--char-deep)', marginBottom: 8 }}>
               Own it end-to-end
             </h3>
@@ -123,6 +147,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div>
+            <SketchIcon name="pencil" className="capability-icon" />
             <h3 style={{ fontFamily: 'var(--font-caveat)', fontSize: 24, color: 'var(--char-deep)', marginBottom: 8 }}>
               Comfortable being the first hire
             </h3>

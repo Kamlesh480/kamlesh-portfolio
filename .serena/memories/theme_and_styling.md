@@ -8,9 +8,9 @@ styling system.
 
 ## Color Tokens (`:root` in globals.css)
 ```
---paper:      #f6f3ec   (base background)
---paper-hi:   #fbf8f2   (lighter gradient edge)
---paper-lo:   #eae5da   (darker gradient edge)
+--paper:      #f9f7f1   (base background — "marble" near-white)
+--paper-hi:   #fdfcf8   (lighter gradient edge)
+--paper-lo:   #efeadf   (darker gradient edge)
 --char-deep:  #161410   (near-black charcoal — headlines)
 --char:       #221f1a   (body charcoal)
 --graphite:   #423e36   (secondary text)
@@ -18,12 +18,21 @@ styling system.
 --edge:       #2a2620   (rules, borders)
 ```
 Also load-bearing for perceived brightness: the `#grain`/`#tooth` texture layers
-multiply-darken the paper — their `opacity` values (0.42 / 0.38, lowered from
-0.55 / 0.5 in the brightness pass) are the main lever for how light the whole
+multiply-darken the paper — their `opacity` values (0.30 / 0.26, lowered twice from the
+original 0.55 / 0.5 across successive brightness passes) are the main lever for how light the whole
 site feels, more than the tokens themselves. The `#vignette` inset shadows were
-also softened in the same pass. On mobile (≤880px) the hero `#figure` renders at
-`opacity: 0.28` — it was 0.6 originally, which put the headline directly on the
-figure's dark mass and hurt readability.
+also softened in the same pass. There is also ONE muted accent
+token, `--accent: #47617a` (slate, lifted from a statue-reference image the user
+supplied) — used ONLY for: the availability-badge pulse dot, the hero accent
+word's text-stroke, and link hovers. Keep it that sparse; this is not a
+multi-color design.
+
+The display-text filter matters for readability: `.headline`, `.page-title`, and
+`.stat-value` use `url(#rough)` (wobble only). They previously used
+`url(#charcoalText)`, whose grain pass punches holes in the letterforms — real
+users reported the text looked "not clean" because of it. The #charcoalText
+filter still exists in SvgFilterDefs but is intentionally unused; don't reapply
+it to body-size or display text.
 **These are WCAG-AA contrast-audited — do not lighten `--graphite-s` or darken `--paper-lo`
 without re-running the contrast audit.** `--graphite-s` was originally `#7d776c` (only 3.50:1
 against `--paper`, failing AA on body/caption text) and was darkened to `#665f53` specifically
@@ -51,8 +60,9 @@ Every page/primitive that wants the hand-drawn look references these by `filter:
 never duplicate filter defs in a page-level component.
 - `#rough` — light wobble via `feTurbulence` + `feDisplacementMap`. Used on nav text, buttons,
   dividers, most UI chrome.
-- `#charcoalText` — heavier wobble + a punched-grain pass (dry-charcoal look). Used on large
-  display headlines (`.headline`, `.page-title`).
+- `#charcoalText` — heavier wobble + a punched-grain pass (dry-charcoal look). Currently
+  UNUSED by design (see the readability note above) — kept only in case a special-purpose
+  dry-charcoal accent is ever wanted; never on headlines or body text.
 - `#smudgeDot` — used for the small period/dot after "Kamlesh" in the brand wordmark.
 
 **Gotcha:** if an SVG path uses `preserveAspectRatio="none"` to stretch a shape non-uniformly
@@ -95,3 +105,46 @@ Lives in `src/lib/charcoal.js` (procedural figure/dust canvas engine) and
 `src/lib/playground.js` (the interactive draw/toolbar system) — both are vanilla JS IIFEs
 attached to `window.Charcoal`/`window.Playground`, dynamically imported (not React components).
 This system went through many rounds of bug-fixing; see `known_patterns.md` before touching it.
+
+## Hero Layout — Column Proportions & Viewport Fit
+`.hero`'s grid is `grid-template-columns: minmax(0, 580px) 40%;` with
+`justify-content: space-between` on `.hero`. The portrait column is a literal, fixed 40% of
+`.hero`'s width by design spec (not a `clamp()`-derived approximation). `.hero-portrait-wrap`
+fills that column at `width: 100%` (capped `max-width: 620px` for ultra-wide screens) — do not
+reintroduce an independent `vw`-based width on the portrait wrapper, or it will drift from the
+40% the column guarantees.
+
+**Deliberately no width cap on the text content anymore.** `.hero-text` has no `max-width` and
+`.lede` has no `max-width` (both were removed per explicit user request) — the text column's
+own `minmax(0, 580px)` grid track is the only thing bounding how wide the text can get. This
+was a conscious tradeoff, made after an earlier iteration (`.hero-text{max-width:52ch}`,
+`justify-content:center`) had already fixed a *different* reported bug (huge dead gap on wide
+screens, from the text column previously being `1fr` and hugely over-wide relative to
+capped-narrow content). `space-between` + no content caps produces a *smaller but still
+present* gap that scales mildly with viewport width (~160–330px measured across
+1366–2560px, vs. ~255px constant under the `center` version, vs. ~600–700px+ under the
+original `1fr` bug) — this is the accepted, requested trade-off, not a regression to silently
+"fix" back to `center`/capped if touched again. If the gap is ever reported as a problem in
+the future, ask which prior version (`center` + capped, or `space-between` + uncapped) is
+preferred rather than assuming.
+
+Two things previously caused a real reported bug ("too much empty space between text and
+image", "See my work" wrapping onto two lines):
+1. `.hero-text` had `max-width: 40ch` — far narrower than its actual grid column, leaving a
+   dead gap before the image AND capping the `.cta-row` flex row too narrow for both CTAs to
+   fit on one line. Now `52ch`, with an explicit `column-gap` on `.hero` doing the job of
+   separating the columns instead.
+2. `.link-plain` had no `white-space: nowrap` — under the old cramped width it wrapped
+   mid-phrase. Now `nowrap` on the link itself, with `.cta-row { flex-wrap: wrap }` as the
+   graceful fallback (the whole link drops to its own line if it must, never splits internally).
+
+**Viewport-fit rule for the hero**: the headline/lede/CTA stack must keep its `.cta-row`
+bottom edge above the fold on real laptop viewports without scrolling. This was verified with
+Playwright bounding-box checks (not just eyeballing) at 1366×768, 1440×900, 1512×900, and
+1920×1080 — 1366×768 is the tightest real-world case and was the one that first failed. The
+levers, in order of impact: `.headline`'s `font-size` clamp ceiling (currently `clamp(44px,
+6vw, 92px)`, line-height 0.88 — do not raise without re-checking 1366×768), then the
+margin-top/margin-bottom clamps on `.avail-badge`/`.eyebrow`/`.lede`/`.cta-row`. `.home-hero`'s
+`min-height` is `88svh`, not `100vh` — it sits below `<header>` in normal flow (see
+`architecture.md`), so `100vh`-of-hero plus the header's own height always exceeded one real
+screen by construction, regardless of how tight the internal spacing was.

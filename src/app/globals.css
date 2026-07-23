@@ -3,14 +3,18 @@
      floor: ≥4.5:1 against --paper-lo (the darkest gradient edge any text
      can sit on). Don't lighten it, or darken --paper-lo, without re-running
      the contrast audit. */
-  --paper:      #f6f3ec;
-  --paper-hi:   #fbf8f2;
-  --paper-lo:   #eae5da;
+  /* "Marble" pass: near-white warm paper (statue-marble values) with dark
+     charcoal ink, plus ONE muted slate accent lifted from statue shadows —
+     used sparingly (availability dot, link hovers, accent word). */
+  --paper:      #f9f7f1;
+  --paper-hi:   #fdfcf8;
+  --paper-lo:   #efeadf;
   --char-deep:  #161410;
   --char:       #221f1a;
   --graphite:   #423e36;
   --graphite-s: #665f53;
   --edge:       #2a2620;
+  --accent:     #47617a;
 
   /* Reference z-index scale — new pages/components should consume these
      rather than picking an arbitrary literal, so nothing accidentally
@@ -68,7 +72,7 @@ body {
   inset: -10%;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.42;
+  opacity: 0.30;
   mix-blend-mode: multiply;
   background-repeat: repeat;
   background-size: 300px 300px;
@@ -78,7 +82,7 @@ body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.38;
+  opacity: 0.26;
   mix-blend-mode: multiply;
   background-repeat: repeat;
   background-size: 600px 600px;
@@ -89,8 +93,8 @@ body {
   z-index: 2;
   pointer-events: none;
   box-shadow:
-    inset 0 0 180px 40px rgba(40, 36, 30, 0.07),
-    inset 0 0 60px 0 rgba(40, 36, 30, 0.04);
+    inset 0 0 180px 40px rgba(40, 36, 30, 0.05),
+    inset 0 0 60px 0 rgba(40, 36, 30, 0.03);
 }
 
 /* ---------- DUST ---------- */
@@ -118,7 +122,14 @@ body {
 .home-hero {
   position: relative;
   z-index: var(--z-content);
-  min-height: 100vh;
+  /* Was 100vh — but this sits BELOW <header> in normal document flow (see
+     the HEADER comment below), so 100vh-of-hero plus the header's own
+     height together always exceeded one real screen, guaranteeing the CTA
+     row sat below the fold on ordinary laptop viewports (~900px tall, less
+     once browser chrome is subtracted). 88svh (svh = small viewport height,
+     accounts for mobile browser chrome too) leaves headroom for the header
+     while still reading as a full first-viewport hero. */
+  min-height: 88svh;
   width: 100%;
   max-width: 1680px;
   margin: 0 auto;
@@ -296,7 +307,20 @@ nav {
   flex: 1;
   position: relative;
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  /* Portrait column stays pinned to exactly 40% per design spec. The TEXT
+     column is now a content-matched fixed cap (580px — close to
+     .hero-text's own 52ch max-width) instead of `minmax(0, 1fr)`. `1fr`
+     greedily claims ALL remaining width (~60% of a 1680px hero = 1000px+),
+     but the text inside is left-aligned and only ever ~520-560px wide —
+     the unused space inside that oversized column was exactly the "too
+     much gap" being reported, and it grew worse the wider the viewport
+     got (fine at 1440px, glaring on a wide monitor). justify-content:
+     center then packs the two now-content-sized columns together as one
+     compact unit and puts any real leftover width as balanced OUTER
+     margins instead of as a gap wedged between text and image. */
+  grid-template-columns: minmax(0, 580px) 40%;
+  justify-content: space-between;
+  column-gap: clamp(32px, 5vw, 72px);
   align-items: center;
 }
 
@@ -305,8 +329,7 @@ nav {
   z-index: 6;
   grid-column: 1;
   grid-row: 1;
-  max-width: 40ch;
-  padding-bottom: 4vh;
+  padding-bottom: 3vh;
 }
 
 .eyebrow {
@@ -316,7 +339,7 @@ nav {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--graphite-s);
-  margin-bottom: clamp(16px, 2.2vh, 26px);
+  margin-bottom: clamp(12px, 1.6vh, 20px);
   display: flex;
   align-items: center;
   gap: 14px;
@@ -333,9 +356,15 @@ nav {
   font-family: var(--font-caveat), cursive;
   font-weight: 700;
   color: var(--char-deep);
-  line-height: 0.92;
-  font-size: clamp(58px, 8.4vw, 132px);
-  filter: url(#charcoalText);
+  line-height: 0.88;
+  /* Ceiling lowered from 132px (then again from 104px) — at 3 lines the
+     size alone could exceed a typical laptop viewport once the header +
+     badge + eyebrow + lede + CTA were added, pushing "Start a project"
+     below the fold. Verified via automated bounding-box checks at
+     1366x768 / 1440x900 / 1512x900 / 1920x1080 — the CTA row's bottom
+     edge must stay within the viewport height at all four. */
+  font-size: clamp(44px, 6vw, 92px);
+  filter: url(#rough);
   letter-spacing: -0.5px;
 }
 .headline .ln { display: block; overflow: visible; }
@@ -364,11 +393,10 @@ nav {
 }
 
 .lede {
-  margin-top: clamp(22px, 3vh, 38px);
-  font-size: clamp(17px, 1.45vw, 23px);
-  line-height: 1.55;
+  margin-top: clamp(16px, 2.2vh, 28px);
+  font-size: clamp(16px, 1.3vw, 21px);
+  line-height: 1.5;
   color: var(--graphite);
-  max-width: 34ch;
   font-weight: 500;
   opacity: 0;
   transform: translateY(6px);
@@ -377,10 +405,12 @@ nav {
 .lede em { font-style: italic; color: var(--char); }
 
 .cta-row {
-  margin-top: clamp(26px, 3.6vh, 44px);
+  margin-top: clamp(18px, 2.6vh, 32px);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: clamp(20px, 2.4vw, 36px);
+  gap: clamp(16px, 2.2vw, 32px);
+  row-gap: 14px;
   opacity: 0;
 }
 .reveal .cta-row { animation: bloom 1.2s 0.8s forwards cubic-bezier(.2,.7,.2,1); }
@@ -425,6 +455,10 @@ nav {
   text-decoration: none;
   position: relative;
   transition: color 0.35s ease;
+  /* Prevents mid-phrase wrap ("See my" / "work →") when the flex row is
+     tight — the row itself now wraps as a whole via .cta-row's flex-wrap
+     if truly needed, rather than breaking inside this link's own text. */
+  white-space: nowrap;
 }
 .link-plain::after {
   content: "→";
@@ -435,25 +469,9 @@ nav {
 .link-plain:hover { color: var(--char-deep); }
 .link-plain:hover::after { transform: translateX(5px); }
 
-/* ---------- FIGURE ---------- */
-.figure-wrap {
-  grid-column: 1 / -1;
-  grid-row: 1;
-  position: relative;
-  z-index: 5;
-  height: 100%;
-  pointer-events: none;
-}
-#figure {
-  position: absolute;
-  top: 56%;
-  right: 1%;
-  transform: translateY(-50%);
-  width: clamp(520px, 56vw, 880px);
-  height: clamp(520px, 86vh, 920px);
-  -webkit-mask-image: radial-gradient(120% 104% at 52% 48%, #000 62%, transparent 96%);
-  mask-image: radial-gradient(120% 104% at 52% 48%, #000 62%, transparent 96%);
-}
+/* (The procedural #figure canvas was replaced by the real charcoal-sketch
+   portrait — see .hero-portrait at the end of this file. The FigureCanvas
+   engine still exists in src/lib/charcoal.js, unused by the hero.) */
 
 /* ---------- SITE FOOTER (persistent, every page) ---------- */
 .site-foot {
@@ -873,9 +891,6 @@ body.draw-mode-active .toolbar {
 
 @media (max-width: 880px) {
   .hero { grid-template-columns: 1fr; }
-  /* Figure drops to a faint watermark on mobile — at 0.6 the headline sat
-     directly on the figure's dark mass and lost contrast/readability. */
-  #figure { right: -14%; opacity: 0.28; width: 92vw; }
   .hero-text { max-width: 90vw; }
   .toolbar { right: 6px; }
 }
@@ -1128,7 +1143,7 @@ body.draw-mode-active .toolbar {
   color: var(--char-deep);
   line-height: 0.95;
   font-size: clamp(46px, 7vw, 92px);
-  filter: url(#charcoalText);
+  filter: url(#rough);
   letter-spacing: -0.4px;
   margin-bottom: clamp(16px, 2.4vh, 28px);
 }
@@ -1208,7 +1223,7 @@ body.draw-mode-active .toolbar {
   font-size: clamp(38px, 4.2vw, 64px);
   color: var(--char-deep);
   line-height: 1;
-  filter: url(#charcoalText);
+  filter: url(#rough);
   margin-bottom: 6px;
 }
 .stat-label {
@@ -1307,4 +1322,125 @@ body.draw-mode-active .toolbar {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+}
+
+/* ===================================================================
+   HERO PORTRAIT + AVAILABILITY BADGE (marble/lead-gen pass)
+   =================================================================== */
+
+/* Real charcoal-sketch portrait. The img multiplies against the WRAPPER's
+   solid paper background (not the fixed #paper layer — .home-hero's z-index
+   creates an isolated stacking context, so a blend can never reach backdrops
+   outside it; blending against an in-context paper-colored wrapper is the
+   reliable equivalent). The mask lives on the wrapper so the paper bg and
+   the image fade out together — no hard rectangle edge. */
+.hero-portrait-wrap {
+  grid-column: 2;
+  grid-row: 1;
+  /* Fills its grid column (which is pinned to exactly 40% of .hero's width
+     — see .hero above), rather than being independently clamped to a
+     fraction of the viewport. justify-self:end is now a no-op since the
+     column has no leftover space to justify within once width:100% fills
+     it — left harmless/explicit rather than removed. A max-width guards
+     against the portrait becoming absurdly large on ultra-wide monitors. */
+  align-self: center;
+  justify-self: end;
+  position: relative;
+  z-index: var(--z-content);
+  width: 100%;
+  max-width: 620px;
+  background: var(--paper);
+  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 45%, #000 55%, rgba(0,0,0,0.85) 75%, transparent 98%);
+  mask-image: radial-gradient(ellipse closest-side at 50% 45%, #000 55%, rgba(0,0,0,0.85) 75%, transparent 98%);
+}
+.hero-portrait {
+  width: 100%;
+  height: auto;
+  display: block;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  filter: blur(10px);
+  transform: scale(1.03);
+}
+.reveal .hero-portrait {
+  animation: bloom 1.4s 0.4s forwards cubic-bezier(.2,.7,.2,1);
+}
+.settled .hero-portrait { opacity: 1; filter: blur(0); transform: none; }
+
+.avail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid var(--edge);
+  border-radius: 999px;
+  padding: 6px 16px 7px;
+  font-family: var(--font-caveat), cursive;
+  font-size: clamp(15px, 1.15vw, 18px);
+  font-weight: 600;
+  color: var(--char-deep);
+  background: var(--paper-hi);
+  filter: url(#rough);
+  margin-bottom: clamp(12px, 1.8vh, 20px);
+  width: fit-content;
+}
+.avail-badge .pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: availPulse 2.2s ease-in-out infinite;
+}
+@keyframes availPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .avail-badge .pulse { animation: none; }
+}
+
+/* Slate accent, used sparingly */
+.headline .accent {
+  -webkit-text-stroke: 1.4px var(--accent);
+  text-stroke: 1.4px var(--accent);
+}
+.link-plain:hover, .featured-link:hover { color: var(--accent); }
+
+@media (max-width: 880px) {
+  .hero { grid-template-columns: 1fr; row-gap: 8px; }
+  .hero-portrait-wrap {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: center;
+    width: min(340px, 78vw);
+  }
+}
+
+/* ---- About page portrait (the dramatic dark charcoal sketch) ---- */
+.about-portrait-wrap {
+  margin: 0;
+  justify-self: center;
+  max-width: min(420px, 100%);
+  text-align: center;
+}
+/* Same wrapper-blend pattern as .hero-portrait-wrap (see comment there):
+   mask on a paper-backed inner span, multiply on the img. */
+.about-portrait-frame {
+  display: block;
+  background: var(--paper);
+  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 47%, #000 58%, rgba(0,0,0,0.85) 78%, transparent 99%);
+  mask-image: radial-gradient(ellipse closest-side at 50% 47%, #000 58%, rgba(0,0,0,0.85) 78%, transparent 99%);
+}
+.about-portrait {
+  width: 100%;
+  height: auto;
+  display: block;
+  mix-blend-mode: multiply;
+}
+.about-portrait-caption {
+  font-family: var(--font-caveat), cursive;
+  font-size: clamp(15px, 1.2vw, 19px);
+  color: var(--graphite-s);
+  margin-top: 10px;
+  transform: rotate(-1.5deg);
+  filter: url(#rough);
 }

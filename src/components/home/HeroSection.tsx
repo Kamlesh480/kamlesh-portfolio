@@ -1,12 +1,17 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 
 /**
- * Home-only hero: the divider rule, figure canvas + headline + lede + CTA,
- * and the font-ready-gated reveal choreography. Nothing here is referenced
- * by id from the canvas engines except #figure and #headline, which only
- * ever exist on this page.
+ * Home-only hero: availability badge, headline, lede, CTAs, and the real
+ * charcoal-sketch portrait (public/kamlesh-portrait.jpg). The portrait uses
+ * mix-blend-mode: multiply so its near-white sketch background melts into
+ * the paper — only the charcoal strokes remain visible.
+ *
+ * The old procedural bust (charcoal.js FigureCanvas) is no longer used here;
+ * this component no longer imports the canvas engines at all. Reveal
+ * choreography (.ink → .reveal / .settled fallback) is unchanged.
  */
 export default function HeroSection() {
   const initialized = useRef(false)
@@ -15,72 +20,50 @@ export default function HeroSection() {
     if (initialized.current) return
     initialized.current = true
 
-    async function init() {
-      await import('@/lib/charcoal')
+    // stagger the headline word blooms
+    const words = document.querySelectorAll('.headline .w')
+    words.forEach((w, i) => {
+      ;(w as HTMLElement).style.animationDelay = 0.15 + i * 0.16 + 's'
+    })
 
-      const figureEl = document.getElementById('figure') as HTMLCanvasElement | null
-      if (!figureEl || !window.Charcoal) return
-      const fig = window.Charcoal.FigureCanvas(figureEl)
+    let revealed = false
+    const heroEl = document.getElementById('homeHero')
 
-      // stagger the headline word blooms
-      const words = document.querySelectorAll('.headline .w')
-      words.forEach((w, i) => {
-        ;(w as HTMLElement).style.animationDelay = 0.15 + i * 0.16 + 's'
-      })
-
-      let revealed = false
-      const heroEl = document.getElementById('homeHero')
-
-      function play() {
-        if (revealed) return
-        revealed = true
-        heroEl?.classList.add('ink')
-        setTimeout(() => {
-          fig.init(true)
-          heroEl?.classList.add('reveal')
-        }, 420)
-      }
-
-      function settle() {
-        if (revealed) return
-        revealed = true
-        heroEl?.classList.add('ink', 'settled')
-        fig.init(false)
-      }
-
-      function begin() {
-        if (!document.hidden) {
-          play()
-          return
-        }
-        document.addEventListener('visibilitychange', function vh() {
-          if (!document.hidden) {
-            document.removeEventListener('visibilitychange', vh)
-            play()
-          }
-        })
-        setTimeout(() => {
-          if (!revealed) settle()
-        }, 2600)
-      }
-
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(begin)
-        setTimeout(begin, 1400)
-      } else {
-        begin()
-      }
-
-      let rt: ReturnType<typeof setTimeout>
-      window.addEventListener('resize', () => {
-        clearTimeout(rt)
-        rt = setTimeout(() => {
-          fig.resize()
-        }, 220)
-      })
+    function play() {
+      if (revealed) return
+      revealed = true
+      heroEl?.classList.add('ink')
+      setTimeout(() => heroEl?.classList.add('reveal'), 380)
     }
 
-    init()
+    function settle() {
+      if (revealed) return
+      revealed = true
+      heroEl?.classList.add('ink', 'settled')
+    }
+
+    function begin() {
+      if (!document.hidden) {
+        play()
+        return
+      }
+      document.addEventListener('visibilitychange', function vh() {
+        if (!document.hidden) {
+          document.removeEventListener('visibilitychange', vh)
+          play()
+        }
+      })
+      setTimeout(() => {
+        if (!revealed) settle()
+      }, 2600)
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(begin)
+      setTimeout(begin, 1400)
+    } else {
+      begin()
+    }
   }, [])
 
   return (
@@ -90,12 +73,12 @@ export default function HeroSection() {
       </svg>
 
       <div className="hero">
-        <div className="figure-wrap">
-          <canvas id="figure" aria-hidden="true" />
-        </div>
-
         <div className="hero-text">
-          <div className="eyebrow">Founding Engineer &middot; Backend &amp; AI Infrastructure</div>
+          <div className="avail-badge">
+            <span className="pulse" aria-hidden="true" />
+            Available for freelance projects
+          </div>
+          <div className="eyebrow">Backend &amp; AI Infrastructure &middot; Full-Stack Product</div>
           <h1 className="headline" id="headline">
             <span className="ln"><span className="w">Backend</span> <span className="w">depth.</span></span>
             <span className="ln"><span className="w accent">Product</span></span>
@@ -107,8 +90,8 @@ export default function HeroSection() {
             If you need someone who can own the whole build, that&apos;s the work I do best.
           </p>
           <div className="cta-row">
-            <a className="btn" href="/projects">
-              See what I&apos;ve built
+            <a className="btn" href="/contact">
+              Start a project
               <svg className="ring" viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true">
                 <path
                   d="M14 10 C 70 4, 150 6, 188 12 C 196 26, 194 44, 186 54 C 130 60, 50 58, 12 52 C 4 38, 6 20, 14 10 Z"
@@ -116,8 +99,20 @@ export default function HeroSection() {
                 />
               </svg>
             </a>
-            <a className="link-plain" href="/contact">Let&apos;s talk</a>
+            <a className="link-plain" href="/projects">See my work</a>
           </div>
+        </div>
+
+        <div className="hero-portrait-wrap">
+          <Image
+            src="/kamlesh-portrait.jpg"
+            alt="Hand-drawn charcoal portrait of Kamlesh Chhipa"
+            width={1400}
+            height={1400}
+            priority
+            className="hero-portrait"
+            sizes="(max-width: 880px) 78vw, 40vw"
+          />
         </div>
       </div>
 

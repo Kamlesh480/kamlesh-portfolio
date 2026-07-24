@@ -39,7 +39,11 @@ const capabilities: { icon: SketchIconName; title: string; body: string }[] = [
   },
 ]
 
-const featured = projects.slice(0, 3)
+// Shows every project, in array order — previously the first 3 only, but
+// that silently dropped whichever entry was last (by design, the personal
+// project entry is always last in src/content/projects.ts). Showing the
+// full list keeps it present here while still rendering it last, per spec.
+const featured = projects
 
 export default function HomeSections() {
   return (
@@ -78,7 +82,7 @@ export default function HomeSections() {
         <div className="content-grid cols-3">
           {featured.map((p) => (
             <Card key={p.slug}>
-              <p className="card-meta" style={{ marginBottom: 8 }}>{p.period}</p>
+              {p.period && <p className="card-meta" style={{ marginBottom: 8 }}>{p.period}</p>}
               <h3>{p.title}</h3>
               <p>{p.summary}</p>
               <div className="stack-tags">
@@ -104,9 +108,11 @@ export default function HomeSections() {
               {' '}
               <span className="exp-strip-co">· {e.company}</span>
             </div>
-            <span className="exp-strip-dates">
-              {e.range.start} – {e.range.end}
-            </span>
+            {e.range && (
+              <span className="exp-strip-dates">
+                {e.range.start} – {e.range.end}
+              </span>
+            )}
           </div>
         ))}
         <div style={{ marginTop: 24 }}>

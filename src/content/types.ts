@@ -3,7 +3,9 @@ export interface ExperienceEntry {
   company: string
   role: string
   location: string
-  range: { start: string; end: string | 'Present' }
+  /** Optional: omit entirely for entries that should show no dates (e.g.
+   * personal projects framed without an employment timeline). */
+  range?: { start: string; end: string | 'Present' }
   summary: string
   highlights: string[]
   stack: string[]
@@ -33,7 +35,8 @@ export interface ProjectEntry {
   slug: string
   title: string
   role: string
-  period: string
+  /** Optional: omit entirely for entries that should show no dates. */
+  period?: string
   summary: string
   problem: string
   solution: string

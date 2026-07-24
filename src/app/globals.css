@@ -307,18 +307,18 @@ nav {
   flex: 1;
   position: relative;
   display: grid;
-  /* Portrait column stays pinned to exactly 40% per design spec. The TEXT
-     column is now a content-matched fixed cap (580px — close to
-     .hero-text's own 52ch max-width) instead of `minmax(0, 1fr)`. `1fr`
-     greedily claims ALL remaining width (~60% of a 1680px hero = 1000px+),
-     but the text inside is left-aligned and only ever ~520-560px wide —
-     the unused space inside that oversized column was exactly the "too
-     much gap" being reported, and it grew worse the wider the viewport
-     got (fine at 1440px, glaring on a wide monitor). justify-content:
-     center then packs the two now-content-sized columns together as one
-     compact unit and puts any real leftover width as balanced OUTER
-     margins instead of as a gap wedged between text and image. */
-  grid-template-columns: minmax(0, 580px) 40%;
+  /* Portrait column stays pinned to exactly 40% per design spec. The text
+     column is `minmax(0, 1fr)` — viewport-relative, not a fixed px cap.
+     A fixed cap (580px, matched to when .hero-text/.lede still had their
+     own ch-based max-width) became WRONG the moment those max-widths were
+     removed: with no cap of its own, the .lede paragraph naturally wraps
+     to fill whatever width its column offers, so starving that column at
+     580px directly under-filled it and dumped the rest into the gap via
+     justify-content: space-between. 1fr lets the column (and therefore
+     the paragraph's natural wrap width) expand with the viewport, so the
+     text's own right edge — not an arbitrary cap — is what determines how
+     close it sits to the portrait. */
+  grid-template-columns: minmax(0, 1fr) 40%;
   justify-content: space-between;
   column-gap: clamp(32px, 5vw, 72px);
   align-items: center;
@@ -1056,7 +1056,7 @@ body.draw-mode-active .toolbar {
 /* ---- Card ---- */
 .card {
   position: relative;
-  padding: clamp(24px, 3vw, 36px);
+  padding: clamp(28px, 3vw, 42px);
   transition: transform 0.35s cubic-bezier(.2,.7,.2,1);
 }
 .card:hover { transform: translateY(-3px); }
@@ -1367,37 +1367,6 @@ body.draw-mode-active .toolbar {
 }
 .settled .hero-portrait { opacity: 1; filter: blur(0); transform: none; }
 
-.avail-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  border: 1.5px solid var(--edge);
-  border-radius: 999px;
-  padding: 6px 16px 7px;
-  font-family: var(--font-caveat), cursive;
-  font-size: clamp(15px, 1.15vw, 18px);
-  font-weight: 600;
-  color: var(--char-deep);
-  background: var(--paper-hi);
-  filter: url(#rough);
-  margin-bottom: clamp(12px, 1.8vh, 20px);
-  width: fit-content;
-}
-.avail-badge .pulse {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: availPulse 2.2s ease-in-out infinite;
-}
-@keyframes availPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.35); opacity: 0.55; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .avail-badge .pulse { animation: none; }
-}
-
 /* Slate accent, used sparingly */
 .headline .accent {
   -webkit-text-stroke: 1.4px var(--accent);
@@ -1444,3 +1413,165 @@ body.draw-mode-active .toolbar {
   transform: rotate(-1.5deg);
   filter: url(#rough);
 }
+
+/* ============================================================
+   Hand-drawn charcoal diagrams (src/components/diagram/*)
+   Clean SVG geometry roughened by the global #rough filter —
+   the same hand as .sketch-icon, scaled up to full schematics.
+   Strokes carry .sk-draw + pathLength=1 so they "ink in" when the
+   enclosing RevealSection scrolls into view; text/fills carry
+   .sk-fade. All animation is CSS keyed off .reveal-section.in-view.
+   ============================================================ */
+.sketch-diagram {
+  margin: clamp(20px, 3vw, 30px) 0 6px;
+}
+.sketch-diagram-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* fade the edges so a mid-scroll diagram doesn't hard-clip on mobile */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+  padding-bottom: 2px;
+}
+.sk {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.sketch-cap {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-size: clamp(14px, 1vw, 16px);
+  color: var(--graphite-s);
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* --- stroked geometry ---
+   Shapes with real area (boxes, cylinders, rings, groups) get roughened by
+   #rough. Connectors (.sk-line) and hairlines (.sk-hair) deliberately do NOT:
+   the filter's object-bounding-box region collapses to zero for perfectly
+   horizontal/vertical strokes and clips them, so those carry a baked-in
+   hand-drawn wobble from sketchCurve() in Sketch.tsx instead. */
+.sk-box,
+.sk-group-box,
+.sk-badge-ring {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: url(#rough);
+}
+.sk-line,
+.sk-hair {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sk-box { fill: var(--paper-hi); fill-opacity: 0.45; }
+.sk-chip-core { fill: none; stroke-width: 1.4; stroke: var(--graphite); }
+.sk-hair { stroke: var(--graphite); stroke-width: 1.6; }
+.sk-queue-div { stroke: var(--graphite); stroke-width: 1.6; }
+.sk-dot { fill: var(--char-deep); fill-opacity: 0.9; stroke: var(--edge); }
+.sk-line { stroke: var(--char); stroke-width: 2.2; }
+.sk-line--dash { stroke-dasharray: 7 6; }
+
+/* focal filled node — the "key move" in a schematic */
+.sk-node--solid .sk-box { fill: var(--char-deep); fill-opacity: 0.92; stroke: var(--char-deep); }
+.sk-node--solid .sk-label { fill: var(--paper-hi); }
+.sk-node--solid .sk-sub { fill: var(--paper-lo); }
+.sk-node--solid .sk-chip-core { stroke: var(--paper-lo); }
+
+/* --- text --- */
+.sk-label {
+  font-family: var(--font-caveat), cursive;
+  font-size: 17px;
+  font-weight: 600;
+  fill: var(--char-deep);
+}
+.sk-sub {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-size: 12.5px;
+  fill: var(--graphite-s);
+}
+.sk-edge-label {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-size: 13px;
+  fill: var(--graphite);
+}
+.sk-note {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-size: 14px;
+  fill: var(--graphite);
+}
+
+/* --- dashed grouping boundary --- */
+.sk-group-box {
+  stroke: var(--graphite-s);
+  stroke-width: 1.6;
+  stroke-dasharray: 6 7;
+  fill: var(--paper-hi);
+  fill-opacity: 0.28;
+}
+.sk-group-label {
+  font-family: var(--font-caveat), cursive;
+  font-size: 15px;
+  fill: var(--graphite-s);
+  letter-spacing: 0.02em;
+}
+
+/* --- circled metric badge --- */
+.sk-badge-ring { stroke: var(--char-deep); stroke-width: 2.2; fill: none; }
+.sk-badge-text {
+  font-family: var(--font-caveat), cursive;
+  font-size: 17px;
+  font-weight: 700;
+  fill: var(--char-deep);
+}
+
+/* ---- Draw-in: strokes ink themselves in on scroll-into-view ----
+   pathLength=1 normalises every shape to a unit length so one rule
+   animates rects, lines, ellipses and paths identically. Resting
+   state (no animation) is fully drawn, so if the observer never
+   fires the diagram is simply visible — same safety contract as
+   the .reveal-section it lives inside. */
+/* Dashed connectors are excluded — their 7·6 dash pattern must survive, and
+   the pathLength=1 dashoffset trick can't coexist with it. They ride in on the
+   parent section's fade instead. */
+.reveal-section.in-view .sk-draw:not(.sk-line--dash) {
+  animation: skInk 1s ease forwards;
+}
+.sk-draw:not(.sk-line--dash) { stroke-dasharray: 1; }
+@keyframes skInk {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+/* labels/fills settle in just behind their strokes */
+.reveal-section .sk-fade { opacity: 0; }
+.reveal-section.in-view .sk-fade {
+  animation: skFade 0.7s ease 0.35s forwards;
+}
+@keyframes skFade {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-section.in-view .sk-draw,
+  .reveal-section.in-view .sk-fade { animation: none; }
+  .sk-draw:not(.sk-line--dash) { stroke-dasharray: none; }
+  .reveal-section .sk-fade { opacity: 1; }
+}
+
+/* legacy / being-replaced node — faded, struck through */
+.sk-node--legacy .sk-box { stroke: var(--graphite-s); stroke-width: 1.6; fill: none; opacity: 0.6; }
+.sk-node--legacy .sk-label { fill: var(--graphite-s); }
+.sk-node--legacy .sk-line { stroke: var(--graphite-s); opacity: 0.8; }
+
+/* before/after bars (experience performance diagrams) */
+.sk-bar-track { fill: var(--paper-lo); stroke: var(--graphite-s); stroke-width: 1.4; filter: url(#rough); }
+.sk-bar-fill { fill: var(--char-deep); fill-opacity: 0.82; stroke: none; filter: url(#rough); }

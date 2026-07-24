@@ -3,6 +3,7 @@ import RevealSection from '@/components/ui/RevealSection'
 import Card from '@/components/ui/Card'
 import HandDrawnButton from '@/components/ui/HandDrawnButton'
 import { experience } from '@/content/experience'
+import { experienceDiagram } from '@/components/diagram/ExperienceDiagrams'
 import { pageMetadata } from '@/lib/seo'
 
 export const metadata = pageMetadata({
@@ -29,9 +30,11 @@ export default function ExperiencePage() {
           <Card>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 4 }}>
               <h3>{entry.role} · {entry.company}</h3>
-              <span className="card-meta" style={{ marginBottom: 0 }}>
-                {entry.range.start} – {entry.range.end}
-              </span>
+              {entry.range && (
+                <span className="card-meta" style={{ marginBottom: 0 }}>
+                  {entry.range.start} – {entry.range.end}
+                </span>
+              )}
             </div>
             <p className="card-meta">{entry.location}</p>
             <p>{entry.summary}</p>
@@ -40,6 +43,7 @@ export default function ExperiencePage() {
                 <li key={h}>{h}</li>
               ))}
             </ul>
+            {experienceDiagram(entry.slug)}
             <div className="stack-tags">
               {entry.stack.map((s) => (
                 <span key={s} className="stack-tag">{s}</span>

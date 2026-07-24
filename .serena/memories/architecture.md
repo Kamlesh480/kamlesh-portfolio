@@ -76,12 +76,83 @@ deliberate product decision, not an oversight — flip it by removing the `usePa
   to the generic `--z-content` (4), its mobile nav panel (nested inside header, `position:
   fixed`, `z-index: 2000`) would get trapped and lose to same-z-index-but-later-in-DOM content
   in `<main>` — see `known_patterns.md`.
+- **`Card` frame edges hug the border (`Card.tsx` path top≈1.5% / bottom≈98.5%) ON PURPOSE.**
+  The frame SVG uses `preserveAspectRatio="none"`, so any vertical waviness in the top/bottom
+  edges is multiplied by the card's height — a wavier edge dips proportionally deeper into the
+  content and collided with the `<h3>` title on tall cards (e.g. the healthcare project card).
+  Keep the horizontal edges near-straight; the `#rough` filter supplies the hand-drawn wobble.
+  Don't re-introduce a wavy top edge without also decoupling it from card height.
 
 ## Content Data Model
 Typed data files under `src/content/`, imported directly into Server Components — no client
 fetching, no MDX. `types.ts` defines `ExperienceEntry`, `ProjectEntry`, `SkillGroup`. This
 structure exists specifically so a future Resume-page rewrite and Architecture-page build-out
 can reuse the same data without a second content-authoring pass.
+
+**Array order IS display order, everywhere.** `/experience`, `/projects`, `/resume`, and
+`HomeSections`' "featured work"/"experience strip" all render `experience`/`projects` by
+mapping the array directly — there is no separate sort/filter step. To make an entry appear
+last on every page that lists it, put it last in the source array; nothing else needs to
+change. (`HomeSections`' `featured` constant used to be `projects.slice(0, 3)` — now it's the
+full `projects` array, specifically so a deliberately-last entry stays visible there too
+instead of silently falling off a top-3 cut.)
+
+**`ExperienceEntry.range` and `ProjectEntry.period` are optional**, not required — this is by
+design for entries that should show no dates (e.g. a personal project framed without an
+employment timeline). Every consuming page guards the date UI with `{entry.range && (...)}` /
+`{p.period && (...)}` rather than assuming it's present — if a new page renders `experience` or
+`projects`, copy that guard pattern, don't assume `range`/`period` exist.
+
+**Anonymized personal project entry**: one `experience` entry (slug `personal-project`,
+company `"Personal Project"`) and one `projects` entry (slug `healthcare-platform`, title
+`"Healthcare Claims Intelligence Platform"`) describe the same real project — its actual name
+is deliberately never in the codebase (not publishable, by explicit request). Both entries are
+last in their arrays and have no dates. If you're tempted to "fill in" a company/product name
+here from context or memory, don't — the omission is intentional, not a data gap. The
+`/about` page's "Standout project" section links to `/projects#healthcare-platform` — if that
+slug ever changes, update the anchor href too (they're two separate literals, not derived from
+a shared constant).
+
+## Hand-Drawn Diagram System
+`src/components/diagram/` renders bespoke charcoal schematics on /projects and
+/experience so those pages aren't wall-to-wall text.
+- `Sketch.tsx` — primitives (`Diagram`, `Box`, `Chip`, `Cylinder`, `Queue`, `Cloud`,
+  `Arrow`, `Connector`, `Group`, `Badge`, `Note`, `Dot`). Shapes with real area (boxes,
+  cylinders, rings, groups) render **clean** geometry and let the global `#rough` filter
+  roughen them — the exact technique `.sketch-icon` uses, which is why they read as the same
+  hand. Do NOT hand-wobble those; add `#rough` via a `.sk-box`/`.sk-group-box`/`.sk-badge-ring`
+  class instead.
+- **GOTCHA — `#rough` clips axis-aligned thin strokes.** The filter's default
+  object-bounding-box region collapses to zero height (horizontal line) or zero width (vertical
+  line), so a perfectly straight arrow shaft / connector / chip-pin / queue-divider filtered by
+  `#rough` renders as *nothing* — only diagonal strokes survive. This silently ate half the
+  arrows on first build (they looked like a bare ">"). Fix in force: connectors (`.sk-line`)
+  and hairlines (`.sk-hair`) are NOT filtered — instead `Arrow`/`Connector` bake a hand-drawn
+  wobble into the path geometry via `sketchCurve()` (deterministic `Math.sin` noise, so no
+  hydration mismatch). If you add a new straight connector, route it through `Arrow`/`Connector`
+  or class it `.sk-hair`; never put a raw axis-aligned `<line>`/`<path>` under a `#rough` class.
+- Dashed connectors (`.sk-line--dash`) are excluded from the `.sk-draw` ink-in animation —
+  the pathLength=1 dashoffset trick can't coexist with a real dash pattern, so they ride in on
+  the parent section's fade instead (see the `:not(.sk-line--dash)` guards in globals.css).
+- `ProjectDiagrams.tsx` / `ExperienceDiagrams.tsx` — one composition per content slug, plus
+  `projectDiagram(slug)` / `experienceDiagram(slug)` lookups that return `null` for any slug
+  without a diagram (so adding a content entry never breaks the page — it just renders text).
+  The pages call these inline (`{projectDiagram(p.slug)}` after the summary;
+  `{experienceDiagram(entry.slug)}` after the highlights). **Slugs are the join key** — if you
+  rename a slug in `src/content/*`, update the MAP key here or the diagram silently disappears.
+- Diagrams are authored in an arbitrary ~900–980-wide user space and scaled to container
+  width by the `<Diagram>` wrapper. On narrow screens they scroll horizontally inside
+  `.sketch-diagram-scroll` (overflow-x:auto + edge fade mask) rather than shrinking labels
+  into illegibility — the card and page never gain horizontal overflow (verified 0px at 390w).
+- **Draw-in animation is pure CSS, no per-diagram JS**: every stroked shape carries
+  `pathLength={1}` + class `sk-draw`; text/fills carry `sk-fade`. `.reveal-section.in-view
+  .sk-draw` animates `stroke-dashoffset` 1→0 and `.sk-fade` opacity in — keyed off the
+  existing RevealSection `.in-view` class the card already sits inside. Resting state (no
+  animation) is fully drawn, so if the IntersectionObserver never fires the diagram is simply
+  visible (same safety contract as `.reveal-section`). Guarded by `prefers-reduced-motion`.
+- Focal "key move" nodes use `solid` (filled charcoal, paper-colored text); legacy/replaced
+  nodes use the `sk-node--legacy` wrapper (faded + struck). All diagram CSS lives in the
+  clearly-commented block appended to the end of `globals.css`.
 
 ## SEO Layer
 - `src/lib/seo.ts` exports `SITE_URL` (from `NEXT_PUBLIC_SITE_URL`, no domain hardcoded

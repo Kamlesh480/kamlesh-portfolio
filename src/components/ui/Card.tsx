@@ -19,9 +19,15 @@ export default function Card({ children, className }: CardProps) {
           up the (usually much larger) horizontal scale factor and render far
           thicker than the horizontal segments. non-scaling-stroke keeps the
           drawn line a constant screen-pixel width regardless of that stretch. */}
+      {/* Top/bottom edges hug the border tightly (≈1.5% inset) on purpose:
+          preserveAspectRatio="none" scales any vertical waviness by the card's
+          height, so a wavier top edge dips proportionally deeper into the
+          content and collides with the title on tall cards. The #rough filter
+          still supplies the hand-drawn wobble, so near-straight geometry here
+          still reads as a sketched frame. */}
       <svg className="card-bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         <path
-          d="M2 4 C 40 1, 75 3, 98 5 C 99 40, 99 70, 97 96 C 60 99, 25 98, 3 95 C 1 60, 1 30, 2 4 Z"
+          d="M1.5 1.6 C 30 0.8, 70 1, 98.5 1.6 C 99.2 30, 99.2 70, 98.5 98.4 C 70 99.2, 30 99, 1.5 98.4 C 0.8 70, 0.8 30, 1.5 1.6 Z"
           vectorEffect="non-scaling-stroke"
         />
       </svg>

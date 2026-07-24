@@ -2,6 +2,7 @@ import InkRule from '@/components/ui/InkRule'
 import RevealSection from '@/components/ui/RevealSection'
 import Card from '@/components/ui/Card'
 import { projects } from '@/content/projects'
+import { projectDiagram } from '@/components/diagram/ProjectDiagrams'
 import { pageMetadata } from '@/lib/seo'
 
 export const metadata = pageMetadata({
@@ -28,11 +29,13 @@ export default function ProjectsPage() {
           <Card>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 4 }}>
               <h3>{p.title}</h3>
-              <span className="card-meta" style={{ marginBottom: 0 }}>{p.period}</span>
+              {p.period && <span className="card-meta" style={{ marginBottom: 0 }}>{p.period}</span>}
             </div>
             <p className="card-meta">{p.role}</p>
 
             <p style={{ marginBottom: 14 }}>{p.summary}</p>
+
+            {projectDiagram(p.slug)}
 
             <div className="content-grid cols-2" style={{ marginTop: 18, marginBottom: 6 }}>
               <div>

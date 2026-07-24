@@ -74,10 +74,6 @@ export default function HeroSection() {
 
       <div className="hero">
         <div className="hero-text">
-          <div className="avail-badge">
-            <span className="pulse" aria-hidden="true" />
-            Available for freelance projects
-          </div>
           <div className="eyebrow">Backend &amp; AI Infrastructure &middot; Full-Stack Product</div>
           <h1 className="headline" id="headline">
             <span className="ln"><span className="w">Backend</span> <span className="w">depth.</span></span>
@@ -85,9 +81,9 @@ export default function HeroSection() {
             <span className="ln"><span className="w">ownership.</span></span>
           </h1>
           <p className="lede">
-            I architect backend systems at massive scale, and as founding engineer on Lumen,
-            took a product from an <em>empty repository to paying customers</em> — alone.
-            If you need someone who can own the whole build, that&apos;s the work I do best.
+            I architect backend systems at massive scale, and as founding engineer on a
+            personal project, took a product from an <em>empty repository to paying customers</em>{' '}
+            — alone. If you need someone who can own the whole build, that&apos;s the work I do best.
           </p>
           <div className="cta-row">
             <a className="btn" href="/contact">

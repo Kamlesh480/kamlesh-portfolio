@@ -32,8 +32,9 @@ export default function AboutPage() {
         I&apos;m Kamlesh — a backend-first engineer based in Bengaluru who&apos;s just as
         comfortable owning an entire product end-to-end. I specialize in Python-based backend
         engineering, distributed data pipelines, and production AI infrastructure — and as
-        founding engineer on Lumen, I took a healthcare SaaS platform from an empty
-        repository to real paying customers, alone, before hiring the team that runs it today.
+        founding engineer on a healthcare SaaS platform I built as a personal project, I took it
+        from an empty repository to real paying customers, alone, before hiring the team that
+        runs it today.
       </p>
 
       <InkRule />
@@ -73,12 +74,12 @@ export default function AboutPage() {
               constraints, real budget, real consequences for getting the architecture wrong.
             </p>
             <p style={{ color: 'var(--graphite)', lineHeight: 1.7, maxWidth: '68ch' }}>
-              Alongside that, I&apos;m the founding engineer on Lumen — a healthcare claims platform
-              that didn&apos;t exist when I joined. No codebase, no architecture, no team. I built the
-              whole thing: frontend, backend, infrastructure, billing, the data pipeline, all of
-              it — then hired and onboarded the engineers who&apos;ve joined since. It&apos;s the clearest
-              proof I have that I can take a product from nothing to production and keep it
-              running once real customers depend on it.
+              Alongside that, I&apos;m the founding engineer on a healthcare claims platform I built
+              as a personal project — one that didn&apos;t exist when I started. No codebase, no
+              architecture, no team. I built the whole thing: frontend, backend, infrastructure,
+              billing, the data pipeline, all of it — then hired and onboarded the engineers
+              who&apos;ve joined since. It&apos;s the clearest proof I have that I can take a product
+              from nothing to production and keep it running once real customers depend on it.
             </p>
           </div>
           <figure className="about-portrait-wrap">
@@ -100,14 +101,14 @@ export default function AboutPage() {
       </RevealSection>
 
       <RevealSection as="section" className="section-block">
-        <SectionHeading eyebrow="Standout project">Building Lumen from zero</SectionHeading>
+        <SectionHeading eyebrow="Standout project">Building a product from zero</SectionHeading>
         <p style={{ color: 'var(--graphite)', lineHeight: 1.7, maxWidth: '68ch', marginBottom: 24 }}>
           If you want the concrete version of &quot;can this person own a whole product&quot; —
           this is it. Dual-database architecture, a full Stripe billing lifecycle, RBAC,
           an automated data pipeline with QA gating, and a team I hired and still mentor.
           Built from a blank repository to a platform real healthcare organizations use daily.
         </p>
-        <HandDrawnButton href="/projects#lumen">Read the full case study</HandDrawnButton>
+        <HandDrawnButton href="/projects#healthcare-platform">Read the full case study</HandDrawnButton>
       </RevealSection>
 
       <RevealSection as="section" className="section-block">
@@ -142,8 +143,9 @@ export default function AboutPage() {
             </h3>
             <p style={{ color: 'var(--graphite)', lineHeight: 1.65 }}>
               I&apos;d rather ship a feature from API to UI to the metric that proves it worked
-              than hand off at the API boundary. It&apos;s why Lumen exists as a single product I
-              built top to bottom, and why I built every interaction on this site myself.
+              than hand off at the API boundary. It&apos;s why my personal project exists as a
+              single product I built top to bottom, and why I built every interaction on this
+              site myself.
             </p>
           </div>
           <div>
@@ -153,8 +155,8 @@ export default function AboutPage() {
             </h3>
             <p style={{ color: 'var(--graphite)', lineHeight: 1.65 }}>
               Being founding engineer means there&apos;s no one to ask when the architecture
-              doesn&apos;t exist yet. I don&apos;t just tolerate that — building Lumen from an empty
-              repo to production customers is the work I&apos;m most proud of.
+              doesn&apos;t exist yet. I don&apos;t just tolerate that — building this personal
+              project from an empty repo to production customers is the work I&apos;m most proud of.
             </p>
           </div>
         </div>

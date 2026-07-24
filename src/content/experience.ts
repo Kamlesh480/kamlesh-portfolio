@@ -7,25 +7,6 @@ import type { ExperienceEntry } from './types'
  */
 export const experience: ExperienceEntry[] = [
   {
-    slug: 'lumen',
-    company: 'Lumen',
-    role: 'Founding Engineer & Full-Stack Lead',
-    location: 'Remote',
-    range: { start: '2025', end: 'Present' },
-    summary:
-      'Founding engineer on Lumen, a healthcare claims intelligence SaaS platform — employee/contractor number one, before any other technical hire. Built the entire system from an empty repository to a live product with real paying healthcare organizations using it daily, then hired and onboarded the team that maintains it today.',
-    highlights: [
-      'Joined as the founding engineer with no existing codebase, architecture, or tooling — defined the technical direction, stack, repository structure, and conventions the whole team now follows.',
-      'Owned the full stack end-to-end: Next.js/React/TypeScript frontend, Django/DRF backend, GCP infrastructure, data pipeline, billing, and RBAC.',
-      'Designed a dual-database architecture with a custom Django database router — application data and scraped claims data live in separate, independently-managed databases, fully decoupling the data layer from the application layer.',
-      'Built a complete Stripe billing lifecycle from scratch: trial provisioning, plan upgrades/downgrades, webhook idempotency, and automatic suspension/restoration of users and connectors tied to plan limits.',
-      'Identified and enforced a critical multi-tenancy invariant (a key record identifier was not globally unique across accounts) — designed and documented the account-scoping rules across every query path to prevent cross-account data leaks.',
-      'Built an automated data collection pipeline with post-collection QA gating (row-count, null-rate, and duplicate checks) before data reaches production, with Slack alerts on failure.',
-      'Hired, onboarded, and mentored the engineers who followed — frontend, QA, DevOps, and backend/integration — including project memory systems and AI-assisted developer tooling that got new engineers contributing correctly from day one.',
-    ],
-    stack: ['Next.js', 'React', 'TypeScript', 'Django', 'Django REST Framework', 'PostgreSQL', 'GCP', 'Cloud Run', 'Stripe', 'Material UI', 'Tailwind CSS', 'Docker', 'GitHub Actions'],
-  },
-  {
     slug: 'brightedge',
     company: 'BrightEdge',
     role: 'Software Engineer (SDE 2)',
@@ -76,5 +57,27 @@ export const experience: ExperienceEntry[] = [
       'Developed Python scripts automating Confluence-to-Zendesk knowledge-base uploads, improving workflow efficiency for the customer experience team.',
     ],
     stack: ['Python', 'MySQL', 'Firebase', 'Google BigQuery', 'Google Places API', 'Google Apps Script', 'Django'],
+  },
+  {
+    // Personal project — the platform's name is intentionally withheld
+    // (not publishable) and no dates are shown, by request. This entry is
+    // deliberately last in the array: every page that lists `experience`
+    // renders in array order, so this stays last everywhere it appears.
+    slug: 'personal-project',
+    company: 'Personal Project',
+    role: 'Founding Engineer & Full-Stack Lead',
+    location: 'Remote',
+    summary:
+      'Founding engineer on a healthcare claims intelligence SaaS platform, built as a personal project — employee/contractor number one, before any other technical hire. Built the entire system from an empty repository to a live product with real paying healthcare organizations using it daily, then hired and onboarded the team that maintains it today.',
+    highlights: [
+      'Joined as the founding engineer with no existing codebase, architecture, or tooling — defined the technical direction, stack, repository structure, and conventions the whole team now follows.',
+      'Owned the full stack end-to-end: Next.js/React/TypeScript frontend, Django/DRF backend, GCP infrastructure, data pipeline, billing, and RBAC.',
+      'Designed a dual-database architecture with a custom Django database router — application data and scraped claims data live in separate, independently-managed databases, fully decoupling the data layer from the application layer.',
+      'Built a complete Stripe billing lifecycle from scratch: trial provisioning, plan upgrades/downgrades, webhook idempotency, and automatic suspension/restoration of users and connectors tied to plan limits.',
+      'Identified and enforced a critical multi-tenancy invariant (a key record identifier was not globally unique across accounts) — designed and documented the account-scoping rules across every query path to prevent cross-account data leaks.',
+      'Built an automated data collection pipeline with post-collection QA gating (row-count, null-rate, and duplicate checks) before data reaches production, with Slack alerts on failure.',
+      'Hired, onboarded, and mentored the engineers who followed — frontend, QA, DevOps, and backend/integration — including project memory systems and AI-assisted developer tooling that got new engineers contributing correctly from day one.',
+    ],
+    stack: ['Next.js', 'React', 'TypeScript', 'Django', 'Django REST Framework', 'PostgreSQL', 'GCP', 'Cloud Run', 'Stripe', 'Material UI', 'Tailwind CSS', 'Docker', 'GitHub Actions'],
   },
 ]

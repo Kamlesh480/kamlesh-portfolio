@@ -1,7 +1,8 @@
 import type { SkillGroup } from './types'
 
 /**
- * Grounded strictly in the resume/LinkedIn PDFs and the Lumen project brief.
+ * Grounded strictly in the resume/LinkedIn PDFs and the personal-project brief
+ * (name withheld — not publishable).
  * Deliberately does NOT include buzzword-adjacent items (GraphQL, Terraform,
  * Spring Boot, generic "RAG"/"vector databases") that aren't evidenced by
  * those source documents — see the content-honesty principle in the

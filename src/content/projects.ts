@@ -2,48 +2,6 @@ import type { ProjectEntry } from './types'
 
 export const projects: ProjectEntry[] = [
   {
-    slug: 'lumen',
-    title: 'Lumen — Healthcare Claims Intelligence Platform',
-    role: 'Founding Engineer & Full-Stack Lead',
-    period: '2025 – Present',
-    summary:
-      'A production SaaS platform that automates the collection, validation, and analysis of insurance claims data for healthcare organizations. I was employee/contractor number one — no codebase, no architecture, no team. I built all of it, then hired the engineers who followed.',
-    problem:
-      'Diagnostic centres, clinics, and medical professionals were managing insurance claims manually across multiple insurance portals — no automated collection, no validation, no real-time visibility into what was outstanding, rejected, or overdue.',
-    solution:
-      'Built a full-stack SaaS platform from a blank repository: a Next.js dashboard with real-time analytics, a Django backend serving a dual-database architecture (application data cleanly separated from scraped claims data via a custom router), an automated collection pipeline with post-collection QA gating, a complete Stripe billing lifecycle, and a role-based access model scoped to the organization level. Then defined the technical direction, hired the team, and kept shipping.',
-    stack: [
-      'Next.js', 'React', 'TypeScript', 'Material UI', 'Tailwind CSS', 'Framer Motion',
-      'Django', 'Django REST Framework', 'PostgreSQL',
-      'GCP Cloud Run', 'Cloud SQL', 'Cloud Tasks', 'Cloud Scheduler',
-      'Stripe', 'SendGrid', 'GitHub Actions', 'Docker',
-    ],
-    outcomes: [
-      'Live in production with multiple healthcare organizations using it daily.',
-      'Full Stripe billing lifecycle — free, trial, paid, upgrade/downgrade/cancellation/reactivation — built and operating with webhook-idempotent handlers.',
-      '13 scraped data tables across 2 databases behind one custom database router, with zero cross-account data leaks under a documented multi-tenancy scoping model.',
-      'Hired and onboarded the frontend, QA, DevOps, and backend engineers who now maintain and extend the platform.',
-      'Multi-language UI (English + Italian) and RBAC across three permission levels, shipped with a CI/CD pipeline that runs automated database migrations on every deploy.',
-    ],
-    challenges: [
-      {
-        title: 'A booking ID that wasn’t actually unique',
-        description:
-          'The scraped claims database is multi-tenant, and a key booking identifier could repeat across different accounts — not a bug, a fact of the source data. I designed and documented explicit account-scoping rules for every query path (list queries, detail lookups, ORM subqueries, and raw SQL joins) to guarantee no account could ever see another’s records.',
-      },
-      {
-        title: 'Stripe webhooks arriving more than once',
-        description:
-          'Stripe can and does redeliver the same billing event. Built an idempotency model keyed on the Stripe event ID, with handler errors caught and logged rather than re-thrown — so a logic bug never causes Stripe to retry a webhook that already succeeded.',
-      },
-      {
-        title: 'A silent double round-trip on every API call',
-        description:
-          'Next.js normalizes URLs with trailing slashes; Django responds to slash-less URLs with a redirect. Left alone, every single API call would cost two HTTP round trips. Fixed at both ends of the request: the client strips trailing slashes, and the proxy re-appends exactly one before forwarding.',
-      },
-    ],
-  },
-  {
     slug: 'ai-hyper-cube',
     title: 'AI Hyper Cube — LLM Processing Infrastructure',
     role: 'Architect & Lead Engineer',
@@ -107,6 +65,50 @@ export const projects: ProjectEntry[] = [
       '4x faster processing versus the previous collector.',
       '100M+ keywords processed per month across multiple vendor integrations.',
       "Keyword-collection costs cut ~60% across 25+ locales via the AI Overview stitching system that mitigated Google's num=100 deprecation.",
+    ],
+  },
+  {
+    // Personal project — the platform's name is intentionally withheld (not
+    // publishable) and no dates are shown, by request. Deliberately last in
+    // the array: every page that lists `projects` renders in array order.
+    slug: 'healthcare-platform',
+    title: 'Healthcare Claims Intelligence Platform',
+    role: 'Founding Engineer & Full-Stack Lead · Personal Project',
+    summary:
+      'A production SaaS platform that automates the collection, validation, and analysis of insurance claims data for healthcare organizations. I was employee/contractor number one — no codebase, no architecture, no team. I built all of it, then hired the engineers who followed.',
+    problem:
+      'Diagnostic centres, clinics, and medical professionals were managing insurance claims manually across multiple insurance portals — no automated collection, no validation, no real-time visibility into what was outstanding, rejected, or overdue.',
+    solution:
+      'Built a full-stack SaaS platform from a blank repository: a Next.js dashboard with real-time analytics, a Django backend serving a dual-database architecture (application data cleanly separated from scraped claims data via a custom router), an automated collection pipeline with post-collection QA gating, a complete Stripe billing lifecycle, and a role-based access model scoped to the organization level. Then defined the technical direction, hired the team, and kept shipping.',
+    stack: [
+      'Next.js', 'React', 'TypeScript', 'Material UI', 'Tailwind CSS', 'Framer Motion',
+      'Django', 'Django REST Framework', 'PostgreSQL',
+      'GCP Cloud Run', 'Cloud SQL', 'Cloud Tasks', 'Cloud Scheduler',
+      'Stripe', 'SendGrid', 'GitHub Actions', 'Docker',
+    ],
+    outcomes: [
+      'Live in production with multiple healthcare organizations using it daily.',
+      'Full Stripe billing lifecycle — free, trial, paid, upgrade/downgrade/cancellation/reactivation — built and operating with webhook-idempotent handlers.',
+      '13 scraped data tables across 2 databases behind one custom database router, with zero cross-account data leaks under a documented multi-tenancy scoping model.',
+      'Hired and onboarded the frontend, QA, DevOps, and backend engineers who now maintain and extend the platform.',
+      'Multi-language UI (English + Italian) and RBAC across three permission levels, shipped with a CI/CD pipeline that runs automated database migrations on every deploy.',
+    ],
+    challenges: [
+      {
+        title: 'A booking ID that wasn’t actually unique',
+        description:
+          'The scraped claims database is multi-tenant, and a key booking identifier could repeat across different accounts — not a bug, a fact of the source data. I designed and documented explicit account-scoping rules for every query path (list queries, detail lookups, ORM subqueries, and raw SQL joins) to guarantee no account could ever see another’s records.',
+      },
+      {
+        title: 'Stripe webhooks arriving more than once',
+        description:
+          'Stripe can and does redeliver the same billing event. Built an idempotency model keyed on the Stripe event ID, with handler errors caught and logged rather than re-thrown — so a logic bug never causes Stripe to retry a webhook that already succeeded.',
+      },
+      {
+        title: 'A silent double round-trip on every API call',
+        description:
+          'Next.js normalizes URLs with trailing slashes; Django responds to slash-less URLs with a redirect. Left alone, every single API call would cost two HTTP round trips. Fixed at both ends of the request: the client strips trailing slashes, and the proxy re-appends exactly one before forwarding.',
+      },
     ],
   },
 ]

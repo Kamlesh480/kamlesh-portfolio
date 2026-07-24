@@ -39,9 +39,11 @@ export default function ResumePage() {
               <strong style={{ fontFamily: 'var(--font-caveat)', fontSize: 20, color: 'var(--char-deep)' }}>
                 {entry.role} · {entry.company}
               </strong>
-              <span className="card-meta" style={{ marginBottom: 0 }}>
-                {entry.range.start} – {entry.range.end}
-              </span>
+              {entry.range && (
+                <span className="card-meta" style={{ marginBottom: 0 }}>
+                  {entry.range.start} – {entry.range.end}
+                </span>
+              )}
             </div>
             <p style={{ color: 'var(--graphite)', marginTop: 4 }}>{entry.summary}</p>
           </div>

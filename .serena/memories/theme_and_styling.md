@@ -107,26 +107,31 @@ attached to `window.Charcoal`/`window.Playground`, dynamically imported (not Rea
 This system went through many rounds of bug-fixing; see `known_patterns.md` before touching it.
 
 ## Hero Layout — Column Proportions & Viewport Fit
-`.hero`'s grid is `grid-template-columns: minmax(0, 580px) 40%;` with
-`justify-content: space-between` on `.hero`. The portrait column is a literal, fixed 40% of
-`.hero`'s width by design spec (not a `clamp()`-derived approximation). `.hero-portrait-wrap`
-fills that column at `width: 100%` (capped `max-width: 620px` for ultra-wide screens) — do not
-reintroduce an independent `vw`-based width on the portrait wrapper, or it will drift from the
-40% the column guarantees.
+`.hero`'s grid is `grid-template-columns: minmax(0, 1fr) 40%;` with `justify-content:
+space-between` on `.hero`. The portrait column is a literal, fixed 40% of `.hero`'s width by
+design spec. `.hero-portrait-wrap` fills that column at `width: 100%` (capped `max-width:
+620px` for ultra-wide screens) — do not reintroduce an independent `vw`-based width on the
+portrait wrapper, or it will drift from the 40% the column guarantees.
 
-**Deliberately no width cap on the text content anymore.** `.hero-text` has no `max-width` and
-`.lede` has no `max-width` (both were removed per explicit user request) — the text column's
-own `minmax(0, 580px)` grid track is the only thing bounding how wide the text can get. This
-was a conscious tradeoff, made after an earlier iteration (`.hero-text{max-width:52ch}`,
-`justify-content:center`) had already fixed a *different* reported bug (huge dead gap on wide
-screens, from the text column previously being `1fr` and hugely over-wide relative to
-capped-narrow content). `space-between` + no content caps produces a *smaller but still
-present* gap that scales mildly with viewport width (~160–330px measured across
-1366–2560px, vs. ~255px constant under the `center` version, vs. ~600–700px+ under the
-original `1fr` bug) — this is the accepted, requested trade-off, not a regression to silently
-"fix" back to `center`/capped if touched again. If the gap is ever reported as a problem in
-the future, ask which prior version (`center` + capped, or `space-between` + uncapped) is
-preferred rather than assuming.
+**No width cap on the text content** — `.hero-text` and `.lede` both have no `max-width`
+(removed per explicit user request), and there is NO `avail-badge` element anymore (also
+removed per user request, along with its CSS — `.avail-badge`, `.pulse`, `@keyframes
+availPulse` are all gone; don't re-add without being asked).
+
+**The text column MUST stay `1fr`, not a fixed px cap.** This flip-flopped once and it's worth
+recording exactly why: with `.hero-text`/`.lede` uncapped, the `.lede` paragraph naturally
+fluid-wraps to fill however much width its grid column offers — there's no ch-based limit
+holding it back anymore. A `minmax(0, 1fr)` column therefore lets `.lede`'s own wrap width
+(not an arbitrary number) determine how close the text's right edge sits to the portrait,
+which is exactly what closes the gap: verified via Playwright bounding-box measurement, the
+text-to-image gap is now a tight, near-constant ~68–72px (matching the `column-gap` value
+almost exactly, i.e. near-zero *wasted* space) across the full 1366–2560px range. The
+intermediate version used a *fixed* `580px` cap on this column — that was correct ONLY while
+`.hero-text` still had its own `52ch` max-width (matching the fixed cap to capped content);
+the moment the content-side cap was removed, the leftover fixed-column cap became a stale
+bottleneck that under-filled the column and dumped the difference into the `space-between`
+gap, reintroducing a ~160-330px gap. **Column sizing must track content sizing — if either
+`.hero-text`'s cap or the column's cap changes, re-check the other.**
 
 Two things previously caused a real reported bug ("too much empty space between text and
 image", "See my work" wrapping onto two lines):

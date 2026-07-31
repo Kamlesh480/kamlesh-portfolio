@@ -94,12 +94,48 @@ requires RGBA.
 own opaque background rect, so only the rounded corners are actually transparent — but the PNG
 format is RGBA either way, which is what Next's decoder needs).
 
+## Bug 7 — hand-drawn diagram arrows/connectors render as just ">" with no line
+**Symptom:** in the `src/components/diagram` schematics, straight arrows showed only their
+arrowhead (a bare ">"); the shaft, chip pins, and RabbitMQ queue dividers were invisible.
+Diagonal arrows looked fine — which is the tell.
+**Root cause:** `#rough`'s default `filterUnits="objectBoundingBox"` region collapses to zero
+height for a perfectly horizontal stroke (zero width for a vertical one), so `feDisplacementMap`
+had no region to render into and clipped the stroke away. Arrowheads and diagonal lines have a
+2-D bounding box, so they survived.
+**Fix:** do NOT filter thin axis-aligned strokes. Connectors (`.sk-line`) and hairlines
+(`.sk-hair`) carry no `#rough`; `Arrow`/`Connector` bake the hand-drawn wobble into the path
+geometry via `sketchCurve()` (deterministic `Math.sin` noise — same on server/client, so no
+hydration mismatch). **General lesson:** `#rough` (or any `feDisplacementMap` filter) on a
+straight horizontal/vertical line will disappear — give the shape 2-D bounds or don't filter it.
+
+## Bug 8 — a diagram inside `.content-grid` gives the whole PAGE horizontal scroll on mobile
+**Symptom:** /about scrolled sideways at 390px (18px of overflow) while /projects and
+/experience — same diagrams, same widths — did not. The overflowing elements were the grid's
+children, including the innocent `<p class="page-lede">` sibling.
+**Root cause:** `.sk` carries an inline `min-width` (diagrams scroll rather than shrink into
+illegibility). A `1fr` track is `minmax(auto, 1fr)`, and that `auto` min-size resolves to the
+child's **min-content** — so the diagram's `min-width` inflated the track, and every sibling in
+it, past the container. On /projects the same diagram sits in normal block flow inside a
+`Card`, where `.sketch-diagram-scroll`'s `overflow-x: auto` clamps it — grid tracks ignore that.
+**Fix:** `.content-grid > * { min-width: 0 }` — lets tracks shrink below min-content so the
+horizontal scroll stays inside `.sketch-diagram-scroll` where it was designed to live.
+**General lesson:** any grid/flex child that contains an overflow-scrolling box needs
+`min-width: 0`, or the inner content's min-width leaks out and blows up the whole row.
+
 ## Content Accuracy Rule
 `src/content/{experience,projects,skills}.ts` must stay strictly grounded in the two source
-resume PDFs and any explicit project briefs the user supplies (e.g. the Lumen project brief) —
-never invent skills, dates, employers, or metrics not evidenced by a source document, even if
-a design brief's example categories suggest them (e.g. an early brief's example skill list
-included Java/Spring Boot/GraphQL/Terraform — none of that is real, none of it was added).
+resume PDFs and any explicit project briefs the user supplies (e.g. the personal project's
+brief) — never invent skills, dates, employers, or metrics not evidenced by a source document,
+even if a design brief's example categories suggest them (e.g. an early brief's example skill
+list included Java/Spring Boot/GraphQL/Terraform — none of that is real, none of it was added).
 When facts conflict between sources, the resume/primary source wins, and when a fact (like a
 project's date range or employment classification) isn't stated anywhere, ask the user rather
-than guessing — this happened for the Lumen project's dates and reporting-line details.
+than guessing — this happened for the personal project's dates and reporting-line details.
+
+**Confidential-name invariant:** the personal project's real product/company name is NOT
+publishable (explicit user instruction). It must appear NOWHERE in the repo — not in code, not
+in content, and not in these memory files (which are git-tracked, so they ship too). Refer to
+it only generically ("the personal project", "the healthcare-claims platform"); it is
+represented in content as `company: 'Personal Project'` / slug `personal-project` /
+`healthcare-platform` — see `architecture.md` (Content Data Model). Do not reintroduce the name
+as a "helpful" clarification.

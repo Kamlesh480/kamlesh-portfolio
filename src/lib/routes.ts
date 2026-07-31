@@ -31,7 +31,7 @@ export const routes: SiteRoute[] = [
   { path: '/projects', label: 'Projects', inHeader: true, inFooter: true, changeFrequency: 'monthly', priority: 0.8 },
   { path: '/skills', label: 'Skills', inHeader: true, inFooter: true, changeFrequency: 'monthly', priority: 0.6 },
   { path: '/contact', label: 'Contact', inHeader: true, inFooter: true, changeFrequency: 'yearly', priority: 0.5 },
-  { path: '/architecture', label: 'Architecture', inHeader: false, inFooter: true, changeFrequency: 'monthly', priority: 0.4 },
+  { path: '/architecture', label: 'Architecture', inHeader: false, inFooter: true, changeFrequency: 'monthly', priority: 0.7 },
   { path: '/blog', label: 'Engineering Notes', inHeader: false, inFooter: true, changeFrequency: 'weekly', priority: 0.6 },
   { path: '/resume', label: 'Resume', inHeader: false, inFooter: true, changeFrequency: 'yearly', priority: 0.7 },
 ]

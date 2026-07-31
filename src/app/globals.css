@@ -1160,9 +1160,21 @@ body.draw-mode-active .toolbar {
 }
 .content-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
 .content-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.content-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1080px) {
+  .content-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+/* A `1fr` track is `minmax(auto, 1fr)`, so a child with a large min-content
+   (e.g. a diagram's `min-width`) blows the track — and every sibling — past the
+   container. Letting tracks shrink below min-content keeps the horizontal
+   scroll inside `.sketch-diagram-scroll` where it belongs, instead of on the page. */
+.content-grid > * { min-width: 0; }
 @media (max-width: 880px) {
   .content-grid.cols-2,
   .content-grid.cols-3 { grid-template-columns: 1fr; }
+  /* cols-4 keeps two columns here — these are short stat pairs, not prose,
+     so a single column would strand a lot of vertical space. */
+  .content-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
 }
 .section-block { margin-bottom: clamp(48px, 8vh, 96px); }
 .section-block:last-child { margin-bottom: 0; }
@@ -1384,34 +1396,38 @@ body.draw-mode-active .toolbar {
   }
 }
 
-/* ---- About page portrait (the dramatic dark charcoal sketch) ---- */
-.about-portrait-wrap {
-  margin: 0;
-  justify-self: center;
-  max-width: min(420px, 100%);
-  text-align: center;
+/* ---- About page hero row (text block + ownership diagram) ----
+   Left column = eyebrow + h1 + lede as one unit; right column = the diagram,
+   vertically centred against the whole text block. */
+/* Wider column-gap than .content-grid's default, matched to the Home hero's
+   `clamp(32px, 5vw, 72px)` — these rows pair a text block against a figure, so
+   they need the same breathing room the hero uses, not the tighter card-grid gap. */
+.about-hero,
+.about-journey { column-gap: clamp(32px, 5vw, 72px); }
+/* Text column gets the larger share: it's long-form narrative, while the
+   figure beside it only needs enough width to stay legible at ~1:1.
+   Selector must out-specify `.content-grid.cols-2`'s `repeat(2, 1fr)`. */
+@media (min-width: 881px) {
+  .content-grid.cols-2.about-journey { grid-template-columns: 1.2fr 0.8fr; }
 }
-/* Same wrapper-blend pattern as .hero-portrait-wrap (see comment there):
-   mask on a paper-backed inner span, multiply on the img. */
-.about-portrait-frame {
-  display: block;
-  background: var(--paper);
-  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 47%, #000 58%, rgba(0,0,0,0.85) 78%, transparent 99%);
-  mask-image: radial-gradient(ellipse closest-side at 50% 47%, #000 58%, rgba(0,0,0,0.85) 78%, transparent 99%);
+/* One size for every descriptive paragraph on this page. The 16px browser
+   default reads small in a wide reading column set against a large figure. */
+.prose,
+.prose p {
+  color: var(--graphite);
+  font-size: clamp(16.5px, 1.25vw, 18.5px);
+  line-height: 1.75;
 }
-.about-portrait {
-  width: 100%;
-  height: auto;
-  display: block;
-  mix-blend-mode: multiply;
-}
-.about-portrait-caption {
-  font-family: var(--font-caveat), cursive;
-  font-size: clamp(15px, 1.2vw, 19px);
-  color: var(--graphite-s);
-  margin-top: 10px;
-  transform: rotate(-1.5deg);
-  filter: url(#rough);
+.prose p + p { margin-top: 18px; }
+.about-hero { align-items: center; }
+.about-hero .page-lede { margin-bottom: 0; }
+/* The global .page-title clamp (up to 92px) is sized for a FULL-WIDTH heading;
+   in a half-width column it wraps to 4-5 ragged lines. Scaled down here so the
+   heading still reads as the page's largest type but fits its column. */
+.about-hero .page-title { font-size: clamp(40px, 4.4vw, 66px); }
+@media (max-width: 880px) {
+  /* stacked by .content-grid's own breakpoint — restore breathing room */
+  .about-hero .page-lede { margin-bottom: clamp(20px, 3vh, 32px); }
 }
 
 /* ============================================================
@@ -1575,3 +1591,74 @@ body.draw-mode-active .toolbar {
 /* before/after bars (experience performance diagrams) */
 .sk-bar-track { fill: var(--paper-lo); stroke: var(--graphite-s); stroke-width: 1.4; filter: url(#rough); }
 .sk-bar-fill { fill: var(--char-deep); fill-opacity: 0.82; stroke: none; filter: url(#rough); }
+
+/* ---- Architecture page: decision records (ADRs) ---- */
+/* Section labels inside an ADR card. Caveat, small, with a drawn rule under
+   it — the visual equivalent of a heading underlined in a notebook. */
+.adr-label {
+  font-family: var(--font-caveat), cursive;
+  font-size: clamp(17px, 1.3vw, 20px);
+  color: var(--char-deep);
+  margin: clamp(18px, 2.4vh, 26px) 0 8px;
+  letter-spacing: 0.3px;
+}
+.adr-label::after {
+  content: "";
+  display: block;
+  width: 34px;
+  height: 1.5px;
+  margin-top: 5px;
+  background: var(--graphite-s);
+  filter: url(#rough);
+}
+/* The option that was NOT taken stays legible but visibly secondary; the
+   chosen one gets the ink. Both keep a left rule so they read as a pair. */
+.adr-option {
+  border-left: 2px solid var(--graphite-s);
+  padding: 2px 0 2px 14px;
+  opacity: 0.72;
+}
+.adr-option.is-chosen {
+  border-left-color: var(--char-deep);
+  opacity: 1;
+}
+.adr-option-label {
+  font-family: var(--font-caveat), cursive;
+  font-size: clamp(17px, 1.3vw, 20px);
+  color: var(--char-deep);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.adr-chosen-tag {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--paper-hi);
+  background: var(--char-deep);
+  border-radius: 3px;
+  padding: 1px 8px;
+  letter-spacing: 0.04em;
+}
+.adr-option-note {
+  color: var(--graphite);
+  font-size: clamp(15px, 1.05vw, 16.5px);
+  line-height: 1.6;
+}
+/* The cost of the decision — set apart so it can't be skimmed past. */
+.adr-tradeoff {
+  font-style: italic;
+  border-left: 2px solid var(--graphite-s);
+  padding-left: 14px;
+  filter: none;
+}
+
+/* ---- Architecture page: recurring patterns ---- */
+.pattern-item {
+  border-top: 1.5px solid var(--graphite-s);
+  border-image: linear-gradient(to right, var(--graphite-s), transparent 90%) 1;
+  border-image-width: 1.5px 0 0 0;
+  padding-top: 14px;
+}

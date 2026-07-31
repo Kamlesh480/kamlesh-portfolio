@@ -38,6 +38,6 @@ square on the paper gradient, for LinkedIn/GitHub profile use).
 
 ## Color Note
 The favicon tile and OG image background were generated against the pre-contrast-fix paper
-tone (`#e8e4da`) — see `theme_and_styling.md` for the current `--paper` value (`#f2eee5`). The
+tone (`#e8e4da`) — see `theme_and_styling.md` for the current `--paper` value (`#f9f7f1`). The
 difference is visually negligible in isolation but they're technically stale; regenerate them
 from the current token if exact consistency ever matters (e.g. before a print use case).

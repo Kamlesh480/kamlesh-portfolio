@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
 })
 
 const EMAIL = 'kamleshchhipa480@gmail.com'
-const LINKEDIN = 'https://www.linkedin.com/in/kamleshchhipa'
+const LINKEDIN = 'https://www.linkedin.com/in/kamlesh-chhipa/'
 const GITHUB = 'https://github.com/Kamlesh480'
 
 export default function ContactPage() {

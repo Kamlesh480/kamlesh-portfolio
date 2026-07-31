@@ -23,9 +23,10 @@ original 0.55 / 0.5 across successive brightness passes) are the main lever for 
 site feels, more than the tokens themselves. The `#vignette` inset shadows were
 also softened in the same pass. There is also ONE muted accent
 token, `--accent: #47617a` (slate, lifted from a statue-reference image the user
-supplied) — used ONLY for: the availability-badge pulse dot, the hero accent
-word's text-stroke, and link hovers. Keep it that sparse; this is not a
-multi-color design.
+supplied) — used ONLY for: the hero accent word's `text-stroke` and link hovers
+(`.link-plain:hover`, `.featured-link:hover`). Keep it that sparse; this is not a
+multi-color design. (The availability badge that also used it is gone — see the
+Hero Layout note below.)
 
 The display-text filter matters for readability: `.headline`, `.page-title`, and
 `.stat-value` use `url(#rough)` (wobble only). They previously used
@@ -37,7 +38,8 @@ it to body-size or display text.
 without re-running the contrast audit.** `--graphite-s` was originally `#7d776c` (only 3.50:1
 against `--paper`, failing AA on body/caption text) and was darkened to `#665f53` specifically
 to clear 4.5:1 against the darkest gradient stop (`--paper-lo`) that any text could realistically
-sit on. The background was also lightened from `#e8e4da` → `#f2eee5` in the same pass. If either
+sit on. The background was also lightened from `#e8e4da` to the current `#f9f7f1` across
+successive brightness passes (an intermediate `#f2eee5` no longer applies). If either
 token changes again, re-verify with a real luminance-ratio check across all 9 routes, not by eye
 — several failures at the previous values were invisible in isolated screenshots but measurable
 (e.g. `.tb-note`, `.eyebrow`, `.card-meta` at reduced opacity compounded with the grey text
@@ -71,6 +73,11 @@ along with the shape unless you add `vector-effect="non-scaling-stroke"` — oth
 segments render much thicker than horizontal ones. See `Card.tsx`'s `.card-bg` path for the
 fixed pattern; this bug shipped once and was caught visually (a card border looked like a bold
 cartoon outline on one side).
+
+**Second `#rough` gotcha:** its default object-bounding-box filter region collapses to zero for
+a perfectly horizontal/vertical stroke, so a straight thin line filtered by `#rough` vanishes
+(only diagonal strokes survive). Never put `#rough` on an axis-aligned connector/line — see
+`known_patterns.md` Bug 7 and the diagram system's baked-wobble approach in `architecture.md`.
 
 ## Z-Index Scale
 Reference tokens declared in `:root` (`--z-paper` through `--z-quickbar`) for **new** code to
@@ -149,7 +156,18 @@ Playwright bounding-box checks (not just eyeballing) at 1366×768, 1440×900, 15
 1920×1080 — 1366×768 is the tightest real-world case and was the one that first failed. The
 levers, in order of impact: `.headline`'s `font-size` clamp ceiling (currently `clamp(44px,
 6vw, 92px)`, line-height 0.88 — do not raise without re-checking 1366×768), then the
-margin-top/margin-bottom clamps on `.avail-badge`/`.eyebrow`/`.lede`/`.cta-row`. `.home-hero`'s
+margin-top/margin-bottom clamps on `.eyebrow`/`.lede`/`.cta-row` (the `.avail-badge` that used
+to be in this stack is gone). `.home-hero`'s
 `min-height` is `88svh`, not `100vh` — it sits below `<header>` in normal flow (see
 `architecture.md`), so `100vh`-of-hero plus the header's own height always exceeded one real
 screen by construction, regardless of how tight the internal spacing was.
+
+## Shared Prose Class
+`.prose` (globals.css) is the one size for narrative/description body copy —
+`clamp(16.5px, 1.25vw, 18.5px)` at line-height 1.75, applied on the element or its `p`
+children. It exists because the 16px browser default reads small in a wide reading column set
+against a large figure, and because every descriptive paragraph previously carried its own
+inline `color`/`lineHeight`/`maxWidth`. Use it instead of new inline prose styles.
+Note it is currently applied on /about and /architecture only — `.card p` on /projects and
+/experience still inherits the 16px default (`.card-meta` is a deliberately smaller 14.4px
+caption). Unify those too if the site-wide size is ever revisited.

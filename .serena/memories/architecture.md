@@ -44,8 +44,9 @@ wrapper-blend pattern documented in `theme_and_styling.md` §portraits: `mix-ble
 multiply` on the img against a `background: var(--paper)` WRAPPER, with the fade mask on the
 wrapper — because `.home-hero`'s z-index creates an isolated stacking context, a blend can
 never reach the fixed `#paper` layer outside it, so blending must target an in-context
-paper-colored backdrop. The About page's dark portrait (`public/kamlesh-portrait-dark.jpg`,
-`.about-portrait-frame`) uses the identical pattern.
+paper-colored backdrop. This is now the ONLY portrait on the site: /about's dark portrait was
+replaced by diagrams (see below), so `.about-portrait*` CSS is gone and
+`public/kamlesh-portrait-dark.jpg` is an unreferenced leftover asset.
 
 ## Draw Marks Do Not Persist Across Navigation
 Since `SiteChrome` never unmounts between routes, the draw canvas content would otherwise
@@ -85,9 +86,15 @@ deliberate product decision, not an oversight — flip it by removing the `usePa
 
 ## Content Data Model
 Typed data files under `src/content/`, imported directly into Server Components — no client
-fetching, no MDX. `types.ts` defines `ExperienceEntry`, `ProjectEntry`, `SkillGroup`. This
-structure exists specifically so a future Resume-page rewrite and Architecture-page build-out
-can reuse the same data without a second content-authoring pass.
+fetching, no MDX. `types.ts` defines `ExperienceEntry`, `ProjectEntry`, `SkillGroup`,
+`DecisionRecord`. This structure exists specifically so a future Resume-page rewrite can reuse
+the same data without a second content-authoring pass.
+
+`decisions.ts` (architecture decision records, drives `/architecture`) is **derived content**:
+it adds *reasoning about* work already evidenced in `experience.ts`/`projects.ts`, and must
+never introduce a metric, employer, or technology not already in those files. Same Content
+Accuracy Rule, one step removed — when editing it, check the claim against the source file
+rather than against what sounds right.
 
 **Array order IS display order, everywhere.** `/experience`, `/projects`, `/resume`, and
 `HomeSections`' "featured work"/"experience strip" all render `experience`/`projects` by
@@ -137,6 +144,22 @@ a shared constant).
 - `ProjectDiagrams.tsx` / `ExperienceDiagrams.tsx` — one composition per content slug, plus
   `projectDiagram(slug)` / `experienceDiagram(slug)` lookups that return `null` for any slug
   without a diagram (so adding a content entry never breaks the page — it just renders text).
+- `AboutDiagrams.tsx` — not slug-keyed (About is prose, not content-array driven): exports
+  `OwnershipDiagram` (hero right column — the stack, with an extent marker spanning all layers)
+  and `JourneyDiagram` (the vertical career path that REPLACED the About portrait photo).
+- `ArchitectureDiagrams.tsx` — `DecisionLoopDiagram` (the /architecture hero) plus
+  `decisionDiagram(slug)` keyed to `src/content/decisions.ts` slugs. Only some records have a
+  diagram; the rest render text-only, by design.
+- **Keep drawn content ~16 units clear of the viewBox edges.** `.sketch-diagram-scroll` fades
+  its outer 14px to transparent (so a mid-scroll diagram doesn't hard-clip on mobile), which
+  silently *erases* anything drawn flush to the edge — it looks like a clipping bug but
+  `getBBox()` will show the geometry is correctly placed. Equally, don't leave a wide margin:
+  a narrow drawing in a wide viewBox renders left-shifted with dead space, because the `<svg>`
+  fills its column regardless. Match content extent to viewBox, minus that ~16-unit padding.
+- Sizing rule: pick the viewBox width to be close to the column the figure lands in, so it
+  renders near 1:1. Scaling a wide drawing down into a narrow column is what makes diagram
+  labels illegible; widening the drawing (rather than scaling it up) is also what makes a tall
+  figure render shorter.
   The pages call these inline (`{projectDiagram(p.slug)}` after the summary;
   `{experienceDiagram(entry.slug)}` after the highlights). **Slugs are the join key** — if you
   rename a slug in `src/content/*`, update the MAP key here or the diagram silently disappears.

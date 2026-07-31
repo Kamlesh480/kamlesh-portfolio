@@ -31,6 +31,33 @@ export interface ProjectChallenge {
   description: string
 }
 
+/** One option that was on the table for a DecisionRecord. */
+export interface DecisionOption {
+  label: string
+  note: string
+  /** Exactly one option per record should be the chosen path. */
+  chosen?: boolean
+}
+
+/**
+ * An architecture decision record — the reasoning behind a system choice that
+ * already shipped. Every field must be traceable to the same source documents
+ * that govern `experience.ts`/`projects.ts` (see the Content Accuracy Rule):
+ * these describe decisions actually made, not hypothetical designs.
+ */
+export interface DecisionRecord {
+  slug: string
+  title: string
+  /** Where the decision was made, e.g. 'BrightEdge · AI Hyper Cube'. */
+  context: string
+  problem: string
+  options: DecisionOption[]
+  decision: string
+  /** What was deliberately given up — a record with no cost isn't a decision. */
+  tradeoff: string
+  outcomes: string[]
+}
+
 export interface ProjectEntry {
   slug: string
   title: string

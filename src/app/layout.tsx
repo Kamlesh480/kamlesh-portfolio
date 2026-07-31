@@ -58,7 +58,7 @@ const personJsonLd = {
   image: `${SITE_URL}/og-image.png`,
   worksFor: { '@type': 'Organization', name: 'BrightEdge' },
   address: { '@type': 'PostalAddress', addressLocality: 'Bengaluru', addressCountry: 'IN' },
-  sameAs: ['https://www.linkedin.com/in/kamleshchhipa', 'https://github.com/Kamlesh480'],
+  sameAs: ['https://www.linkedin.com/in/kamlesh-chhipa/', 'https://github.com/Kamlesh480'],
   knowsAbout: [
     'Python', 'FastAPI', 'Django', 'Backend Engineering', 'Distributed Systems',
     'Data Pipelines', 'Trino', 'Apache Iceberg', 'ClickHouse', 'Apache Spark', 'BigQuery',

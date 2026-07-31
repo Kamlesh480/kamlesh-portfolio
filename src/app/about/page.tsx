@@ -4,12 +4,16 @@ import RevealSection from '@/components/ui/RevealSection'
 import HandDrawnButton from '@/components/ui/HandDrawnButton'
 import SketchIcon from '@/components/ui/SketchIcon'
 import { OwnershipDiagram, JourneyDiagram } from '@/components/diagram/AboutDiagrams'
+import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
+
+const PAGE_DESCRIPTION =
+  'Kamlesh Chhipa — from ETL scripts to founding engineer on a production healthcare SaaS platform, and the philosophy behind how he builds.'
 
 export const metadata = pageMetadata({
   title: 'About',
   description:
-    'Kamlesh Chhipa — from ETL scripts to founding engineer on a production healthcare SaaS platform, and the philosophy behind how he builds.',
+    PAGE_DESCRIPTION,
   path: '/about',
 })
 
@@ -22,6 +26,7 @@ const stats = [
 export default function AboutPage() {
   return (
     <div className="page-shell">
+      <PageSchema path="/about" type="AboutPage" name="About" description={PAGE_DESCRIPTION} />
       {/* True left/right hero split: the whole text block (eyebrow + heading +
           lede) is ONE column, the stack diagram is the other — so the heading
           aligns with the diagram instead of spanning the full width above it.

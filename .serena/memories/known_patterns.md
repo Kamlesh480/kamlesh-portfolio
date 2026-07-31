@@ -132,6 +132,23 @@ When facts conflict between sources, the resume/primary source wins, and when a 
 project's date range or employment classification) isn't stated anywhere, ask the user rather
 than guessing — this happened for the personal project's dates and reporting-line details.
 
+**Employer-confidentiality invariant (BrightEdge and any future employer).** Two classes of
+detail must never be published on this site, regardless of being on the private résumé:
+1. **Internal system codenames.** "DCX Collector V2" was removed everywhere and is now
+   described by function ("High-Throughput Keyword Collection Pipeline", slug
+   `keyword-collection-pipeline`). A codename ranks for nothing, means nothing to a reader,
+   and discloses internal naming. **Exception, verified:** "AI Hyper Cube" is a *publicly
+   announced* BrightEdge product (CEO keynote + press releases), so naming it is verifiable
+   credibility, not disclosure — keep it. Check whether a name is public before genericising
+   it; blanket-anonymising costs real credibility.
+2. **Absolute internal cost figures.** "$40K → $15K/month" and "$18K–$20K/month saved" were
+   replaced with percentages and "a five-figure monthly saving". Percentages convey the same
+   achievement without publishing an employer's infrastructure spend. Specific supplier names
+   (Vast.ai) were likewise generalised to "rented GPU capacity" — naming an employer's vendor
+   is a supplier-relationship detail, not a skill.
+Percentages, throughput/scale numbers, employer name, role, and standard tech stack are all
+fine — that's normal résumé material.
+
 **Confidential-name invariant:** the personal project's real product/company name is NOT
 publishable (explicit user instruction). It must appear NOWHERE in the repo — not in code, not
 in content, and not in these memory files (which are git-tracked, so they ship too). Refer to

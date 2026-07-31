@@ -2,12 +2,16 @@ import InkRule from '@/components/ui/InkRule'
 import RevealSection from '@/components/ui/RevealSection'
 import HandDrawnButton from '@/components/ui/HandDrawnButton'
 import ContactForm from './ContactForm'
+import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
+
+const PAGE_DESCRIPTION =
+  'Get in touch with Kamlesh Chhipa — open to Senior Backend, Platform, and Full-Stack engineering roles in product-led, AI-driven teams.'
 
 export const metadata = pageMetadata({
   title: 'Contact',
   description:
-    'Get in touch with Kamlesh Chhipa — open to Senior Backend, Platform, and Full-Stack engineering roles in product-led, AI-driven teams.',
+    PAGE_DESCRIPTION,
   path: '/contact',
 })
 
@@ -18,6 +22,7 @@ const GITHUB = 'https://github.com/Kamlesh480'
 export default function ContactPage() {
   return (
     <div className="page-shell">
+      <PageSchema path="/contact" type="ContactPage" name="Contact" description={PAGE_DESCRIPTION} />
       <div className="eyebrow">Contact</div>
       <h1 className="page-title">Let&apos;s talk about what you&apos;re building.</h1>
       <p className="page-lede">

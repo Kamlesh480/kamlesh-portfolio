@@ -11,11 +11,11 @@ export const projects: ProjectEntry[] = [
     problem:
       'AI Overviews and AI-generated search results needed to be parsed for brand mentions, sentiment, and citations across 100M+ keyword SERPs a month — at a token volume and cost that made naive LLM API calls economically unworkable.',
     solution:
-      'Architected a Python/ClickHouse/MySQL pipeline processing 5B+ tokens per month, then engineered a GPU-based inference platform on vLLM and Vast.ai using open-source models for large-scale entity extraction — moving the workload off pay-per-token hosted APIs entirely.',
-    stack: ['Python', 'ClickHouse', 'MySQL', 'vLLM', 'Vast.ai', 'BigQuery', 'Apache Spark'],
+      'Architected a Python/ClickHouse/MySQL pipeline processing 5B+ tokens per month, then engineered a GPU-based inference platform on vLLM and rented GPU capacity using open-source models for large-scale entity extraction — moving the workload off pay-per-token hosted APIs entirely.',
+    stack: ['Python', 'ClickHouse', 'MySQL', 'vLLM', 'GPU Inference', 'BigQuery', 'Apache Spark'],
     outcomes: [
       '5B+ tokens processed per month in production.',
-      'Monthly AI processing cost cut 62% — from $40K to $15K — by moving inference to a self-hosted GPU platform.',
+      'Monthly AI processing cost cut 62% by moving inference to a self-hosted GPU platform.',
       '100M+ keyword SERPs processed monthly for prompt generation and post-processing, with brand-level hash partitioning (MD5 modulo) for reliable analytics.',
     ],
     challenges: [
@@ -37,21 +37,21 @@ export const projects: ProjectEntry[] = [
     role: 'Lead Engineer',
     period: 'BrightEdge · 2025',
     summary:
-      'Replaced a legacy BigQuery UDF workflow with a self-managed Trino–Iceberg–ClickHouse pipeline, cutting monthly cost by $18K–$20K while scaling to over a billion events per month.',
+      'Replaced a legacy BigQuery UDF workflow with a self-managed Trino–Iceberg–ClickHouse pipeline, cutting monthly processing cost by a substantial five-figure sum while scaling to over a billion events per month.',
     problem:
       'The existing BigQuery UDF-based processing workflow was expensive at scale and difficult to reason about operationally as event volume grew past 1B+ per month.',
     solution:
       'Built a pipeline on Python, GCS, Hive metadata, JavaScript UDFs, and Kubernetes, with a custom memory-aware job scheduler to safely run distributed jobs at that volume — replacing the BigQuery-UDF approach end-to-end.',
     stack: ['Trino', 'Iceberg', 'ClickHouse', 'Python', 'GCS', 'Hive metadata', 'Kubernetes', 'JavaScript'],
     outcomes: [
-      '$18K–$20K in monthly cost savings versus the legacy BigQuery UDF process.',
+      'A five-figure reduction in monthly processing cost versus the legacy BigQuery UDF process.',
       '1B+ events processed per month on the new pipeline.',
       'A custom memory-aware job scheduler purpose-built for this workload.',
     ],
   },
   {
-    slug: 'dcx-collector-v2',
-    title: 'DCX Collector V2',
+    slug: 'keyword-collection-pipeline',
+    title: 'High-Throughput Keyword Collection Pipeline',
     role: 'Lead Engineer',
     period: 'BrightEdge · 2025',
     summary:

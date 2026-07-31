@@ -4,18 +4,23 @@ import Card from '@/components/ui/Card'
 import HandDrawnButton from '@/components/ui/HandDrawnButton'
 import { experience } from '@/content/experience'
 import { experienceDiagram } from '@/components/diagram/ExperienceDiagrams'
+import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
+
+const PAGE_DESCRIPTION =
+  'Kamlesh Chhipa’s work history — BrightEdge, Hevo Data, and DUIT Technologies — with the systems built, scale reached, and business impact delivered at each.'
 
 export const metadata = pageMetadata({
   title: 'Experience',
   description:
-    'Kamlesh Chhipa’s work history — BrightEdge, Hevo Data, and DUIT Technologies — with the systems built, scale reached, and business impact delivered at each.',
+    PAGE_DESCRIPTION,
   path: '/experience',
 })
 
 export default function ExperiencePage() {
   return (
     <div className="page-shell">
+      <PageSchema path="/experience" type="WebPage" name="Experience" description={PAGE_DESCRIPTION} />
       <div className="eyebrow">Experience</div>
       <h1 className="page-title">What I built, where, and why it mattered.</h1>
       <p className="page-lede">
@@ -29,7 +34,7 @@ export default function ExperiencePage() {
         <RevealSection key={entry.slug} as="section" className="section-block">
           <Card>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 4 }}>
-              <h3>{entry.role} · {entry.company}</h3>
+              <h2>{entry.role} · {entry.company}</h2>
               {entry.range && (
                 <span className="card-meta" style={{ marginBottom: 0 }}>
                   {entry.range.start} – {entry.range.end}

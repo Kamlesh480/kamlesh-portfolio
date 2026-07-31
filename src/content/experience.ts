@@ -16,10 +16,10 @@ export const experience: ExperienceEntry[] = [
       'Architecting and scaling the core LLM processing infrastructure behind AI Hyper Cube — the platform that runs scoped LLM prompts over AI-generated search content to extract intent, brand entities, sentiment, and citations at production scale.',
     highlights: [
       'Architected and scaled the core LLM processing infrastructure for AI Hyper Cube using Python, ClickHouse, and MySQL, processing 5B+ tokens per month.',
-      'Engineered a GPU-based LLM inference platform using vLLM, Vast.ai, and open-source models for large-scale entity extraction, cutting monthly AI processing costs 62% ($40K → $15K).',
+      'Engineered a GPU-based LLM inference platform using vLLM, rented GPU capacity, and open-source models for large-scale entity extraction, cutting monthly AI processing costs 62%.',
       'Built pre- and post-processing pipelines for AI Hyper Cube, processing 100M+ keyword SERPs using Python and BigQuery for prompt generation, and Spark for post-processing with brand-level hash partitioning (MD5 modulo).',
-      'Built a scalable Trino–Iceberg–ClickHouse data pipeline with a custom memory-aware job scheduler, replacing the legacy BigQuery UDF process — $18K–$20K in monthly savings while processing 1B+ events per month.',
-      'Led development of DCX Collector V2 (Python, FastAPI, RabbitMQ, Redis, Docker, Argo Workflows, BigQuery) — a 4x faster processing pipeline handling 100M+ keywords per month across multiple vendor integrations.',
+      'Built a scalable Trino–Iceberg–ClickHouse data pipeline with a custom memory-aware job scheduler, replacing the legacy BigQuery UDF process — a five-figure monthly saving while processing 1B+ events per month.',
+      'Led a ground-up rebuild of the keyword collection pipeline (Python, FastAPI, RabbitMQ, Redis, Docker, Argo Workflows, BigQuery) — 4x faster processing, handling 100M+ keywords per month across multiple vendor integrations.',
       'Implemented an automated AI Overview stitching system (Python, JavaScript, BigQuery UDFs, Argo) that mitigated the Google num=100 deprecation and cut keyword-collection costs ~60% across 25+ locales.',
     ],
     stack: ['Python', 'ClickHouse', 'MySQL', 'BigQuery', 'Apache Spark', 'Trino', 'Iceberg', 'Kubernetes', 'FastAPI', 'RabbitMQ', 'Redis', 'Docker', 'Argo Workflows', 'vLLM', 'GCS'],

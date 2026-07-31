@@ -29,11 +29,11 @@ export const decisions: DecisionRecord[] = [
       },
     ],
     decision:
-      'Engineered a GPU-based inference platform on vLLM and Vast.ai running open-source models for large-scale entity extraction, moving the extraction workload off hosted APIs entirely.',
+      'Engineered a GPU-based inference platform on vLLM and rented GPU capacity running open-source models for large-scale entity extraction, moving the extraction workload off hosted APIs entirely.',
     tradeoff:
       'Traded a zero-operations dependency for infrastructure I own: GPU capacity planning, model serving, and throughput tuning became my problem — in exchange for a bill that no longer scales with every additional token.',
     outcomes: [
-      'Monthly AI processing cost cut 62% — $40K to $15K.',
+      'Monthly AI processing cost cut 62%.',
       'Throughput and extraction accuracy held at 5B+ tokens per month.',
     ],
   },
@@ -59,7 +59,7 @@ export const decisions: DecisionRecord[] = [
     tradeoff:
       'Took on cluster operations and a scheduler I had to write myself, to get predictable memory behaviour and a cost curve I actually control.',
     outcomes: [
-      '$18K–$20K saved every month versus the legacy process.',
+      'A five-figure monthly saving versus the legacy process.',
       '1B+ events processed per month on the new pipeline.',
     ],
   },

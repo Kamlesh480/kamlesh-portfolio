@@ -211,3 +211,33 @@ a shared constant).
 - Root layout emits `Person` + `WebSite` JSON-LD once via `src/components/seo/JsonLd.tsx` (a
   Server Component using a manually `<`-escaped `dangerouslySetInnerHTML`, not `next/script`,
   since this is static inline data with no loading-strategy concern).
+
+## Engineering Notes (blog) Framework
+Adding a post = ONE markdown file in `src/content/blog/`. Nothing else is touched — route,
+metadata, cover, reading time, TOC, Article schema, sitemap entry, related/prev-next all
+derive from it. Authoring contract is documented in `src/content/blog/README.md` (that file
+is excluded from the post index by the `^[A-Z]+\.md$` / `_`-prefix filter in `blog.ts`).
+- `src/lib/blog.ts` — filesystem index (server-only). Throws at BUILD time on missing
+  required frontmatter rather than shipping a broken post. `draft: true` shows in dev,
+  is excluded from production build, listing, sitemap, and 404s on the detail route.
+- `src/lib/markdown.ts` — markdown-it + Shiki. Two classes of custom block, handled
+  differently ON PURPOSE: `:::note|tip|warning` stay markdown-it containers (their bodies
+  are prose that must keep rendering markdown); `:::diagram|metrics|timeline` are split OUT
+  of the source before parsing, because their bodies are structured data and — for
+  `:::diagram` — must become a real React component, which an HTML string cannot.
+  Shiki uses a hand-authored `charcoal-paper` theme; stock themes read as a pasted-in dark
+  IDE against this palette. `createHighlighter` is async but the returned `codeToHtml` is
+  sync, which is what lets markdown-it's sync `highlight` hook work.
+- Client JS is ONE island (`BlogChrome.tsx`) using event delegation for copy buttons,
+  progress bar, TOC active state, and lightbox — the body stays a static HTML string.
+- **`/blog` is `ƒ` dynamic**, not static, because it reads `searchParams` for category/tag
+  filters. This is the only non-static route on the site; it's the accepted cost of
+  crawlable, shareable filter URLs. Moving filters to the client would restore static.
+
+## GOTCHA — bare `header {}` / `nav {}` element selectors leak into page content
+globals.css styles the site chrome with bare element selectors. Any semantic `<header>` or
+`<nav>` inside page content silently inherits them — the blog article header picked up
+`display:flex` (rendering title/byline/tags as side-by-side columns) AND `z-index:1500`,
+which would have floated it above the draw toolbar. Fixed by explicitly resetting
+`.post-header` / `.post-breadcrumb` / `.toc` / `.prev-next`. Any NEW in-content
+`<header>`/`<nav>` needs the same reset — or convert the chrome selectors to classes.

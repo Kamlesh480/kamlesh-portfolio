@@ -4,7 +4,8 @@ import SiteChrome from '@/components/chrome/SiteChrome'
 import SiteHeader from '@/components/layout/SiteHeader'
 import SiteFooter from '@/components/layout/SiteFooter'
 import JsonLd from '@/components/seo/JsonLd'
-import { SITE_URL, SITE_NAME, baseOpenGraph, baseTwitter } from '@/lib/seo'
+import { graph, personNode, websiteNode } from '@/lib/schema'
+import { SITE_URL, baseOpenGraph, baseTwitter } from '@/lib/seo'
 import './globals.css'
 
 const caveat = Caveat({
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     template: '%s | Kamlesh Chhipa',
   },
   description:
-    'Kamlesh Chhipa is a backend and full-stack software engineer with 4+ years building large-scale data platforms and production LLM infrastructure. Based in Bengaluru, India.',
+    'Backend and full-stack engineer in Bengaluru with 4+ years building large-scale data platforms and production LLM infrastructure.',
   openGraph: {
     ...baseOpenGraph,
     title: 'Kamlesh Chhipa — Senior Software Engineer & AI Infra Engineer',
@@ -49,37 +50,17 @@ export const viewport: Viewport = {
   themeColor: '#f6f3ec',
 }
 
-const personJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: SITE_NAME,
-  jobTitle: 'Software Development Engineer 2 (Backend & AI Infrastructure)',
-  url: SITE_URL,
-  image: `${SITE_URL}/og-image.png`,
-  worksFor: { '@type': 'Organization', name: 'BrightEdge' },
-  address: { '@type': 'PostalAddress', addressLocality: 'Bengaluru', addressCountry: 'IN' },
-  sameAs: ['https://www.linkedin.com/in/kamlesh-chhipa/', 'https://github.com/Kamlesh480'],
-  knowsAbout: [
-    'Python', 'FastAPI', 'Django', 'Backend Engineering', 'Distributed Systems',
-    'Data Pipelines', 'Trino', 'Apache Iceberg', 'ClickHouse', 'Apache Spark', 'BigQuery',
-    'LLM Infrastructure', 'AI Engineering', 'vLLM', 'React', 'Next.js', 'TypeScript',
-    'Kubernetes', 'Docker', 'AWS', 'Google Cloud Platform', 'System Design',
-  ],
-}
-
-const websiteJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: SITE_NAME,
-  url: SITE_URL,
-}
+/* Site-wide entity graph. Person and WebSite carry stable @ids that every
+   page-level node (WebPage, BreadcrumbList, Article) references, so a crawler
+   reads one connected graph instead of repeated, unrelated blobs.
+   See src/lib/schema.ts. */
+const siteJsonLd = graph([personNode(), websiteNode()])
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${caveat.variable} ${cormorant.variable}`}>
       <body>
-        <JsonLd data={personJsonLd} />
-        <JsonLd data={websiteJsonLd} />
+        <JsonLd data={siteJsonLd} />
         <SiteChrome />
         <SiteHeader />
         <main>{children}</main>

@@ -3,18 +3,30 @@ import RevealSection from '@/components/ui/RevealSection'
 import Card from '@/components/ui/Card'
 import { projects } from '@/content/projects'
 import { projectDiagram } from '@/components/diagram/ProjectDiagrams'
+import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
+
+const PAGE_DESCRIPTION =
+  'Case studies from Kamlesh Chhipa’s work — LLM processing infrastructure at 5B+ tokens/month, a Trino–Iceberg–ClickHouse pipeline, and the system behind this site.'
 
 export const metadata = pageMetadata({
   title: 'Projects',
   description:
-    'Case studies from Kamlesh Chhipa’s work — LLM processing infrastructure at 5B+ tokens/month, a Trino–Iceberg–ClickHouse pipeline, and the system behind this site.',
+    PAGE_DESCRIPTION,
   path: '/projects',
 })
 
 export default function ProjectsPage() {
   return (
     <div className="page-shell">
+      <PageSchema
+        path="/projects"
+        type="CollectionPage"
+        name="Projects"
+        description={PAGE_DESCRIPTION}
+        itemsName="Engineering projects"
+        items={projects.map((p) => ({ name: p.title, path: `/projects#${p.slug}` }))}
+      />
       <div className="eyebrow">Projects</div>
       <h1 className="page-title">Systems, not just tech stacks.</h1>
       <p className="page-lede">
@@ -28,7 +40,7 @@ export default function ProjectsPage() {
         <RevealSection key={p.slug} id={p.slug} as="section" className="section-block">
           <Card>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 4 }}>
-              <h3>{p.title}</h3>
+              <h2>{p.title}</h2>
               {p.period && <span className="card-meta" style={{ marginBottom: 0 }}>{p.period}</span>}
             </div>
             <p className="card-meta">{p.role}</p>
@@ -39,22 +51,22 @@ export default function ProjectsPage() {
 
             <div className="content-grid cols-2" style={{ marginTop: 18, marginBottom: 6 }}>
               <div>
-                <h4 style={{ fontFamily: 'var(--font-caveat)', fontSize: 18, color: 'var(--char-deep)', marginBottom: 6 }}>
+                <h3 style={{ fontFamily: 'var(--font-caveat)', fontSize: 18, color: 'var(--char-deep)', marginBottom: 6 }}>
                   The problem
-                </h4>
+                </h3>
                 <p style={{ fontSize: '0.96rem' }}>{p.problem}</p>
               </div>
               <div>
-                <h4 style={{ fontFamily: 'var(--font-caveat)', fontSize: 18, color: 'var(--char-deep)', marginBottom: 6 }}>
+                <h3 style={{ fontFamily: 'var(--font-caveat)', fontSize: 18, color: 'var(--char-deep)', marginBottom: 6 }}>
                   The solution
-                </h4>
+                </h3>
                 <p style={{ fontSize: '0.96rem' }}>{p.solution}</p>
               </div>
             </div>
 
-            <h4 style={{ fontFamily: 'var(--font-caveat)', fontSize: 18, color: 'var(--char-deep)', marginTop: 18, marginBottom: 6 }}>
+            <h3 style={{ fontFamily: 'var(--font-caveat)', fontSize: 18, color: 'var(--char-deep)', marginTop: 18, marginBottom: 6 }}>
               Outcomes
-            </h4>
+            </h3>
             <ul>
               {p.outcomes.map((o) => (
                 <li key={o}>{o}</li>
@@ -63,9 +75,9 @@ export default function ProjectsPage() {
 
             {p.challenges && p.challenges.length > 0 && (
               <>
-                <h4 style={{ fontFamily: 'var(--font-caveat)', fontSize: 18, color: 'var(--char-deep)', marginTop: 18, marginBottom: 6 }}>
+                <h3 style={{ fontFamily: 'var(--font-caveat)', fontSize: 18, color: 'var(--char-deep)', marginTop: 18, marginBottom: 6 }}>
                   Engineering challenges
-                </h4>
+                </h3>
                 {p.challenges.map((c) => (
                   <p key={c.title} style={{ marginBottom: 10 }}>
                     <strong style={{ color: 'var(--char)' }}>{c.title}.</strong> {c.description}

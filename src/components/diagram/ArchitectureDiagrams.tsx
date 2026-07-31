@@ -64,7 +64,7 @@ function InferencePaths() {
     <Diagram
       viewBox="0 4 616 268"
       minWidth={420}
-      title="The same five-billion-token monthly workload sent down two paths: hosted per-token APIs at forty thousand dollars a month, versus a self-hosted vLLM GPU platform at fifteen thousand — a 62 percent reduction."
+      title="The same five-billion-token monthly workload sent down two paths: hosted per-token APIs at the baseline cost, versus a self-hosted vLLM GPU platform at 62 percent lower cost."
       caption="Fig. 2 — Same workload, two cost curves. Only one of them stops growing per token."
     >
       <Box x={16} y={92} w={132} h={72} label="5B tokens" sub="every month" />
@@ -74,13 +74,13 @@ function InferencePaths() {
         <Box x={252} y={22} w={182} h={62} label="Hosted per-token API" />
       </g>
       <Arrow from={{ x: 148, y: 116 }} to={{ x: 252, y: 56 }} bend={14} />
-      <Badge cx={534} cy={53} text="$40K / mo" w={140} h={40} />
+      <Badge cx={534} cy={53} text="baseline cost" w={150} h={40} />
       <Connector from={{ x: 434, y: 53 }} to={{ x: 464, y: 53 }} dashed />
 
       {/* chosen path */}
       <Chip x={252} y={172} w={182} h={64} solid label="Self-hosted vLLM" sub="open-source · GPU" />
       <Arrow from={{ x: 148, y: 140 }} to={{ x: 252, y: 202 }} bend={-14} />
-      <Badge cx={534} cy={204} text="$15K / mo" w={140} h={40} />
+      <Badge cx={534} cy={204} text="62% lower" w={150} h={40} />
       <Connector from={{ x: 434, y: 204 }} to={{ x: 464, y: 204 }} dashed />
 
       <Note x={316} y={130} text="62% ↓ — cost stops scaling per token" />

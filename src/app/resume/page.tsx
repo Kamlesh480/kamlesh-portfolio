@@ -4,18 +4,23 @@ import RevealSection from '@/components/ui/RevealSection'
 import HandDrawnButton from '@/components/ui/HandDrawnButton'
 import { experience } from '@/content/experience'
 import { skillGroups } from '@/content/skills'
+import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
+
+const PAGE_DESCRIPTION =
+  'Download Kamlesh Chhipa’s résumé (PDF) or read the summary — 4+ years backend and full-stack engineering, currently building LLM infrastructure at BrightEdge.'
 
 export const metadata = pageMetadata({
   title: 'Resume',
   description:
-    'Download Kamlesh Chhipa’s résumé (PDF) or read the summary — 4+ years backend and full-stack engineering, currently building LLM infrastructure at BrightEdge.',
+    PAGE_DESCRIPTION,
   path: '/resume',
 })
 
 export default function ResumePage() {
   return (
     <div className="page-shell">
+      <PageSchema path="/resume" type="WebPage" name="Resume" description={PAGE_DESCRIPTION} />
       <div className="eyebrow">Resume</div>
       <h1 className="page-title">The short version, and the PDF.</h1>
       <p className="page-lede">

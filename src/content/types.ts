@@ -31,6 +31,63 @@ export interface ProjectChallenge {
   description: string
 }
 
+/**
+ * Frontmatter contract for `src/content/blog/*.md`. Everything here is
+ * authored by hand in YAML at the top of the post EXCEPT `slug` (derived from
+ * the filename) and `readingTime` (computed from the body) — see src/lib/blog.ts.
+ */
+export interface BlogFrontmatter {
+  title: string
+  /**
+   * Permanent public URL segment, overriding the filename. Set this so the
+   * filename can stay organisational while the URL targets search keywords —
+   * and so renaming a file never breaks an indexed URL. Once a post is live,
+   * treat this as immutable.
+   */
+  slug?: string
+  /**
+   * Shorter title for the <title> tag when `title` is long. Google truncates
+   * around 60 characters INCLUDING the " | Kamlesh Chhipa" suffix, so a long
+   * headline reads fine on the page but gets cut in search results.
+   */
+  seoTitle?: string
+  /** One-line summary — used on cards, meta description, and OG description. */
+  description: string
+  /** ISO date, e.g. '2026-07-31'. */
+  date: string
+  /** ISO date; omit until the post is actually revised. */
+  updated?: string
+  category: string
+  tags: string[]
+  /** Pins the post to the featured slot on /blog. At most one should be true. */
+  featured?: boolean
+  /** Set true to keep a post out of the listing, sitemap, and feeds. */
+  draft?: boolean
+  /** Overrides the auto-generated cover art wording if set. */
+  coverTitle?: string
+  /**
+   * Which schematic the generated cover draws. Omit to infer from
+   * category/tags. See src/components/blog/PostCover.tsx.
+   */
+  cover?: 'pipeline' | 'comparison' | 'layers' | 'timeline'
+}
+
+export interface BlogPost extends BlogFrontmatter {
+  /** Derived from the filename — the URL is /blog/<slug>. */
+  slug: string
+  /** Raw markdown body, frontmatter stripped. */
+  body: string
+  /** Minutes, computed from body word count. */
+  readingTime: number
+}
+
+/** A heading extracted from a post body, for the table of contents. */
+export interface TocEntry {
+  id: string
+  text: string
+  level: 2 | 3
+}
+
 /** One option that was on the table for a DecisionRecord. */
 export interface DecisionOption {
   label: string

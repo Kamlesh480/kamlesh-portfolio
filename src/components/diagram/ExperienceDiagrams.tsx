@@ -11,14 +11,14 @@ import { Diagram, Box, Chip, Cylinder, Arrow, Connector, Badge, Note } from './S
 function BrightEdge() {
   const lanes = [
     { y: 58, name: ['AI Hyper', 'Cube'], a: '5B tokens / mo', b: '62% ↓ cost', focal: true },
-    { y: 140, name: ['Trino', 'pipeline'], a: '1B+ events / mo', b: '$18–20K ↓ / mo', focal: false },
-    { y: 222, name: ['DCX', 'Collector V2'], a: '100M+ kw / mo', b: '4× faster', focal: false },
+    { y: 140, name: ['Trino', 'pipeline'], a: '1B+ events / mo', b: '5-figure ↓ / mo', focal: false },
+    { y: 222, name: ['Keyword', 'collection'], a: '100M+ kw / mo', b: '4× faster', focal: false },
   ]
   return (
     <Diagram
       viewBox="0 0 920 290"
       minWidth={620}
-      title="Impact scoreboard for three systems built at BrightEdge: AI Hyper Cube at five billion tokens a month and 62% lower cost, a Trino pipeline over a billion events a month saving eighteen to twenty thousand dollars monthly, and DCX Collector V2 at a hundred million keywords a month, four times faster."
+      title="Impact scoreboard for three systems built at BrightEdge: AI Hyper Cube at five billion tokens a month and 62% lower cost, a Trino pipeline over a billion events a month at a five-figure monthly saving, and a rebuilt keyword collection pipeline at a hundred million keywords a month, four times faster."
       caption="Fig. 1 — Three systems, one mandate: make expensive things at scale cheap and fast."
     >
       {lanes.map((l) => (

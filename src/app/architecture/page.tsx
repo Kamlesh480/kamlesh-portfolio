@@ -6,12 +6,16 @@ import Card from '@/components/ui/Card'
 import SketchIcon, { type SketchIconName } from '@/components/ui/SketchIcon'
 import { decisions } from '@/content/decisions'
 import { DecisionLoopDiagram, decisionDiagram } from '@/components/diagram/ArchitectureDiagrams'
+import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
+
+const PAGE_DESCRIPTION =
+  'Architecture decision records from Kamlesh Chhipa — the constraints, trade-offs and measured results behind LLM infrastructure and data pipelines at scale.'
 
 export const metadata = pageMetadata({
   title: 'Architecture',
   description:
-    'How Kamlesh Chhipa designs systems at scale — architecture decision records behind 5B+ tokens/month of LLM infrastructure, a self-managed Trino–Iceberg–ClickHouse pipeline, and a multi-tenant SaaS platform.',
+    PAGE_DESCRIPTION,
   path: '/architecture',
 })
 
@@ -28,7 +32,7 @@ const principles: { icon: SketchIconName; title: string; body: string }[] = [
   {
     icon: 'cloud',
     title: 'Unit economics are a design input',
-    body: 'At a billion events and five billion tokens a month, the monthly bill is an output of the architecture, not a finance problem discovered later. The two largest wins I have shipped — 62% off AI processing, $18–20K a month off data processing — were both design decisions, not optimisations bolted on afterwards.',
+    body: 'At a billion events and five billion tokens a month, the monthly bill is an output of the architecture, not a finance problem discovered later. The two largest wins I have shipped — 62% off AI processing, a five-figure monthly saving on data processing — were both design decisions, not optimisations bolted on afterwards.',
   },
   {
     icon: 'layers',
@@ -79,6 +83,7 @@ const patterns = [
 export default function ArchitecturePage() {
   return (
     <div className="page-shell">
+      <PageSchema path="/architecture" type="WebPage" name="Architecture" description={PAGE_DESCRIPTION} />
       <RevealSection className="content-grid cols-2 about-hero">
         <div>
           <div className="eyebrow">Architecture</div>

@@ -34,7 +34,7 @@ function AiHyperCube() {
       {/* cost callout hanging off the focal inference node */}
       <Connector from={{ x: 444, y: 187 }} to={{ x: 444, y: 226 }} dashed />
       <Badge cx={444} cy={250} text="62% ↓ cost" w={116} h={38} />
-      <Note x={444} y={286} text="$40K → $15K — inference in-house" anchor="middle" />
+      <Note x={444} y={286} text="inference moved in-house" anchor="middle" />
     </Diagram>
   )
 }
@@ -70,13 +70,13 @@ function TrinoPipeline() {
       </g>
       <Connector from={{ x: 452, y: 250 }} to={{ x: 452, y: 208 }} dashed />
       <Note x={556} y={252} text="replaced end-to-end" />
-      <Badge cx={760} cy={276} text="$18–20K ↓ / mo" w={150} h={38} />
+      <Badge cx={760} cy={276} text="5-figure ↓ / mo" w={158} h={38} />
     </Diagram>
   )
 }
 
-/* ---- DCX Collector V2 — event-driven collection ------------------------- */
-function DcxCollector() {
+/* ---- Keyword collection pipeline — event-driven collection -------------- */
+function KeywordCollector() {
   const midY = 150
   return (
     <Diagram
@@ -160,7 +160,7 @@ function HealthcarePlatform() {
 const MAP: Record<string, () => React.ReactElement> = {
   'ai-hyper-cube': AiHyperCube,
   'trino-iceberg-clickhouse-pipeline': TrinoPipeline,
-  'dcx-collector-v2': DcxCollector,
+  'keyword-collection-pipeline': KeywordCollector,
   'healthcare-platform': HealthcarePlatform,
 }
 

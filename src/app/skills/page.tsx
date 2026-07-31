@@ -5,6 +5,7 @@ import Card from '@/components/ui/Card'
 import SketchIcon, { type SketchIconName } from '@/components/ui/SketchIcon'
 import { skillGroups } from '@/content/skills'
 import type { SkillCategory } from '@/content/types'
+import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
 
 const categoryIcons: Record<SkillCategory, SketchIconName> = {
@@ -14,16 +15,20 @@ const categoryIcons: Record<SkillCategory, SketchIconName> = {
   'cloud-devops': 'cloud',
 }
 
+const PAGE_DESCRIPTION =
+  'Kamlesh Chhipa’s skills grouped by use: backend (Python, FastAPI, Django), data & AI infra (Trino, ClickHouse, vLLM), frontend (React, Next.js), cloud & DevOps.'
+
 export const metadata = pageMetadata({
   title: 'Skills & Expertise',
   description:
-    'Kamlesh Chhipa’s technical taxonomy: backend engineering (Python, FastAPI, Django), data & AI infrastructure (Trino, Iceberg, ClickHouse, vLLM), frontend (React, Next.js, TypeScript), and cloud & DevOps (Kubernetes, AWS, GCP).',
+    PAGE_DESCRIPTION,
   path: '/skills',
 })
 
 export default function SkillsPage() {
   return (
     <div className="page-shell">
+      <PageSchema path="/skills" type="WebPage" name="Skills & Expertise" description={PAGE_DESCRIPTION} />
       <div className="eyebrow">Skills &amp; Expertise</div>
       <h1 className="page-title">A capability map, not a keyword list.</h1>
       <p className="page-lede">
@@ -38,7 +43,7 @@ export default function SkillsPage() {
           <RevealSection key={group.category} as="section" className="section-block">
             <Card>
               <SketchIcon name={categoryIcons[group.category]} className="capability-icon" />
-              <SectionHeading level={3}>{group.label}</SectionHeading>
+              <SectionHeading level={2}>{group.label}</SectionHeading>
               <p style={{ marginBottom: 16 }}>{group.description}</p>
               <div className="stack-tags">
                 {group.skills.map((s) => (

@@ -162,6 +162,12 @@ function createRenderer(toc: TocEntry[], highlighter: Highlighter) {
     )
   }
 
+  // Wide tables scroll inside their own container rather than forcing the
+  // article column wider. Wrapping (instead of `display:block` on the table)
+  // keeps real table semantics for assistive tech.
+  md.renderer.rules.table_open = () => '<div class="table-scroll"><table>'
+  md.renderer.rules.table_close = () => '</table></div>'
+
   // Images become figures; the markdown title attribute becomes the caption.
   md.renderer.rules.image = (tokens, idx) => {
     const t = tokens[idx]

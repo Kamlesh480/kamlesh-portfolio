@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Source material for blog posts — may contain internal identifiers (project
+# ids, service accounts, IPs, hostnames). Keep it local; publish only the
+# sanitised article in src/content/blog/.
+/*.png
+/Backend Infrastructure Migration*

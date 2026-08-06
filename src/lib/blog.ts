@@ -83,6 +83,8 @@ function parseFile(filename: string): BlogPost | null {
     draft: fm.draft ?? false,
     coverTitle: fm.coverTitle,
     cover: fm.cover,
+    coverNodes: fm.coverNodes,
+    coverMetric: fm.coverMetric,
     body: content,
     readingTime: readingTimeOf(content),
   }

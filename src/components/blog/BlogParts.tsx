@@ -5,6 +5,7 @@ import { formatDate } from '@/lib/blog'
 import { projectDiagram } from '@/components/diagram/ProjectDiagrams'
 import { experienceDiagram } from '@/components/diagram/ExperienceDiagrams'
 import { decisionDiagram } from '@/components/diagram/ArchitectureDiagrams'
+import { blogDiagram } from '@/components/diagram/BlogDiagrams'
 import PostCover from './PostCover'
 
 /**
@@ -16,7 +17,7 @@ import PostCover from './PostCover'
  *  post can reuse the exact figure already published on /projects,
  *  /experience, or /architecture instead of duplicating it. */
 export function resolveDiagram(slug: string) {
-  return projectDiagram(slug) ?? experienceDiagram(slug) ?? decisionDiagram(slug)
+  return projectDiagram(slug) ?? experienceDiagram(slug) ?? decisionDiagram(slug) ?? blogDiagram(slug)
 }
 
 export function BlogBody({ segments }: { segments: BodySegment[] }) {
@@ -159,12 +160,15 @@ export function ShareRow({ url, title }: { url: string; title: string }) {
 
 export function RelatedPosts({ posts }: { posts: BlogPost[] }) {
   if (!posts.length) return null
+  // A fixed 3-column grid strands two empty columns when only one or two
+  // related notes exist — which is the normal case on a young blog. The grid
+  // adapts instead, and a lone note becomes a wide horizontal card.
   return (
     <section className="section-block" aria-labelledby="related-heading">
       <h2 id="related-heading" className="blog-section-title">
         Related notes
       </h2>
-      <div className="content-grid cols-3">
+      <div className={`related-grid related-grid--${Math.min(posts.length, 3)}`}>
         {posts.map((p) => (
           <BlogCard key={p.slug} post={p} />
         ))}

@@ -142,6 +142,79 @@ function Timeline({ seed }: { seed: string }) {
   )
 }
 
+/* ---- labelled schematic: the article's real chain ----------------------- */
+/* When a post supplies `coverNodes`, the cover stops being decorative and
+   becomes a summary — named components, an inked focal node, and the headline
+   metric. This is what makes a cover legible to someone who hasn't read the
+   post yet, which is the whole point when it's shared. */
+function LabelledFlow({ nodes, metric }: { nodes: string[]; metric?: string }) {
+  const items = nodes.slice(0, 5)
+  const n = items.length
+  const GAP = 12
+  const W = (300 - GAP * (n - 1)) / n
+  const H = 46
+  const y = metric ? 58 : 70
+  const focal = n - 1 // the destination is the point of the story
+
+  return (
+    <>
+      {items.map((label, i) => {
+        const x = 10 + i * (W + GAP)
+        const solid = i === focal
+        // Long names wrap to two lines rather than overflowing the box.
+        const words = label.split(' ')
+        const lines =
+          label.length > 11 && words.length > 1
+            ? [words.slice(0, Math.ceil(words.length / 2)).join(' '), words.slice(Math.ceil(words.length / 2)).join(' ')]
+            : [label]
+        return (
+          <g key={label}>
+            <rect
+              className={solid ? 'pc-node-box pc-node-box--solid' : 'pc-node-box'}
+              x={x}
+              y={y}
+              width={W}
+              height={H}
+              rx={4}
+            />
+            <text
+              className={solid ? 'pc-node-label pc-node-label--on-solid' : 'pc-node-label'}
+              x={x + W / 2}
+              y={y + H / 2 + (lines.length > 1 ? -4 : 1)}
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              {lines.map((ln, li) => (
+                <tspan key={li} x={x + W / 2} dy={li === 0 ? 0 : 11}>
+                  {ln}
+                </tspan>
+              ))}
+            </text>
+            {i < n - 1 && (
+              <>
+                <line className="pc-link" x1={x + W} y1={y + H / 2} x2={x + W + GAP - 3} y2={y + H / 2} />
+                <path
+                  className="pc-link"
+                  d={`M ${x + W + GAP - 7} ${y + H / 2 - 3} L ${x + W + GAP - 3} ${y + H / 2} L ${x + W + GAP - 7} ${y + H / 2 + 3}`}
+                  fill="none"
+                />
+              </>
+            )}
+          </g>
+        )
+      })}
+      {metric && (
+        <g>
+          <ellipse className="pc-badge-ring" cx={160} cy={140} rx={92} ry={20} />
+          <text className="pc-metric" x={160} y={140} textAnchor="middle" dominantBaseline="middle">
+            {metric}
+          </text>
+        </g>
+      )}
+    </>
+  )
+}
+
 const MOTIFS: Record<CoverMotif, (p: { seed: string }) => React.ReactElement> = {
   pipeline: Pipeline,
   comparison: Comparison,
@@ -159,11 +232,16 @@ export default function PostCover({
   const motif = (post.cover as CoverMotif) ?? inferMotif(post)
   const Motif = MOTIFS[motif] ?? Pipeline
   const label = post.coverTitle ?? post.category
+  const labelled = (post.coverNodes?.length ?? 0) >= 2
 
   return (
     <div className={`post-cover post-cover--${variant}`} aria-hidden="true">
       <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid meet" className="post-cover-art">
-        <Motif seed={post.slug} />
+        {labelled ? (
+          <LabelledFlow nodes={post.coverNodes!} metric={post.coverMetric} />
+        ) : (
+          <Motif seed={post.slug} />
+        )}
       </svg>
       <span className="post-cover-label">{label}</span>
     </div>

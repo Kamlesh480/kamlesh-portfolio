@@ -1681,7 +1681,7 @@ body.draw-mode-active .toolbar {
 .post-cover-art { display: block; width: 100%; height: 100%; }
 .post-cover--card { aspect-ratio: 16 / 9; }
 .post-cover--featured { aspect-ratio: 16 / 10; }
-.post-cover--hero { aspect-ratio: 21 / 8; margin: clamp(20px, 3vh, 32px) 0; border-radius: 2px; }
+.post-cover--hero { aspect-ratio: 4 / 3; border-radius: 2px; }
 /* Boxes/cylinders get the hand-drawn wobble; straight connectors must NOT
    (the #rough filter erases axis-aligned strokes — known_patterns.md Bug 7). */
 .pc-node-box {
@@ -1805,6 +1805,24 @@ a.cat-badge:hover { color: var(--char-deep); }
 .read-progress-bar {
   height: 100%; width: 100%; transform: scaleX(0); transform-origin: 0 50%;
   background: var(--char-deep); opacity: 0.75;
+}
+
+/* ---- article hero: title block beside the cover ---- */
+/* The header alone left the whole right half of the fold empty. The cover art
+   is 4:3 here (not the old full-width 21:8 banner) because it now sits in a
+   half-width column beside the text rather than spanning the page. */
+.post-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  column-gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  margin-bottom: clamp(20px, 3vh, 32px);
+}
+.post-hero .post-header { max-width: none; }
+@media (max-width: 980px) {
+  /* stack, and give the cover back its breathing room above/below */
+  .post-hero { grid-template-columns: 1fr; }
+  .post-hero .post-cover--hero { margin-top: clamp(20px, 3vh, 32px); }
 }
 
 /* ---- article layout ---- */
@@ -2038,3 +2056,59 @@ a.cat-badge:hover { color: var(--char-deep); }
    "←", so suppress the trailing arrow and animate leftward instead. */
 .post-breadcrumb .link-plain::after { content: none; }
 .post-breadcrumb .link-plain { font-size: clamp(15px, 1.1vw, 18px); }
+
+/* A `1fr` track is `minmax(auto, 1fr)`, so a wide code block or table inside
+   the article makes the whole column — and the page — overflow on mobile.
+   Same fix as `.content-grid > *`: let the tracks shrink, and let the wide
+   content scroll inside its own box. */
+.post-layout > *,
+.post-hero > * { min-width: 0; }
+.table-scroll { overflow-x: auto; margin-bottom: 22px; }
+.table-scroll table { margin-bottom: 0; }
+
+/* ---- Article footer: reading column vs. discovery ----
+   Share + author card stay at reading width; prev/next and related notes use
+   the full shell, otherwise they render in a narrow strip with the entire
+   right-hand side empty. */
+.post-footer { max-width: none; }
+.post-footer-narrow { max-width: 74ch; }
+
+/* Related notes adapt to how many there actually are, rather than always
+   reserving three columns. */
+.related-grid { display: grid; gap: clamp(20px, 3vw, 40px); }
+.related-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.related-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.related-grid > * { min-width: 0; }
+
+/* A single related note becomes a horizontal card so it fills the row
+   instead of sitting as one narrow column against empty space. */
+.related-grid--1 .blog-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: center;
+}
+.related-grid--1 .blog-card-cover { margin-bottom: 0; }
+.related-grid--1 .blog-card h3 { font-size: clamp(24px, 2.2vw, 32px); }
+.related-grid--1 .blog-card-excerpt { max-width: 62ch; }
+
+@media (max-width: 880px) {
+  .related-grid--2,
+  .related-grid--3 { grid-template-columns: 1fr; }
+  .related-grid--1 .blog-card { grid-template-columns: 1fr; }
+  .related-grid--1 .blog-card-cover { margin-bottom: 14px; }
+}
+
+/* Labelled cover schematic — component names drawn on the cover art. */
+.pc-node-label {
+  font-family: var(--font-caveat), cursive;
+  font-size: 11px;
+  fill: var(--char-deep);
+}
+.pc-node-label--on-solid { fill: var(--paper-hi); }
+.pc-metric {
+  font-family: var(--font-caveat), cursive;
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--char-deep);
+}

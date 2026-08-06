@@ -38,17 +38,31 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = getPostBySlug(slug)
   if (!post) return pageMetadata({ title: 'Not found', description: 'This note does not exist.', path: `/blog/${slug}` })
 
+  const base = pageMetadata({
+    title: post.seoTitle ?? post.title,
+    description: post.description,
+    path: `/blog/${post.slug}`,
+  })
+
+  // `baseOpenGraph` pins the site-wide og-image.png. Any explicit `images` here
+  // would OVERRIDE the generated per-post card from opengraph-image.tsx, so it
+  // is stripped deliberately — Next then injects the generated one.
+  const { images: _ogImages, ...og } = base.openGraph ?? {}
+  const { images: _twImages, ...tw } = base.twitter ?? {}
+  void _ogImages
+  void _twImages
+
   return {
-    ...pageMetadata({ title: post.seoTitle ?? post.title, description: post.description, path: `/blog/${post.slug}` }),
-    // Article-specific OG fields the shared helper doesn't cover.
+    ...base,
     openGraph: {
-      ...pageMetadata({ title: post.seoTitle ?? post.title, description: post.description, path: `/blog/${post.slug}` }).openGraph,
-      type: 'article',
+      ...og,
+      type: 'article' as const,
       publishedTime: post.date,
       modifiedTime: post.updated ?? post.date,
       authors: ['Kamlesh Chhipa'],
       tags: post.tags,
     },
+    twitter: tw,
   }
 }
 
@@ -94,6 +108,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </Link>
         </nav>
 
+        {/* Title block and cover share one row — the header alone left the
+            entire right half of the fold empty. Stacks below 980px. */}
+        <div className="post-hero">
         <header className="post-header">
           <CategoryBadge name={post.category} />
           <h1 className="page-title post-title">{post.title}</h1>
@@ -125,6 +142,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </header>
 
         <PostCover post={post} variant="hero" />
+        </div>
 
         <InkRule />
 
@@ -139,9 +157,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         <InkRule variant={1} />
 
+        {/* Share + author stay in the reading column (they belong to the
+            article); prev/next and related notes are discovery UI and span the
+            full shell, otherwise they sit in a narrow strip with the whole
+            right-hand side empty. */}
         <footer className="post-footer">
-          <ShareRow url={url} title={post.title} />
-          <AuthorCard />
+          <div className="post-footer-narrow">
+            <ShareRow url={url} title={post.title} />
+            <AuthorCard />
+          </div>
           <PrevNextNav previous={previous} next={next} />
           <RelatedPosts posts={related} />
         </footer>

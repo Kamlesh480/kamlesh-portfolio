@@ -70,6 +70,15 @@ export interface BlogFrontmatter {
    * category/tags. See src/components/blog/PostCover.tsx.
    */
   cover?: 'pipeline' | 'comparison' | 'layers' | 'timeline'
+  /**
+   * Component names drawn on the cover, in order — the article's actual chain
+   * (e.g. ["Browser", "Proxy", "Load balancer", "Cloud Run"]). 3–5 works best.
+   * Supplying these turns the abstract cover into a labelled schematic and
+   * drives the social share card. Omit for the generic motif.
+   */
+  coverNodes?: string[]
+  /** Headline number shown on the cover and share card, e.g. "200–400ms removed". */
+  coverMetric?: string
 }
 
 export interface BlogPost extends BlogFrontmatter {

@@ -79,6 +79,20 @@ a perfectly horizontal/vertical stroke, so a straight thin line filtered by `#ro
 (only diagonal strokes survive). Never put `#rough` on an axis-aligned connector/line — see
 `known_patterns.md` Bug 7 and the diagram system's baked-wobble approach in `architecture.md`.
 
+## Textures Published to CSS
+`SiteChrome` generates the paper noise at runtime and sets it on `#grain`/`#tooth` AND
+publishes the same values as `--grain-img` / `--tooth-img` on `<html>`. Anything painting its
+own paper above the fixed texture layers (currently `.site-top`) must reuse those vars —
+`#grain`/`#tooth` sit at z-index 1, so an element above them that fills with a flat
+`var(--paper)` renders as a visibly lighter band against the textured page.
+
+## `.rule` vs `.nav-rule`
+Both draw the same hand-drawn horizontal line, and they are NOT interchangeable. `.rule`
+starts fully dash-offset (`stroke-dashoffset: var(--rlen)`) and is only revealed by the Home
+hero's `.ink`/`.settled` choreography — reuse it anywhere else and it renders nothing.
+`.nav-rule` (the header's bottom edge) has no dash animation and is always drawn.
+`.home-hero .rule` is hidden so Home doesn't show two stacked lines.
+
 ## Z-Index Scale
 Reference tokens declared in `:root` (`--z-paper` through `--z-quickbar`) for **new** code to
 consume. The pre-existing draw-system rules (toolbar, quickbar, mini-palette, mode indicator)

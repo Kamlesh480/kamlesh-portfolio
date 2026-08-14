@@ -6,7 +6,7 @@ description: "The old collector posted every job at once and waited two to three
 date: "2026-07-31"
 category: "Data Infrastructure"
 tags: ["python", "fastapi", "rabbitmq", "redis", "serp", "data-pipeline", "scale"]
-draft: true
+draft: false
 cover: "pipeline"
 coverTitle: "Batch → event-driven"
 coverNodes: ["Keywords", "Redis", "Vendor", "Queue", "Workers"]

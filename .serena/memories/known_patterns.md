@@ -121,6 +121,40 @@ it, past the container. On /projects the same diagram sits in normal block flow 
 horizontal scroll stays inside `.sketch-diagram-scroll` where it was designed to live.
 **General lesson:** any grid/flex child that contains an overflow-scrolling box needs
 `min-width: 0`, or the inner content's min-width leaks out and blows up the whole row.
+Recurred on `.post-layout` (article TOC + body) via wide code blocks and markdown
+tables — same fix, plus tables are now wrapped in a `.table-scroll` div by the
+markdown renderer. Wrapping, NOT `display:block` on the `<table>`: the shortcut strips
+table semantics from assistive tech.
+
+## Bug 9 — grep reports zero matches in a file that visibly contains the string
+**Symptom:** `grep -c "ROTATE_MS" AnnouncementBar.tsx` → 0, while `sed`/Python showed the
+constant plainly. Every grep against that one file silently returned nothing.
+**Root cause:** a sentinel written as `'\u0000server'` put a literal NUL byte in the source.
+grep classifies any file containing NUL as binary and suppresses matches; git can do the same
+and produce unreadable diffs. The code ran fine, which is what makes it dangerous — the only
+symptom is tooling quietly lying to you.
+**Fix:** never put control characters in source. Use a `Symbol()` for a unique sentinel — it
+cannot collide with a real value and keeps the file plain text. If grep ever disagrees with
+your eyes, check for NUL before doubting the grep.
+
+## Bug 10 — adding a child to <header> pushed the page 581px wide
+**Symptom:** dropping the `.nav-rule` SVG into `<header>` produced ~581px of horizontal
+overflow sitewide.
+**Root cause:** `header` is `display: flex` (brand ⟷ nav). A new block child becomes a THIRD
+flex item on the same row rather than sitting below it, and a `width: 100%` item on that row
+blows the container out.
+**Fix:** `flex-wrap: wrap` on `header` + `flex: 0 0 100%` on the child so it claims its own
+row. **Any future direct child of `<header>` needs the same treatment.**
+
+## Bug 11 — renaming a class silently re-enabled clicks during draw mode
+**Symptom:** after the footer was rebuilt, drawing over the footer could trigger navigation
+again — the behaviour Bug 2's geometry work exists to prevent.
+**Root cause:** draw mode disables page interaction through an EXPLICIT class list
+(`body.draw-mode-active .home-hero, .page-shell, .nav-item, … { pointer-events: none }`).
+Renaming `.foot-sitemap` → `.foot-grid` left a selector matching nothing. Nothing errors; the
+rule just stops applying to that element.
+**Fix:** when renaming or replacing a layout class, grep the `body.draw-mode-active` block and
+update it. That list is a hand-maintained inventory and will not tell you when it goes stale.
 
 ## Content Accuracy Rule
 `src/content/{experience,projects,skills}.ts` must stay strictly grounded in the two source

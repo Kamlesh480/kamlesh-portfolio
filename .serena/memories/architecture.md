@@ -87,7 +87,7 @@ deliberate product decision, not an oversight — flip it by removing the `usePa
 ## Content Data Model
 Typed data files under `src/content/`, imported directly into Server Components — no client
 fetching, no MDX. `types.ts` defines `ExperienceEntry`, `ProjectEntry`, `SkillGroup`,
-`DecisionRecord`. This structure exists specifically so a future Resume-page rewrite can reuse
+`DecisionRecord`, plus the blog contract (`BlogFrontmatter`/`BlogPost`/`TocEntry`). This structure exists specifically so a future Resume-page rewrite can reuse
 the same data without a second content-authoring pass.
 
 `decisions.ts` (architecture decision records, drives `/architecture`) is **derived content**:
@@ -150,6 +150,9 @@ a shared constant).
 - `ArchitectureDiagrams.tsx` — `DecisionLoopDiagram` (the /architecture hero) plus
   `decisionDiagram(slug)` keyed to `src/content/decisions.ts` slugs. Only some records have a
   diagram; the rest render text-only, by design.
+- `BlogDiagrams.tsx` — figures authored for a specific post, embedded from markdown with
+  `:::diagram <slug>`. `resolveDiagram()` in BlogParts.tsx tries project → experience →
+  decision → blog sets in order, so a post can reuse any existing figure by slug.
 - **Keep drawn content ~16 units clear of the viewBox edges.** `.sketch-diagram-scroll` fades
   its outer 14px to transparent (so a mid-scroll diagram doesn't hard-clip on mobile), which
   silently *erases* anything drawn flush to the edge — it looks like a clipping bug but
@@ -193,6 +196,29 @@ root layout ABOVE `SiteHeader`. Adding news = one entry in the content file.
 - Not an `aria-live` region: an auto-rotating banner re-announcing itself every 7s is hostile
   to screen readers. Dots give deliberate navigation. Rotation pauses on hover/focus and is
   disabled entirely under `prefers-reduced-motion`.
+
+## Sticky Top Bar
+`AnnouncementBar` + `SiteHeader` are wrapped in `.site-top` (root layout) which carries
+`position: sticky` ONLY. Constraints that must hold:
+- **No transform/filter/backdrop-filter on `.site-top`.** `.nav-mobile-panel` is a
+  `position: fixed` descendant of `<header>`; any of those makes the wrapper its containing
+  block and traps it (Bug 4 all over again). The blur/paper lives on `::before`/`::after`
+  pseudo-elements, which carry filters without becoming an ancestor containing block.
+- **Draw mode un-sticks it** (`body.draw-mode-active .site-top { position: static }`).
+  `#drawOverlay` reserves only the top 64px of the viewport; the bar is taller, so left sticky
+  it would cover drawable area and swallow canvas pointer events.
+- The bar repaints the page's own paper (same fixed gradient + the `--grain-img`/`--tooth-img`
+  textures) rather than a flat colour — it sits ABOVE `#paper`/`#grain`/`#tooth` in the stack,
+  so a plain fill renders as a visibly lighter band. See `theme_and_styling.md`.
+- `SiteChrome` stays OUTSIDE `.site-top` — it must remain a direct child of `<body>`.
+
+## Footer
+`SiteFooter` renders columns from `footerGroups` + each route's `group` field in `routes.ts`.
+Adding a page to the footer = set `group` on its route; the component never changes.
+The Writing column additionally pulls live blog data (recent posts + categories), so
+publishing a post adds a sitewide internal link automatically — deliberate for crawl
+discovery. Counts are capped (3 posts / 4 categories): a footer with 60 links dilutes rather
+than distributes.
 
 ## Breadcrumbs
 `PageSchema` renders BOTH the `BreadcrumbList` JSON-LD and the visible trail, from the SAME
@@ -253,6 +279,17 @@ is excluded from the post index by the `^[A-Z]+\.md$` / `_`-prefix filter in `bl
   Shiki uses a hand-authored `charcoal-paper` theme; stock themes read as a pasted-in dark
   IDE against this palette. `createHighlighter` is async but the returned `codeToHtml` is
   sync, which is what lets markdown-it's sync `highlight` hook work.
+- **Covers and share cards come from the same frontmatter.** `coverNodes` + `coverMetric` turn
+  `PostCover` from an abstract motif into a labelled schematic of the article, and feed
+  `blog/[slug]/opengraph-image.tsx`, which renders a unique 1200×630 card per post. Omit them
+  and the cover falls back to a motif inferred from category/tags — nothing breaks.
+- **`generateMetadata` must STRIP `openGraph.images`.** `baseOpenGraph` pins the site-wide
+  og-image.png; any explicit `images` silently overrides the generated per-post card, and the
+  build still succeeds while every post shares one generic preview. Verify by reading the
+  rendered `<meta property="og:image">`, not by checking the file exists.
+- OG fonts live in `assets/fonts/` as STATIC instances. Satori cannot parse variable fonts
+  (a `[wght]` file fails with "Cannot read properties of undefined") and requires explicit
+  `display` on any element with more than one child.
 - Client JS is ONE island (`BlogChrome.tsx`) using event delegation for copy buttons,
   progress bar, TOC active state, and lightbox — the body stays a static HTML string.
 - **`/blog` is `ƒ` dynamic**, not static, because it reads `searchParams` for category/tag

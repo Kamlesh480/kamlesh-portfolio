@@ -177,6 +177,31 @@ a shared constant).
   nodes use the `sk-node--legacy` wrapper (faded + struck). All diagram CSS lives in the
   clearly-commented block appended to the end of `globals.css`.
 
+## Announcement Bar
+`src/content/announcements.ts` + `src/components/chrome/AnnouncementBar.tsx`, mounted in the
+root layout ABOVE `SiteHeader`. Adding news = one entry in the content file.
+- Client-only render on purpose: date windows (`starts`/`expires`) and dismissal are both
+  browser facts. Server-rendering would flash a bar that then vanishes, and would bake
+  expired announcements into static HTML. Evaluating dates in the browser also means a dated
+  banner switches on/off ON THE DAY without a redeploy.
+- Renders `null` when nothing is active — no reserved strip, no layout shift.
+- **GOTCHA — the dismissal key must be derived from the DATE-active set, never the
+  route-filtered one.** The bar hides an announcement whose `href` matches the current route
+  (don't advertise the page you're on). If the key followed that filtered list, navigating
+  onto an announced page would shrink the set, change the key, and RESURRECT a bar the
+  visitor had dismissed. `dateActive` → key; `active` (route-filtered) → display.
+- Not an `aria-live` region: an auto-rotating banner re-announcing itself every 7s is hostile
+  to screen readers. Dots give deliberate navigation. Rotation pauses on hover/focus and is
+  disabled entirely under `prefers-reduced-motion`.
+
+## Breadcrumbs
+`PageSchema` renders BOTH the `BreadcrumbList` JSON-LD and the visible trail, from the SAME
+`breadcrumbNode()` array — so markup and structured data cannot drift (Google expects them to
+agree). Labels come from `routes.ts`, so nav/sitemap/schema/visible trail share one source.
+Home renders no visible trail (a lone "Home" crumb is noise). A blog post passes
+`extraCrumbs` to get the third level. Adding a page needs no breadcrumb work — the existing
+one-line `<PageSchema …>` call produces it.
+
 ## SEO Layer
 - `src/lib/seo.ts` exports `SITE_URL` (from `NEXT_PUBLIC_SITE_URL`, no domain hardcoded
   elsewhere), `baseOpenGraph`/`baseTwitter`, and `pageMetadata()` — every route's

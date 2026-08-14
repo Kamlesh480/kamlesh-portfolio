@@ -6,7 +6,7 @@
  * accounts, IP addresses, or resource names ever appear in a diagram — see the
  * employer/confidentiality invariant in known_patterns.md.
  */
-import { Diagram, Box, Cylinder, Arrow, Connector, Group, Badge, Note } from './Sketch'
+import { Diagram, Box, Cylinder, Queue, Arrow, Connector, Group, Badge, Note } from './Sketch'
 
 /* ---- Before: a token exchange on every single request ------------------- */
 function OidcBefore() {
@@ -76,9 +76,68 @@ function LoadBalancerAfter() {
   )
 }
 
+/* ---- SERP collection: batch-and-wait ------------------------------------ */
+function SerpBatchBefore() {
+  return (
+    <Diagram
+      viewBox="0 4 660 260"
+      minWidth={440}
+      title="The previous collection design: the whole keyword batch is posted to vendors at once, and nothing is usable until every job in the batch has finished — a wait of two to three days before any data flows."
+      caption="Fig. 1 — Before: one batch, one wait. The slowest job set the pace for all of them."
+    >
+      <Box x={16} y={92} w={132} h={62} label="Keyword batch" />
+      <Arrow from={{ x: 148, y: 123 }} to={{ x: 184, y: 123 }} />
+      <Box x={184} y={92} w={148} h={62} label="Post every job" sub="all at once" />
+      <Arrow from={{ x: 332, y: 123 }} to={{ x: 372, y: 123 }} />
+
+      <Group x={362} y={58} w={180} h={132} label="vendor processing" />
+      <Box x={378} y={98} w={148} h={52} label="Jobs run" />
+
+      <Arrow from={{ x: 542, y: 123 }} to={{ x: 584, y: 123 }} />
+      <Box x={584} y={92} w={64} h={62} label="Data" />
+
+      <Connector from={{ x: 452, y: 190 }} to={{ x: 452, y: 214 }} dashed />
+      <Badge cx={452} cy={236} text="2–3 days before anything lands" w={264} h={38} />
+    </Diagram>
+  )
+}
+
+/* ---- SERP collection: event-driven -------------------------------------- */
+function SerpEventDrivenAfter() {
+  return (
+    <Diagram
+      viewBox="0 4 660 320"
+      minWidth={460}
+      title="The rebuilt design: Redis holds a status record for every keyword — whether it has been posted, whether its callback has arrived, and whether it has been processed onward. When a vendor callback arrives it becomes a task on a RabbitMQ queue, workers pick it up immediately, and the keyword's status is updated. Each keyword flows independently instead of waiting for the batch."
+      caption="Fig. 2 — After: state per keyword, work triggered per callback. Nothing waits for the batch."
+    >
+      {/* outbound */}
+      <Box x={16} y={44} w={118} h={54} label="Keywords" />
+      <Arrow from={{ x: 134, y: 71 }} to={{ x: 166, y: 71 }} />
+      <Cylinder x={166} y={38} w={140} h={70} label="Redis" sub="status per keyword" />
+      <Arrow from={{ x: 306, y: 71 }} to={{ x: 344, y: 71 }} label="post" labelDy={-10} />
+      <Box x={344} y={44} w={136} h={54} label="Vendor" />
+
+      {/* callback path */}
+      <Arrow from={{ x: 412, y: 98 }} to={{ x: 412, y: 168 }} label="callback" labelDy={-8} />
+      <Queue x={330} y={168} w={164} h={56} label="RabbitMQ" />
+      <Arrow from={{ x: 330, y: 196 }} to={{ x: 300, y: 196 }} />
+      <Box x={160} y={166} w={140} h={60} solid label="Workers" sub="next step" />
+
+      {/* the loop that makes it self-tracking */}
+      <Connector from={{ x: 230, y: 166 }} to={{ x: 230, y: 112 }} dashed />
+      <Note x={20} y={150} text={['status updated:', 'posted · returned · done']} />
+
+      <Badge cx={540} cy={262} text="each keyword flows on its own" w={230} h={38} />
+    </Diagram>
+  )
+}
+
 const MAP: Record<string, () => React.ReactElement> = {
   'oidc-before': OidcBefore,
   'load-balancer-after': LoadBalancerAfter,
+  'serp-batch-before': SerpBatchBefore,
+  'serp-event-driven-after': SerpEventDrivenAfter,
 }
 
 export function blogDiagram(slug: string): React.ReactElement | null {

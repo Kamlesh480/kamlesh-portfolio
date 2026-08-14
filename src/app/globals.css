@@ -145,12 +145,13 @@ body {
    it can never interfere with the fixed draw-system layers in SiteChrome. */
 header {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
   max-width: 1680px;
   margin: 0 auto;
-  padding: clamp(26px, 4vh, 46px) clamp(28px, 5vw, 88px) 0;
+  padding: clamp(14px, 2vh, 22px) clamp(28px, 5vw, 88px) 0;
   position: relative;
   z-index: var(--z-header);
 }
@@ -482,11 +483,35 @@ nav {
   padding-top: clamp(24px, 4vh, 40px);
   margin-top: clamp(40px, 8vh, 96px);
 }
-.foot-sitemap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(14px, 2vw, 28px);
-  margin-bottom: clamp(20px, 3vh, 32px);
+/* Grouped footer columns. Collapses to two columns on tablets and one on
+   phones — a four-column footer at 390px is unreadable. */
+.foot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 48px);
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+.foot-col ul { list-style: none; display: grid; gap: 7px; margin: 0; padding: 0; }
+.foot-col-title {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-size: clamp(13px, 1vw, 15px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--graphite-s);
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+/* Post titles can be long; keep the column tidy without truncating the link
+   text away from crawlers. */
+.foot-link--sub { display: block; line-height: 1.35; }
+.foot-link--muted { color: var(--graphite-s); }
+.foot-count { font-family: var(--font-cormorant), serif; font-style: italic; font-size: 0.8em; }
+@media (max-width: 900px) {
+  .foot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .foot-grid { grid-template-columns: 1fr; gap: clamp(18px, 4vh, 26px); }
 }
 .foot-link {
   font-family: var(--font-caveat), cursive;
@@ -868,7 +893,7 @@ body.draw-mode-active .hero-text,
 body.draw-mode-active .btn,
 body.draw-mode-active .link-plain,
 body.draw-mode-active .foot,
-body.draw-mode-active .foot-sitemap {
+body.draw-mode-active .foot-grid {
   pointer-events: none;
 }
 /* Prevent text selection and touch scroll while drawing */
@@ -2112,3 +2137,205 @@ a.cat-badge:hover { color: var(--char-deep); }
   font-weight: 700;
   fill: var(--char-deep);
 }
+
+/* ---- Breadcrumbs (visible trail; mirrors the BreadcrumbList JSON-LD) ---- */
+.breadcrumbs {
+  display: block;
+  margin-bottom: clamp(14px, 2vh, 22px);
+}
+.breadcrumbs ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+.breadcrumbs li { display: flex; align-items: baseline; min-width: 0; }
+.breadcrumbs a,
+.breadcrumb-current {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-size: clamp(14px, 1.05vw, 16.5px);
+  line-height: 1.4;
+}
+.breadcrumbs a {
+  color: var(--graphite-s);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+.breadcrumbs a:hover { color: var(--char-deep); border-bottom-color: var(--graphite-s); }
+.breadcrumb-sep { color: var(--graphite-s); margin: 0 9px; opacity: 0.75; }
+/* Current page is not a link; long post titles truncate rather than wrap
+   the trail onto three lines on a phone. */
+.breadcrumb-current {
+  color: var(--graphite);
+  max-width: min(48ch, 100%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 560px) {
+  .breadcrumb-current { max-width: 22ch; }
+}
+
+/* ---- Announcement bar (src/content/announcements.ts) ----
+   Sits above the header in normal flow. Inverted (ink ground, paper text) so it
+   reads as a deliberate strip on a paper site without introducing a new colour.
+   Renders nothing when there's no active news — no reserved space, no CLS. */
+.announce {
+  position: relative;
+  z-index: var(--z-header);
+  background: var(--char-deep);
+  color: var(--paper-hi);
+}
+.announce-inner {
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 8px clamp(16px, 5vw, 88px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 2vw, 20px);
+  min-height: 38px;
+}
+.announce-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  text-decoration: none;
+  color: var(--paper-hi);
+}
+.announce-msg {
+  font-family: var(--font-cormorant), serif;
+  font-size: clamp(13.5px, 1.05vw, 15.5px);
+  line-height: 1.35;
+  /* One line, always — a wrapping banner shoves the whole page down. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.announce-cta {
+  font-family: var(--font-caveat), cursive;
+  font-size: clamp(14px, 1.1vw, 17px);
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(253, 252, 248, 0.45);
+  transition: border-color 0.25s ease;
+}
+.announce-link:hover .announce-cta { border-bottom-color: var(--paper-hi); }
+.announce-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--paper-hi);
+  flex-shrink: 0;
+}
+.announce-link.is-accent .announce-dot { background: #8fb3d4; }
+
+.announce-nav { display: flex; gap: 6px; flex-shrink: 0; }
+.announce-pip {
+  width: 7px; height: 7px; padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(253, 252, 248, 0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+.announce-pip.is-on { background: var(--paper-hi); }
+.announce-pip:focus-visible,
+.announce-close:focus-visible,
+.announce-link:focus-visible { outline: 2px solid var(--paper-hi); outline-offset: 3px; }
+
+.announce-close {
+  position: absolute;
+  right: clamp(10px, 2vw, 24px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--paper-lo);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.announce-close:hover { color: var(--paper-hi); }
+
+@media (max-width: 640px) {
+  /* The CTA is the least important part once space is tight — the whole bar
+     is a link anyway, so dropping the label costs nothing. */
+  .announce-cta { display: none; }
+  .announce-inner { justify-content: flex-start; padding-right: 44px; }
+}
+
+/* ---- Sticky top bar (announcement + header) ----
+   The wrapper carries `position: sticky` ONLY. It must not gain
+   transform/filter/backdrop-filter, because `.nav-mobile-panel` is a
+   position:fixed descendant of <header>; any of those properties would make
+   this wrapper its containing block and trap it (see known_patterns.md Bug 4).
+   The blur therefore lives on a ::before pseudo-element, which carries the
+   filter without becoming an ancestor containing block. */
+.site-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+}
+/* No flat colour band: the bar reproduces the page's own paper — the same
+   fixed gradient as #paper, plus the same generated grain/tooth textures —
+   so the sticky strip is indistinguishable from the sheet behind it. The
+   drawn .nav-rule is what marks its edge, not a background change. */
+.site-top::before,
+.site-top::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.site-top::before {
+  z-index: -2;
+  background: radial-gradient(120% 90% at 70% 20%, var(--paper-hi) 0%, var(--paper) 45%, var(--paper-lo) 100%);
+  /* fixed, so it lines up with #paper (which is position:fixed) exactly */
+  background-attachment: fixed;
+}
+.site-top::after {
+  z-index: -1;
+  background-image: var(--grain-img), var(--tooth-img);
+  background-repeat: repeat, repeat;
+  background-size: 300px 300px, 600px 600px;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+}
+
+/* Draw mode un-sticks it. #drawOverlay reserves only the top 64px of the
+   viewport, which is shorter than the bar — left sticky, the header would
+   cover part of the drawable area and swallow pointer events meant for the
+   canvas. Scrolling it away restores the original draw geometry exactly. */
+body.draw-mode-active .site-top {
+  position: static;
+}
+
+/* Header's drawn bottom edge. Same path as the Home hero's .rule but always
+   drawn — `.rule` starts fully dash-offset and is only revealed by the hero's
+   .ink/.settled classes, which don't exist on other routes. */
+/* <header> is display:flex, so the rule must claim its own row — as a plain
+   block it became a third item in the brand/nav row and blew the layout
+   581px past the viewport. */
+.nav-rule {
+  flex: 0 0 100%;
+  display: block;
+  width: 100%;
+  height: 14px;
+  overflow: visible;
+  margin-top: 0;
+}
+.nav-rule path {
+  stroke: var(--edge);
+  stroke-width: 1.6;
+  fill: none;
+  stroke-linecap: round;
+  filter: url(#rough);
+}
+/* Home's hero already draws its own rule immediately below the header —
+   without this the two would stack as a double line. */
+.home-hero .rule { display: none; }

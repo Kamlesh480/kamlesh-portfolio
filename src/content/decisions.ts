@@ -14,7 +14,7 @@ export const decisions: DecisionRecord[] = [
   {
     slug: 'inference-in-house',
     title: 'Move LLM inference off per-token APIs',
-    context: 'BrightEdge · AI Hyper Cube',
+    context: 'AI Hyper Cube · LLM infrastructure',
     problem:
       'AI Hyper Cube runs scoped prompts over AI-generated search content at 5B+ tokens a month, across 100M+ keyword SERPs. At that volume the dominant cost driver was not compute or storage — it was per-token API pricing, and it grew linearly with every unit of product growth.',
     options: [
@@ -40,7 +40,7 @@ export const decisions: DecisionRecord[] = [
   {
     slug: 'self-managed-query-engine',
     title: 'Retire BigQuery UDFs for a self-managed engine',
-    context: 'BrightEdge · data platform',
+    context: 'Data platform · 1B+ events / month',
     problem:
       'The legacy BigQuery UDF workflow processed more than a billion events a month. It was expensive at that scale and hard to reason about operationally — and both problems compounded as volume grew.',
     options: [

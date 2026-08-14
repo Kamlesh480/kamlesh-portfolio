@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import InkRule from '@/components/ui/InkRule'
 import BlogChrome from '@/components/blog/BlogChrome'
 import PostCover from '@/components/blog/PostCover'
@@ -101,12 +100,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             }),
           ]}
         />
-
-        <nav className="post-breadcrumb" aria-label="Breadcrumb">
-          <Link className="link-plain" href="/blog">
-            ← Engineering Notes
-          </Link>
-        </nav>
 
         {/* Title block and cover share one row — the header alone left the
             entire right half of the fold empty. Stacks below 980px. */}

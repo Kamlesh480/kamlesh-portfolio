@@ -5,7 +5,7 @@ export const projects: ProjectEntry[] = [
     slug: 'ai-hyper-cube',
     title: 'AI Hyper Cube — LLM Processing Infrastructure',
     role: 'Architect & Lead Engineer',
-    period: 'BrightEdge · Jun 2025 – Present',
+    period: 'Jun 2025 – Present',
     summary:
       'The core LLM infrastructure that scopes and runs prompts over AI-generated search content at massive scale — extracting intent, brand entities, sentiment, and citations for enterprise SEO analytics.',
     problem:
@@ -35,7 +35,7 @@ export const projects: ProjectEntry[] = [
     slug: 'trino-iceberg-clickhouse-pipeline',
     title: 'Trino–Iceberg–ClickHouse Data Pipeline',
     role: 'Lead Engineer',
-    period: 'BrightEdge · 2025',
+    period: '2025',
     summary:
       'Replaced a legacy BigQuery UDF workflow with a self-managed Trino–Iceberg–ClickHouse pipeline, cutting monthly processing cost by a substantial five-figure sum while scaling to over a billion events per month.',
     problem:
@@ -53,7 +53,7 @@ export const projects: ProjectEntry[] = [
     slug: 'keyword-collection-pipeline',
     title: 'High-Throughput Keyword Collection Pipeline',
     role: 'Lead Engineer',
-    period: 'BrightEdge · 2025',
+    period: '2025',
     summary:
       'A rebuilt keyword-collection system spanning multiple vendor integrations, achieving 4x faster processing at 100M+ keywords per month.',
     problem:

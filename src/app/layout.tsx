@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Caveat, Cormorant_Garamond } from 'next/font/google'
 import SiteChrome from '@/components/chrome/SiteChrome'
 import SiteHeader from '@/components/layout/SiteHeader'
+import AnnouncementBar from '@/components/chrome/AnnouncementBar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import JsonLd from '@/components/seo/JsonLd'
 import { graph, personNode, websiteNode } from '@/lib/schema'
@@ -62,7 +63,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <JsonLd data={siteJsonLd} />
         <SiteChrome />
-        <SiteHeader />
+        {/* Banner + nav travel together as one sticky unit. SiteChrome stays
+            OUTSIDE it — it must remain a direct child of <body>. */}
+        <div className="site-top">
+          <AnnouncementBar />
+          <SiteHeader />
+        </div>
         <main>{children}</main>
         <SiteFooter />
       </body>

@@ -114,7 +114,8 @@ export interface DecisionOption {
 export interface DecisionRecord {
   slug: string
   title: string
-  /** Where the decision was made, e.g. 'BrightEdge · AI Hyper Cube'. */
+  /** Where the decision was made, e.g. 'AI Hyper Cube · LLM infrastructure'.
+   *  Name the SYSTEM, not the employer — see known_patterns.md. */
   context: string
   problem: string
   options: DecisionOption[]

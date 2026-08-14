@@ -78,7 +78,7 @@ export default function AboutPage() {
               ran A/B tests, and watched Core Web Vitals move because of decisions I made.
             </p>
             <p>
-              Now at BrightEdge, I architect the LLM infrastructure that processes over 5 billion
+              In my current role, I architect the LLM infrastructure that processes over 5 billion
               tokens a month — the kind of scale where a naive design doesn&apos;t just run slowly, it
               becomes unaffordable. Moving inference onto a self-hosted GPU platform and cutting
               our AI processing bill 62% is one of the projects I&apos;m proudest of, not because of

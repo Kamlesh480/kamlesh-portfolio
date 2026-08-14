@@ -146,8 +146,18 @@ detail must never be published on this site, regardless of being on the private 
    achievement without publishing an employer's infrastructure spend. Specific supplier names
    (Vast.ai) were likewise generalised to "rented GPU capacity" — naming an employer's vendor
    is a supplier-relationship detail, not a skill.
-Percentages, throughput/scale numbers, employer name, role, and standard tech stack are all
-fine — that's normal résumé material.
+3. **The employer NAME is scoped to employment context only.** "BrightEdge" may appear on
+   `/experience`, `/resume`, in `experience.ts` (the `company` field), and in the Home
+   "Where I've been" strip — all of which ARE employment history. It must NOT appear on
+   `/about`, `/projects`, `/architecture`, `/skills`, `/contact`, `/blog`, or in any blog post:
+   there, name the SYSTEM instead ("AI Hyper Cube · LLM infrastructure", "Data platform"),
+   or the timeframe alone (`period: 'Jun 2025 – Present'`, not `'BrightEdge · Jun 2025'`).
+   Rationale: attaching an employer's name to public technical write-ups and project pages is
+   what invites a concern; stating employment history on a résumé page does not.
+   The site-wide `Person` JSON-LD keeps `worksFor` — that's the machine-readable form of the
+   same résumé fact, and removing it would weaken entity recognition for no privacy gain.
+Percentages, throughput/scale numbers, role, and standard tech stack are all fine — that's
+normal résumé material.
 
 **Confidential-name invariant:** the personal project's real product/company name is NOT
 publishable (explicit user instruction). It must appear NOWHERE in the repo — not in code, not

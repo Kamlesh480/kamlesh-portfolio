@@ -73,7 +73,7 @@ export function JourneyDiagram() {
   const stops = [
     { label: 'DUIT Technologies', sub: 'Python ETL · ML API evals' },
     { label: 'Hevo Data', sub: 'Full-stack · Django → Next.js' },
-    { label: 'BrightEdge', sub: 'LLM infra · 5B tokens / mo' },
+    { label: 'Current role', sub: 'LLM infra · 5B tokens / mo' },
     { label: 'Personal project', sub: 'Founding engineer · 0 → 1', solid: true },
   ]
   // What each step taught, annotated on the transition out of it.
@@ -94,7 +94,7 @@ export function JourneyDiagram() {
     <Diagram
       viewBox="0 4 490 428"
       minWidth={340}
-      title="A career path in four steps: DUIT Technologies writing Python ETL and evaluating ML APIs, then Hevo Data as a full-stack engineer migrating Django to Next.js, then BrightEdge architecting LLM infrastructure at five billion tokens a month, then founding engineer on a personal project taken from zero to one."
+      title="A career path in four steps: DUIT Technologies writing Python ETL and evaluating ML APIs, then Hevo Data as a full-stack engineer migrating Django to Next.js, then a current role architecting LLM infrastructure at five billion tokens a month, then founding engineer on a personal project taken from zero to one."
       caption="Fig. 1 — Four steps, one thread: make it work, then make it provable."
     >
       {stops.map((s, i) => {

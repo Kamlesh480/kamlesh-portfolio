@@ -76,6 +76,13 @@ export default function SiteHeader() {
         </svg>
       </button>
 
+      {/* The header's bottom edge. Uses .nav-rule, NOT .rule — `.rule` is
+          hidden by default (stroke-dashoffset) and only revealed by the Home
+          hero's .ink/.settled choreography, so it would draw nothing here. */}
+      <svg className="nav-rule" viewBox="0 0 1500 14" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 8 C 200 4, 360 11, 560 7 S 920 3, 1140 9 S 1380 5, 1498 7" />
+      </svg>
+
       <div className={`nav-mobile-panel${mobileOpen ? ' open' : ''}`} aria-hidden={!mobileOpen}>
         {headerRoutes.map((route, i) => (
           <Link

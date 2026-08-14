@@ -48,8 +48,17 @@ export default function SiteChrome() {
       }
       const grainEl = document.getElementById('grain')
       const toothEl = document.getElementById('tooth')
-      if (grainEl) grainEl.style.backgroundImage = noiseURI(0.9, 2, 0.55)
-      if (toothEl) toothEl.style.backgroundImage = noiseURI(0.18, 3, 0.42)
+      const grain = noiseURI(0.9, 2, 0.55)
+      const tooth = noiseURI(0.18, 3, 0.42)
+      if (grainEl) grainEl.style.backgroundImage = grain
+      if (toothEl) toothEl.style.backgroundImage = tooth
+      // Publish the same textures as CSS vars. The sticky top bar paints its
+      // own paper (it sits above #paper/#grain/#tooth in the stack), so it has
+      // to reproduce them — otherwise that strip renders as a flat, visibly
+      // lighter band against the textured page.
+      const root = document.documentElement
+      root.style.setProperty('--grain-img', grain)
+      root.style.setProperty('--tooth-img', tooth)
 
       const dustCanvas = document.getElementById('dust') as HTMLCanvasElement | null
       if (dustCanvas && window.Charcoal) window.Charcoal.Dust(dustCanvas)

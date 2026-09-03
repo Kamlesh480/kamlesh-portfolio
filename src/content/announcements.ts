@@ -30,16 +30,16 @@ export interface Announcement {
 
 export const announcements: Announcement[] = [
   {
-    id: 'post-cloud-run-load-balancer-2026-08',
-    message: 'New write-up: cutting 200–400ms per request by putting Cloud Run behind a load balancer',
-    href: '/blog/cloud-run-load-balancer-oidc-token-exchange',
+    id: 'post-system-design-interview-2026-09',
+    message: 'New write-up: what a system design interview actually tests: notes from a 10M-user feed',
+    href: '/blog/system-design-interview-news-feed-lessons',
     cta: 'Read the post',
   },
   {
-    id: 'engineering-notes-launch-2026-08',
-    message: 'Engineering Notes is live — deep-dives on the systems behind the numbers',
-    href: '/blog',
-    cta: 'Browse notes',
+    id: 'post-cloud-run-load-balancer-2026-08',
+    message: 'Cutting 200–400ms per request by putting Cloud Run behind a load balancer',
+    href: '/blog/cloud-run-load-balancer-oidc-token-exchange',
+    cta: 'Read the post',
     tone: 'accent',
   },
 ]

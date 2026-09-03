@@ -16,7 +16,7 @@ import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
 
 const PAGE_DESCRIPTION =
-  'Engineering write-ups from Kamlesh Chhipa on distributed data systems, LLM infrastructure, and performance work — with the numbers behind each decision.'
+  'Engineering write-ups from Kamlesh Chhipa on distributed data systems, LLM infrastructure, and performance work: with the numbers behind each decision.'
 
 export const metadata = pageMetadata({
   title: 'Engineering Notes',
@@ -55,7 +55,7 @@ export default async function BlogIndexPage({
       <div className="eyebrow">Engineering Notes</div>
       <h1 className="page-title">Notes from the build.</h1>
       <p className="page-lede">
-        Write-ups on the systems I&apos;ve been building — data pipelines, LLM infrastructure,
+        Write-ups on the systems I&apos;ve been building: data pipelines, LLM infrastructure,
         and the performance work in between. Long-form where it earns it, with the numbers that
         made the decision.
       </p>
@@ -166,7 +166,7 @@ export default async function BlogIndexPage({
             ) : (
               isFiltered && (
                 <p className="prose">
-                  Nothing here yet under that filter —{' '}
+                  Nothing here yet under that filter: {' '}
                   <Link className="link-plain" href="/blog">
                     see all notes
                   </Link>

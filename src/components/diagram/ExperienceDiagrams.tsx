@@ -19,7 +19,7 @@ function BrightEdge() {
       viewBox="0 0 920 290"
       minWidth={620}
       title="Impact scoreboard for three systems built at BrightEdge: AI Hyper Cube at five billion tokens a month and 62% lower cost, a Trino pipeline over a billion events a month at a five-figure monthly saving, and a rebuilt keyword collection pipeline at a hundred million keywords a month, four times faster."
-      caption="Fig. 1 — Three systems, one mandate: make expensive things at scale cheap and fast."
+      caption="Fig. 1. Three systems, one mandate: make expensive things at scale cheap and fast."
     >
       {lanes.map((l) => (
         <g key={l.name.join()}>
@@ -56,14 +56,14 @@ function HevoData() {
       viewBox="0 0 920 340"
       minWidth={560}
       title="Before-and-after performance work at Hevo Data: the signup API dropped from nine seconds to two-and-a-half, and good-LCP URLs rose from 55.73% to 83.85% via Varnish caching and a CloudFront CDN."
-      caption="Fig. 1 — Owning it end-to-end: API latency and Core Web Vitals, before and after."
+      caption="Fig. 1. Owning it end-to-end: API latency and Core Web Vitals, before and after."
     >
-      <Note x={40} y={40} text="Signup API — response time" />
+      <Note x={40} y={40} text="Signup API: response time" />
       <Bar x={40} y={70} w={248} label="before" value="9 s" />
       <Bar x={40} y={118} w={69} label="after" value="2–2.5 s" />
       <Badge cx={470} cy={104} text="~75% ↓ · +4–5% signups" w={230} h={40} />
 
-      <Note x={40} y={196} text="Good-LCP URLs — Core Web Vitals" />
+      <Note x={40} y={196} text="Good-LCP URLs: Core Web Vitals" />
       <Bar x={40} y={226} w={145} label="before" value="55.73%" />
       <Bar x={40} y={274} w={218} label="after" value="83.85%" />
 
@@ -83,7 +83,7 @@ function DuitTechnologies() {
       viewBox="0 0 900 250"
       minWidth={560}
       title="An ETL flow built at DUIT Technologies: a stock API feeds a Google Apps Script ETL job that loads Firebase and BigQuery, alongside evaluating machine-learning APIs to about ninety percent accuracy."
-      caption="Fig. 1 — Early-career ETL: real-time market data into Firebase and BigQuery."
+      caption="Fig. 1. Early-career ETL: real-time market data into Firebase and BigQuery."
     >
       <Box x={24} y={84} w={132} h={68} label="Stock API" sub="real-time" />
       <Box x={220} y={84} w={150} h={68} solid label="Apps Script" sub="ETL job" />
@@ -114,7 +114,7 @@ function PersonalProject() {
       viewBox="0 0 900 220"
       minWidth={620}
       title="A zero-to-one founding journey: from an empty repository as employee number one, to defining the architecture and conventions, to a live SaaS used daily by paying healthcare organizations, to hiring and mentoring the engineering team that maintains it."
-      caption="Fig. 1 — Zero to one: empty repository to a live product and the team that now runs it."
+      caption="Fig. 1. Zero to one: empty repository to a live product and the team that now runs it."
     >
       {stops.map((s, i) => (
         <g key={s.label}>
@@ -127,7 +127,7 @@ function PersonalProject() {
       <Note
         x={450}
         y={188}
-        text="dual-DB router · Stripe lifecycle · RBAC · QA-gated pipeline — all built solo, first"
+        text="dual-DB router · Stripe lifecycle · RBAC · QA-gated pipeline: all built solo, first"
         anchor="middle"
       />
     </Diagram>

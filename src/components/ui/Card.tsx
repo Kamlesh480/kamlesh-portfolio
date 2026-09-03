@@ -15,7 +15,7 @@ export default function Card({ children, className }: CardProps) {
       {/* preserveAspectRatio="none" stretches the viewBox non-uniformly to fill
           whatever size the card actually renders at (often much wider than
           tall). Without vectorEffect="non-scaling-stroke", that non-uniform
-          stretch also distorts the stroke itself — vertical-ish segments pick
+          stretch also distorts the stroke itself: vertical-ish segments pick
           up the (usually much larger) horizontal scale factor and render far
           thicker than the horizontal segments. non-scaling-stroke keeps the
           drawn line a constant screen-pixel width regardless of that stretch. */}

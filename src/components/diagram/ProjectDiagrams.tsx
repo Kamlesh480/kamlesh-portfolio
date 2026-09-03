@@ -15,8 +15,8 @@ function AiHyperCube() {
     <Diagram
       viewBox="0 0 960 320"
       minWidth={640}
-      title="Pipeline: AI search results are prompt-scoped, run through self-hosted vLLM inference on GPUs, entity-extracted, then Spark post-processed with MD5 hash partitioning into ClickHouse — about five billion tokens a month."
-      caption="Fig. 1 — AI search results become brand analytics: inference moved off pay-per-token APIs onto self-hosted GPUs."
+      title="Pipeline: AI search results are prompt-scoped, run through self-hosted vLLM inference on GPUs, entity-extracted, then Spark post-processed with MD5 hash partitioning into ClickHouse: about five billion tokens a month."
+      caption="Fig. 1. AI search results become brand analytics: inference moved off pay-per-token APIs onto self-hosted GPUs."
     >
       <Note x={480} y={30} text="≈ 5B tokens processed / month" anchor="middle" />
 
@@ -47,7 +47,7 @@ function TrinoPipeline() {
       viewBox="0 0 960 340"
       minWidth={640}
       title="A self-managed Trino, Iceberg and ClickHouse pipeline on Kubernetes with a custom memory-aware scheduler, processing over a billion events a month and replacing a legacy BigQuery-UDF workflow for eighteen to twenty thousand dollars a month in savings."
-      caption="Fig. 1 — Retiring the BigQuery-UDF workflow with a self-managed engine and a memory-aware scheduler."
+      caption="Fig. 1. Retiring the BigQuery-UDF workflow with a self-managed engine and a memory-aware scheduler."
     >
       <Box x={24} y={115} w={120} h={70} label="Events" sub="1B+ / month" />
       <Cylinder x={182} y={110} w={130} h={80} label="GCS" sub="raw + Hive meta" />
@@ -83,7 +83,7 @@ function KeywordCollector() {
       viewBox="0 0 960 340"
       minWidth={680}
       title="An event-driven keyword collector: multiple vendor SERP sources fan into a FastAPI service, through a RabbitMQ queue to a Redis-backed worker pool orchestrated by Argo Workflows, landing in BigQuery, with an AI-Overview stitching branch that mitigates Google's num=100 deprecation."
-      caption="Fig. 1 — Event-driven collection at 100M+ keywords/month; an AI-Overview stitching branch absorbs the num=100 change."
+      caption="Fig. 1. Event-driven collection at 100M+ keywords/month; an AI-Overview stitching branch absorbs the num=100 change."
     >
       {/* fan-in sources */}
       <Box x={20} y={62} w={120} h={44} label="Vendor SERP A" />
@@ -121,7 +121,7 @@ function HealthcarePlatform() {
       viewBox="0 0 980 440"
       minWidth={720}
       title="Product architecture: a browser client hits a Next.js dashboard through a proxy that fixes a trailing-slash double round-trip, into a Django DRF API enforcing role-based access; a custom database router splits application data from scraped claims data across separate databases; a collection pipeline gates on QA before writing claims; Stripe drives billing through idempotent webhooks."
-      caption="Fig. 1 — One product, built from an empty repo: request path, dual-database router, QA-gated collection, and idempotent billing."
+      caption="Fig. 1. One product, built from an empty repo: request path, dual-database router, QA-gated collection, and idempotent billing."
     >
       {/* request path (top row) */}
       <Dot cx={48} cy={topY} r={7} label="Users" labelDy={-16} />

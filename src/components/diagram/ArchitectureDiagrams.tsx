@@ -30,8 +30,8 @@ export function DecisionLoopDiagram() {
     <Diagram
       viewBox="0 4 616 236"
       minWidth={420}
-      title="A loop: a constraint such as cost, scale or latency leads to naming the options and their trade-offs, then to a decision with its cost written down, then to verification in production — whose measured result feeds back into the next constraint."
-      caption="Fig. 1 — The loop. A decision without a measured result is just an opinion."
+      title="A loop: a constraint such as cost, scale or latency leads to naming the options and their trade-offs, then to a decision with its cost written down, then to verification in production, whose measured result feeds back into the next constraint."
+      caption="Fig. 1. The loop. A decision without a measured result is just an opinion."
     >
       {steps.map((s, i) => {
         const x = X + i * (W + GAP)
@@ -46,7 +46,7 @@ export function DecisionLoopDiagram() {
       })}
 
       {/* feedback path: what production actually measured re-enters as the
-          next constraint — the reason this is a loop and not a checklist */}
+          next constraint: the reason this is a loop and not a checklist */}
       <Arrow
         from={{ x: X + 3 * (W + GAP) + W / 2, y: Y + H + 6 }}
         to={{ x: X + W / 2, y: Y + H + 6 }}
@@ -65,7 +65,7 @@ function InferencePaths() {
       viewBox="0 4 616 268"
       minWidth={420}
       title="The same five-billion-token monthly workload sent down two paths: hosted per-token APIs at the baseline cost, versus a self-hosted vLLM GPU platform at 62 percent lower cost."
-      caption="Fig. 2 — Same workload, two cost curves. Only one of them stops growing per token."
+      caption="Fig. 2. Same workload, two cost curves. Only one of them stops growing per token."
     >
       <Box x={16} y={92} w={132} h={72} label="5B tokens" sub="every month" />
 
@@ -83,7 +83,7 @@ function InferencePaths() {
       <Badge cx={534} cy={204} text="62% lower" w={150} h={40} />
       <Connector from={{ x: 434, y: 204 }} to={{ x: 464, y: 204 }} dashed />
 
-      <Note x={316} y={130} text="62% ↓ — cost stops scaling per token" />
+      <Note x={316} y={130} text="62% ↓: cost stops scaling per token" />
     </Diagram>
   )
 }
@@ -109,8 +109,8 @@ function TenancyScope() {
     <Diagram
       viewBox="0 4 616 296"
       minWidth={420}
-      title="Four query paths — list queries, detail lookups, ORM subqueries and raw SQL joins — all pass through a single account-scope predicate before reaching the scraped claims database, because a booking identifier repeats across accounts."
-      caption="Fig. 2 — The identifier repeats across accounts, so every path is scoped. No exceptions, including raw SQL."
+      title="Four query paths, list queries, detail lookups, ORM subqueries and raw SQL joins, all pass through a single account-scope predicate before reaching the scraped claims database, because a booking identifier repeats across accounts."
+      caption="Fig. 2. The identifier repeats across accounts, so every path is scoped. No exceptions, including raw SQL."
     >
       {paths.map((p, i) => {
         const y = top + i * STEP
@@ -126,7 +126,7 @@ function TenancyScope() {
       <Arrow from={{ x: gateX + 168, y: gateY + gateH / 2 }} to={{ x: 470, y: gateY + gateH / 2 }} />
       <Cylinder x={470} y={92} w={130} h={92} label="Scraped claims" sub="multi-tenant" />
 
-      <Note x={16} y={276} text="booking ID repeats across accounts — scope it, or leak it" />
+      <Note x={16} y={276} text="booking ID repeats across accounts: scope it, or leak it" />
     </Diagram>
   )
 }
@@ -138,7 +138,7 @@ function IdempotentWebhook() {
       viewBox="0 4 616 274"
       minWidth={420}
       title="A Stripe webhook is checked against the event IDs already seen: a repeat delivery is acknowledged and skipped, while a new event is applied and its ID recorded. Handler errors are caught and logged rather than re-thrown, so the provider never retries work that already succeeded."
-      caption="Fig. 2 — Redelivery is a no-op, and a handler error never asks Stripe to try again."
+      caption="Fig. 2. Redelivery is a no-op, and a handler error never asks Stripe to try again."
     >
       <Box x={16} y={94} w={126} h={66} label="Stripe" sub="billing event" />
       <Arrow from={{ x: 142, y: 127 }} to={{ x: 190, y: 127 }} />
@@ -152,7 +152,7 @@ function IdempotentWebhook() {
       <Arrow from={{ x: 348, y: 146 }} to={{ x: 424, y: 196 }} bend={-10} label="no" labelDy={16} />
       <Box x={424} y={168} w={176} h={62} label="Apply + record ID" sub="plan / state change" />
 
-      <Note x={16} y={200} text={['Handler errors are caught', 'and logged — never re-thrown,', 'so Stripe never retries a', 'webhook that already worked.']} />
+      <Note x={16} y={200} text={['Handler errors are caught', 'and logged: never re-thrown,', 'so Stripe never retries a', 'webhook that already worked.']} />
     </Diagram>
   )
 }

@@ -12,7 +12,7 @@ export const skillGroups: SkillGroup[] = [
   {
     category: 'backend',
     label: 'Backend Engineering',
-    description: 'API and service design, data modeling, billing, and multi-tenant systems — not just CRUD.',
+    description: 'API and service design, data modeling, billing, and multi-tenant systems: not just CRUD.',
     skills: [
       'Python', 'FastAPI', 'Django', 'Django REST Framework', 'ORM',
       'REST APIs', 'Authentication & Authorization', 'RBAC & Multi-Tenancy',
@@ -23,7 +23,7 @@ export const skillGroups: SkillGroup[] = [
   {
     category: 'data-ai',
     label: 'Data & AI Infrastructure',
-    description: 'Large-scale data platforms and production LLM infrastructure — not just API integrations.',
+    description: 'Large-scale data platforms and production LLM infrastructure: not just API integrations.',
     skills: [
       'Trino', 'Apache Iceberg', 'ClickHouse', 'Google BigQuery', 'Apache Spark',
       'Hive Metadata', 'Argo Workflows', 'LLM Processing Infrastructure',

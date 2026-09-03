@@ -80,7 +80,7 @@ export default function SiteFooter() {
           <h2 className="foot-col-title">Elsewhere</h2>
           <ul>
             <li>
-              {/* rel="me" ties these profiles to the Person entity — the same
+              {/* rel="me" ties these profiles to the Person entity: the same
                   claim the JSON-LD `sameAs` makes, in link form. */}
               <a className="foot-link" href={LINKEDIN} rel="me noopener noreferrer" target="_blank">
                 LinkedIn
@@ -107,7 +107,7 @@ export default function SiteFooter() {
 
       <div className="foot">
         <div className="signature">Kamlesh</div>
-        {/* Replaced an art-print colophon ("No. 01 — Charcoal on paper /
+        {/* Replaced an art-print colophon ("No. 01: Charcoal on paper /
             Studio · MMXXVI"). It supported the artwork conceit but implied a
             studio that doesn't exist and told a recruiter nothing. The role +
             location line is also a small local-relevance signal. */}

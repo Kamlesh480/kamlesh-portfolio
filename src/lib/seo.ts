@@ -26,7 +26,7 @@ function resolveSiteUrl(): string {
     return new URL(raw).origin
   } catch {
     console.warn(
-      `[seo] NEXT_PUBLIC_SITE_URL is set but not a valid URL: "${raw}" — falling back to ${FALLBACK_SITE_URL}`
+      `[seo] NEXT_PUBLIC_SITE_URL is set but not a valid URL: "${raw}": falling back to ${FALLBACK_SITE_URL}`
     )
     return FALLBACK_SITE_URL
   }

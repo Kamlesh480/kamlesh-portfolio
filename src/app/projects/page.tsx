@@ -7,7 +7,7 @@ import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
 
 const PAGE_DESCRIPTION =
-  'Case studies from Kamlesh Chhipa’s work — LLM processing infrastructure at 5B+ tokens/month, a Trino–Iceberg–ClickHouse pipeline, and the system behind this site.'
+  'Case studies from Kamlesh Chhipa’s work: LLM processing infrastructure at 5B+ tokens/month, a Trino–Iceberg–ClickHouse pipeline, and the system behind this site.'
 
 export const metadata = pageMetadata({
   title: 'Projects',
@@ -30,7 +30,7 @@ export default function ProjectsPage() {
       <div className="eyebrow">Projects</div>
       <h1 className="page-title">Systems, not just tech stacks.</h1>
       <p className="page-lede">
-        Each of these started as a real constraint — cost, throughput, or scale — not a
+        Each of these started as a real constraint, cost, throughput, or scale, not a
         greenfield exercise. Here&apos;s the problem, the solution, and what it moved.
       </p>
 

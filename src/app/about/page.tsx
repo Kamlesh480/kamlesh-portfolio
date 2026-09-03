@@ -8,7 +8,7 @@ import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
 
 const PAGE_DESCRIPTION =
-  'Kamlesh Chhipa — from ETL scripts to founding engineer on a production healthcare SaaS platform, and the philosophy behind how he builds.'
+  'Kamlesh Chhipa: from ETL scripts to founding engineer on a production healthcare SaaS platform, and the philosophy behind how he builds.'
 
 export const metadata = pageMetadata({
   title: 'About',
@@ -28,7 +28,7 @@ export default function AboutPage() {
     <div className="page-shell">
       <PageSchema path="/about" type="AboutPage" name="About" description={PAGE_DESCRIPTION} />
       {/* True left/right hero split: the whole text block (eyebrow + heading +
-          lede) is ONE column, the stack diagram is the other — so the heading
+          lede) is ONE column, the stack diagram is the other, so the heading
           aligns with the diagram instead of spanning the full width above it.
           No manual <br> in the title: it wraps to the column. */}
       <RevealSection className="content-grid cols-2 about-hero">
@@ -38,9 +38,9 @@ export default function AboutPage() {
             From ETL scripts to founding engineer on a live SaaS product.
           </h1>
           <p className="page-lede">
-            I&apos;m Kamlesh — a backend-first engineer based in Bengaluru who&apos;s just as
+            I&apos;m Kamlesh: a backend-first engineer based in Bengaluru who&apos;s just as
             comfortable owning an entire product end-to-end. I specialize in Python-based backend
-            engineering, distributed data pipelines, and production AI infrastructure — and as
+            engineering, distributed data pipelines, and production AI infrastructure, and as
             founding engineer on a healthcare SaaS platform I built as a personal project, I took
             it from an empty repository to real paying customers, alone, before hiring the team
             that runs it today.
@@ -70,7 +70,7 @@ export default function AboutPage() {
           <div className="prose">
             <p>
               I started at DUIT Technologies writing Python ETL scripts and evaluating machine
-              learning APIs — unglamorous work that taught me the thing that&apos;s stuck with me
+              learning APIs: unglamorous work that taught me the thing that&apos;s stuck with me
               since: most of engineering is making messy, real-world data behave. From there I
               spent over three years at Hevo Data as a full-stack engineer, where I learned that
               the line between &quot;backend&quot; and &quot;frontend&quot; matters far less than the line between
@@ -79,7 +79,7 @@ export default function AboutPage() {
             </p>
             <p>
               In my current role, I architect the LLM infrastructure that processes over 5 billion
-              tokens a month — the kind of scale where a naive design doesn&apos;t just run slowly, it
+              tokens a month: the kind of scale where a naive design doesn&apos;t just run slowly, it
               becomes unaffordable. Moving inference onto a self-hosted GPU platform and cutting
               our AI processing bill 62% is one of the projects I&apos;m proudest of, not because of
               the percentage, but because it&apos;s exactly the kind of problem I want more of: real
@@ -87,9 +87,9 @@ export default function AboutPage() {
             </p>
             <p>
               Alongside that, I&apos;m the founding engineer on a healthcare claims platform I built
-              as a personal project — one that didn&apos;t exist when I started. No codebase, no
+              as a personal project: one that didn&apos;t exist when I started. No codebase, no
               architecture, no team. I built the whole thing: frontend, backend, infrastructure,
-              billing, the data pipeline, all of it — then hired and onboarded the engineers
+              billing, the data pipeline, all of it, then hired and onboarded the engineers
               who&apos;ve joined since. It&apos;s the clearest proof I have that I can take a product
               from nothing to production and keep it running once real customers depend on it.
             </p>
@@ -101,7 +101,7 @@ export default function AboutPage() {
       <RevealSection as="section" className="section-block">
         <SectionHeading eyebrow="Standout project">Building a product from zero</SectionHeading>
         <p className="prose" style={{ maxWidth: '72ch', marginBottom: 24 }}>
-          If you want the concrete version of &quot;can this person own a whole product&quot; —
+          If you want the concrete version of &quot;can this person own a whole product&quot;: 
           this is it. Dual-database architecture, a full Stripe billing lifecycle, RBAC,
           an automated data pipeline with QA gating, and a team I hired and still mentor.
           Built from a blank repository to a platform real healthcare organizations use daily.
@@ -118,7 +118,7 @@ export default function AboutPage() {
               Deterministic over clever
             </h3>
             <p className="prose">
-              At the scale I work at — billions of tokens, billions of events — a clever
+              At the scale I work at, billions of tokens, billions of events, a clever
               system that&apos;s hard to reason about will eventually fail in a way nobody can
               debug at 2am. I&apos;d rather build something boring that&apos;s always right.
             </p>
@@ -129,8 +129,8 @@ export default function AboutPage() {
               Cost is a design constraint
             </h3>
             <p className="prose">
-              Every infrastructure decision I&apos;ve made that mattered — Trino over BigQuery
-              UDFs, self-hosted vLLM over hosted APIs — came from treating monthly cost as a
+              Every infrastructure decision I&apos;ve made that mattered: Trino over BigQuery
+              UDFs, self-hosted vLLM over hosted APIs: came from treating monthly cost as a
               real architectural constraint, not an afterthought for finance to worry about.
             </p>
           </div>
@@ -153,7 +153,7 @@ export default function AboutPage() {
             </h3>
             <p className="prose">
               Being founding engineer means there&apos;s no one to ask when the architecture
-              doesn&apos;t exist yet. I don&apos;t just tolerate that — building this personal
+              doesn&apos;t exist yet. I don&apos;t just tolerate that: building this personal
               project from an empty repo to production customers is the work I&apos;m most proud of.
             </p>
           </div>
@@ -164,7 +164,7 @@ export default function AboutPage() {
         <SectionHeading eyebrow="What's next">Open to the right problem</SectionHeading>
         <p className="prose" style={{ maxWidth: '68ch', marginBottom: 28 }}>
           I&apos;m open to SDE-2 / SDE-3 backend, platform, or full-stack roles in product-led,
-          AI-driven teams — and to founding/lead engineering engagements for startups and
+          AI-driven teams, and to founding/lead engineering engagements for startups and
           founders who need someone who can take a product from idea to production alone.
         </p>
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>

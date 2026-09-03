@@ -27,14 +27,14 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Kamlesh Chhipa — Senior Software Engineer & AI Infra Engineer',
+    default: 'Kamlesh Chhipa: Senior Software Engineer & AI Infra Engineer',
     template: '%s | Kamlesh Chhipa',
   },
   description:
     'Backend and full-stack engineer in Bengaluru with 4+ years building large-scale data platforms and production LLM infrastructure.',
   openGraph: {
     ...baseOpenGraph,
-    title: 'Kamlesh Chhipa — Senior Software Engineer & AI Infra Engineer',
+    title: 'Kamlesh Chhipa: Senior Software Engineer & AI Infra Engineer',
     description:
       'Backend and full-stack engineer with 4+ years building large-scale data platforms and production LLM infrastructure.',
     url: SITE_URL,
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   // Match the paper background so mobile browser chrome reads as part of the
-  // light page — a charcoal themeColor here made the whole site feel like a
+  // light page: a charcoal themeColor here made the whole site feel like a
   // dark theme on phones even though the page itself is paper-light.
   themeColor: '#f6f3ec',
 }
@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={siteJsonLd} />
         <SiteChrome />
         {/* Banner + nav travel together as one sticky unit. SiteChrome stays
-            OUTSIDE it — it must remain a direct child of <body>. */}
+            OUTSIDE it: it must remain a direct child of <body>. */}
         <div className="site-top">
           <AnnouncementBar />
           <SiteHeader />

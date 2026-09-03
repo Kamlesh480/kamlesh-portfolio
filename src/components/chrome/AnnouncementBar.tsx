@@ -56,7 +56,7 @@ function readDismiss(): string | null {
   try {
     return window.localStorage.getItem(STORAGE_KEY)
   } catch {
-    return null // storage blocked (private mode) — just show the bar
+    return null // storage blocked (private mode): just show the bar
   }
 }
 

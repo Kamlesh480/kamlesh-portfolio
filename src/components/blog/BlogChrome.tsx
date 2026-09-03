@@ -60,7 +60,7 @@ export default function BlogChrome() {
             label.textContent = 'Link copied'
             setTimeout(() => { label.textContent = 'Copy link' }, 1600)
           }
-        } catch { /* clipboard unavailable — the visible URL is still selectable */ }
+        } catch { /* clipboard unavailable: the visible URL is still selectable */ }
         return
       }
 

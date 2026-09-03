@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           ]}
         />
 
-        {/* Title block and cover share one row — the header alone left the
+        {/* Title block and cover share one row: the header alone left the
             entire right half of the fold empty. Stacks below 980px. */}
         <div className="post-hero">
         <header className="post-header">

@@ -16,11 +16,11 @@ export const decisions: DecisionRecord[] = [
     title: 'Move LLM inference off per-token APIs',
     context: 'AI Hyper Cube · LLM infrastructure',
     problem:
-      'AI Hyper Cube runs scoped prompts over AI-generated search content at 5B+ tokens a month, across 100M+ keyword SERPs. At that volume the dominant cost driver was not compute or storage — it was per-token API pricing, and it grew linearly with every unit of product growth.',
+      'AI Hyper Cube runs scoped prompts over AI-generated search content at 5B+ tokens a month, across 100M+ keyword SERPs. At that volume the dominant cost driver was not compute or storage: it was per-token API pricing, and it grew linearly with every unit of product growth.',
     options: [
       {
         label: 'Stay on hosted per-token APIs',
-        note: 'No serving infrastructure to own — but the cost curve is set by someone else and scales with every token.',
+        note: 'No serving infrastructure to own, but the cost curve is set by someone else and scales with every token.',
       },
       {
         label: 'Self-host open-source models on GPUs',
@@ -31,7 +31,7 @@ export const decisions: DecisionRecord[] = [
     decision:
       'Engineered a GPU-based inference platform on vLLM and rented GPU capacity running open-source models for large-scale entity extraction, moving the extraction workload off hosted APIs entirely.',
     tradeoff:
-      'Traded a zero-operations dependency for infrastructure I own: GPU capacity planning, model serving, and throughput tuning became my problem — in exchange for a bill that no longer scales with every additional token.',
+      'Traded a zero-operations dependency for infrastructure I own: GPU capacity planning, model serving, and throughput tuning became my problem: in exchange for a bill that no longer scales with every additional token.',
     outcomes: [
       'Monthly AI processing cost cut 62%.',
       'Throughput and extraction accuracy held at 5B+ tokens per month.',
@@ -42,7 +42,7 @@ export const decisions: DecisionRecord[] = [
     title: 'Retire BigQuery UDFs for a self-managed engine',
     context: 'Data platform · 1B+ events / month',
     problem:
-      'The legacy BigQuery UDF workflow processed more than a billion events a month. It was expensive at that scale and hard to reason about operationally — and both problems compounded as volume grew.',
+      'The legacy BigQuery UDF workflow processed more than a billion events a month. It was expensive at that scale and hard to reason about operationally, and both problems compounded as volume grew.',
     options: [
       {
         label: 'Keep tuning the BigQuery UDF workflow',
@@ -50,7 +50,7 @@ export const decisions: DecisionRecord[] = [
       },
       {
         label: 'Self-manage Trino, Iceberg and ClickHouse',
-        note: 'Direct control of memory, scheduling, and storage layout — at the cost of running the cluster.',
+        note: 'Direct control of memory, scheduling, and storage layout: at the cost of running the cluster.',
         chosen: true,
       },
     ],
@@ -68,7 +68,7 @@ export const decisions: DecisionRecord[] = [
     title: 'Separate scraped data from application data',
     context: 'Personal project · healthcare claims platform',
     problem:
-      'Scraped claims data and application data have different shapes, different lifecycles, and different failure modes. Putting both in one database would have coupled the scrape layer to the product permanently — every pipeline change becoming a product migration.',
+      'Scraped claims data and application data have different shapes, different lifecycles, and different failure modes. Putting both in one database would have coupled the scrape layer to the product permanently: every pipeline change becoming a product migration.',
     options: [
       {
         label: 'One database, one schema',
@@ -76,7 +76,7 @@ export const decisions: DecisionRecord[] = [
       },
       {
         label: 'Separate databases behind an explicit router',
-        note: 'Independent lifecycles — but no cross-database joins, and every query’s destination must be deliberate.',
+        note: 'Independent lifecycles, but no cross-database joins, and every query’s destination must be deliberate.',
         chosen: true,
       },
     ],
@@ -94,7 +94,7 @@ export const decisions: DecisionRecord[] = [
     title: 'Treat a non-unique ID as a fact, not a bug',
     context: 'Personal project · multi-tenancy',
     problem:
-      'A key booking identifier repeats across different accounts in the scraped source data. That is not a defect waiting to be fixed upstream — it is a property of the data. Any query written assuming global uniqueness would silently return another account’s records, and would look correct in every test written by the person who made the assumption.',
+      'A key booking identifier repeats across different accounts in the scraped source data. That is not a defect waiting to be fixed upstream: it is a property of the data. Any query written assuming global uniqueness would silently return another account’s records, and would look correct in every test written by the person who made the assumption.',
     options: [
       {
         label: 'Assume the identifier is unique',
@@ -102,14 +102,14 @@ export const decisions: DecisionRecord[] = [
       },
       {
         label: 'Scope every query path by account, explicitly',
-        note: 'More verbose at every call site — and the invariant cannot be quietly forgotten.',
+        note: 'More verbose at every call site, and the invariant cannot be quietly forgotten.',
         chosen: true,
       },
     ],
     decision:
       'Designed and documented explicit account-scoping rules for every query path: list queries, detail lookups, ORM subqueries, and raw SQL joins.',
     tradeoff:
-      'Every read carries an extra predicate and a rule someone has to know — the price of an invariant that still holds when a new engineer writes the next query.',
+      'Every read carries an extra predicate and a rule someone has to know: the price of an invariant that still holds when a new engineer writes the next query.',
     outcomes: [
       'No account can retrieve another account’s records.',
       'The scoping model is written down and reviewable, not folklore.',
@@ -124,7 +124,7 @@ export const decisions: DecisionRecord[] = [
     options: [
       {
         label: 'Handle each delivery as it arrives',
-        note: 'Correct only while the network is — and billing is the wrong place to find out it isn’t.',
+        note: 'Correct only while the network is, and billing is the wrong place to find out it isn’t.',
       },
       {
         label: 'Key idempotency on the provider’s event ID',
@@ -135,9 +135,9 @@ export const decisions: DecisionRecord[] = [
     decision:
       'An idempotency model keyed on the Stripe event ID, with handler errors caught and logged rather than re-thrown.',
     tradeoff:
-      'Failures surface through logs and alerts instead of provider retries — which means the monitoring has to be real, not aspirational.',
+      'Failures surface through logs and alerts instead of provider retries, which means the monitoring has to be real, not aspirational.',
     outcomes: [
-      'The full billing lifecycle — trial, paid, upgrade, downgrade, cancellation, reactivation — runs on idempotent handlers.',
+      'The full billing lifecycle, trial, paid, upgrade, downgrade, cancellation, reactivation, runs on idempotent handlers.',
       'A logic bug never causes Stripe to retry an event that already succeeded.',
     ],
   },

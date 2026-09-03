@@ -8,7 +8,7 @@ import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
 
 const PAGE_DESCRIPTION =
-  'Kamlesh Chhipa’s work history — BrightEdge, Hevo Data, and DUIT Technologies — with the systems built, scale reached, and business impact delivered at each.'
+  'Kamlesh Chhipa’s work history, BrightEdge, Hevo Data, and DUIT Technologies, with the systems built, scale reached, and business impact delivered at each.'
 
 export const metadata = pageMetadata({
   title: 'Experience',

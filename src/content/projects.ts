@@ -3,15 +3,15 @@ import type { ProjectEntry } from './types'
 export const projects: ProjectEntry[] = [
   {
     slug: 'ai-hyper-cube',
-    title: 'AI Hyper Cube — LLM Processing Infrastructure',
+    title: 'AI Hyper Cube: LLM Processing Infrastructure',
     role: 'Architect & Lead Engineer',
     period: 'Jun 2025 – Present',
     summary:
-      'The core LLM infrastructure that scopes and runs prompts over AI-generated search content at massive scale — extracting intent, brand entities, sentiment, and citations for enterprise SEO analytics.',
+      'The core LLM infrastructure that scopes and runs prompts over AI-generated search content at massive scale: extracting intent, brand entities, sentiment, and citations for enterprise SEO analytics.',
     problem:
-      'AI Overviews and AI-generated search results needed to be parsed for brand mentions, sentiment, and citations across 100M+ keyword SERPs a month — at a token volume and cost that made naive LLM API calls economically unworkable.',
+      'AI Overviews and AI-generated search results needed to be parsed for brand mentions, sentiment, and citations across 100M+ keyword SERPs a month: at a token volume and cost that made naive LLM API calls economically unworkable.',
     solution:
-      'Architected a Python/ClickHouse/MySQL pipeline processing 5B+ tokens per month, then engineered a GPU-based inference platform on vLLM and rented GPU capacity using open-source models for large-scale entity extraction — moving the workload off pay-per-token hosted APIs entirely.',
+      'Architected a Python/ClickHouse/MySQL pipeline processing 5B+ tokens per month, then engineered a GPU-based inference platform on vLLM and rented GPU capacity using open-source models for large-scale entity extraction: moving the workload off pay-per-token hosted APIs entirely.',
     stack: ['Python', 'ClickHouse', 'MySQL', 'vLLM', 'GPU Inference', 'BigQuery', 'Apache Spark'],
     outcomes: [
       '5B+ tokens processed per month in production.',
@@ -41,7 +41,7 @@ export const projects: ProjectEntry[] = [
     problem:
       'The existing BigQuery UDF-based processing workflow was expensive at scale and difficult to reason about operationally as event volume grew past 1B+ per month.',
     solution:
-      'Built a pipeline on Python, GCS, Hive metadata, JavaScript UDFs, and Kubernetes, with a custom memory-aware job scheduler to safely run distributed jobs at that volume — replacing the BigQuery-UDF approach end-to-end.',
+      'Built a pipeline on Python, GCS, Hive metadata, JavaScript UDFs, and Kubernetes, with a custom memory-aware job scheduler to safely run distributed jobs at that volume: replacing the BigQuery-UDF approach end-to-end.',
     stack: ['Trino', 'Iceberg', 'ClickHouse', 'Python', 'GCS', 'Hive metadata', 'Kubernetes', 'JavaScript'],
     outcomes: [
       'A five-figure reduction in monthly processing cost versus the legacy BigQuery UDF process.',
@@ -75,9 +75,9 @@ export const projects: ProjectEntry[] = [
     title: 'Healthcare Claims Intelligence Platform',
     role: 'Founding Engineer & Full-Stack Lead · Personal Project',
     summary:
-      'A production SaaS platform that automates the collection, validation, and analysis of insurance claims data for healthcare organizations. I was employee/contractor number one — no codebase, no architecture, no team. I built all of it, then hired the engineers who followed.',
+      'A production SaaS platform that automates the collection, validation, and analysis of insurance claims data for healthcare organizations. I was employee/contractor number one: no codebase, no architecture, no team. I built all of it, then hired the engineers who followed.',
     problem:
-      'Diagnostic centres, clinics, and medical professionals were managing insurance claims manually across multiple insurance portals — no automated collection, no validation, no real-time visibility into what was outstanding, rejected, or overdue.',
+      'Diagnostic centres, clinics, and medical professionals were managing insurance claims manually across multiple insurance portals: no automated collection, no validation, no real-time visibility into what was outstanding, rejected, or overdue.',
     solution:
       'Built a full-stack SaaS platform from a blank repository: a Next.js dashboard with real-time analytics, a Django backend serving a dual-database architecture (application data cleanly separated from scraped claims data via a custom router), an automated collection pipeline with post-collection QA gating, a complete Stripe billing lifecycle, and a role-based access model scoped to the organization level. Then defined the technical direction, hired the team, and kept shipping.',
     stack: [
@@ -88,7 +88,7 @@ export const projects: ProjectEntry[] = [
     ],
     outcomes: [
       'Live in production with multiple healthcare organizations using it daily.',
-      'Full Stripe billing lifecycle — free, trial, paid, upgrade/downgrade/cancellation/reactivation — built and operating with webhook-idempotent handlers.',
+      'Full Stripe billing lifecycle, free, trial, paid, upgrade/downgrade/cancellation/reactivation, built and operating with webhook-idempotent handlers.',
       '13 scraped data tables across 2 databases behind one custom database router, with zero cross-account data leaks under a documented multi-tenancy scoping model.',
       'Hired and onboarded the frontend, QA, DevOps, and backend engineers who now maintain and extend the platform.',
       'Multi-language UI (English + Italian) and RBAC across three permission levels, shipped with a CI/CD pipeline that runs automated database migrations on every deploy.',
@@ -97,12 +97,12 @@ export const projects: ProjectEntry[] = [
       {
         title: 'A booking ID that wasn’t actually unique',
         description:
-          'The scraped claims database is multi-tenant, and a key booking identifier could repeat across different accounts — not a bug, a fact of the source data. I designed and documented explicit account-scoping rules for every query path (list queries, detail lookups, ORM subqueries, and raw SQL joins) to guarantee no account could ever see another’s records.',
+          'The scraped claims database is multi-tenant, and a key booking identifier could repeat across different accounts: not a bug, a fact of the source data. I designed and documented explicit account-scoping rules for every query path (list queries, detail lookups, ORM subqueries, and raw SQL joins) to guarantee no account could ever see another’s records.',
       },
       {
         title: 'Stripe webhooks arriving more than once',
         description:
-          'Stripe can and does redeliver the same billing event. Built an idempotency model keyed on the Stripe event ID, with handler errors caught and logged rather than re-thrown — so a logic bug never causes Stripe to retry a webhook that already succeeded.',
+          'Stripe can and does redeliver the same billing event. Built an idempotency model keyed on the Stripe event ID, with handler errors caught and logged rather than re-thrown, so a logic bug never causes Stripe to retry a webhook that already succeeded.',
       },
       {
         title: 'A silent double round-trip on every API call',

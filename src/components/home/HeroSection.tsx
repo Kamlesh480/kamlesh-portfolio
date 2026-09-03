@@ -83,7 +83,7 @@ export default function HeroSection() {
           <p className="lede">
             I architect backend systems at massive scale, and as founding engineer on a
             personal project, took a product from an <em>empty repository to paying customers</em>{' '}
-            — alone. If you need someone who can own the whole build, that&apos;s the work I do best.
+: alone. If you need someone who can own the whole build, that&apos;s the work I do best.
           </p>
           <div className="cta-row">
             <a className="btn" href="/contact">

@@ -42,8 +42,8 @@ export function OwnershipDiagram() {
     <Diagram
       viewBox="0 4 560 310"
       minWidth={380}
-      title="A vertical slice of the product stack — product UI, API and services, data and AI infrastructure, cloud and CI/CD — with a marker spanning all four layers noting that one engineer owns the whole column, backend-first."
-      caption="Fig. 1 — Backend-first, but the whole column ships."
+      title="A vertical slice of the product stack: product UI, API and services, data and AI infrastructure, cloud and CI/CD: with a marker spanning all four layers noting that one engineer owns the whole column, backend-first."
+      caption="Fig. 1. Backend-first, but the whole column ships."
     >
       {layers.map((l, i) => (
         <Box
@@ -58,12 +58,12 @@ export function OwnershipDiagram() {
         />
       ))}
 
-      {/* extent marker spanning every layer — a plain rule with ticks turned
+      {/* extent marker spanning every layer: a plain rule with ticks turned
           toward the stack reads as "all of this" without needing a curly brace */}
       <Connector from={{ x: markX, y: top }} to={{ x: markX, y: bottom }} />
       <Connector from={{ x: markX, y: top }} to={{ x: markX + 12, y: top }} />
       <Connector from={{ x: markX, y: bottom }} to={{ x: markX + 12, y: bottom }} />
-      <Note x={NOTE_X} y={(top + bottom) / 2 - 8} text={['I own the whole', 'column — end to end.']} />
+      <Note x={NOTE_X} y={(top + bottom) / 2 - 8} text={['I own the whole', 'column: end to end.']} />
     </Diagram>
   )
 }
@@ -95,7 +95,7 @@ export function JourneyDiagram() {
       viewBox="0 4 490 428"
       minWidth={340}
       title="A career path in four steps: DUIT Technologies writing Python ETL and evaluating ML APIs, then Hevo Data as a full-stack engineer migrating Django to Next.js, then a current role architecting LLM infrastructure at five billion tokens a month, then founding engineer on a personal project taken from zero to one."
-      caption="Fig. 1 — Four steps, one thread: make it work, then make it provable."
+      caption="Fig. 1. Four steps, one thread: make it work, then make it provable."
     >
       {stops.map((s, i) => {
         const y = top + i * STEP

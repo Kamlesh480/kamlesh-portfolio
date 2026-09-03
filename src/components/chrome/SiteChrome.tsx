@@ -134,7 +134,7 @@ export default function SiteChrome() {
       {/* mode indicator */}
       <div id="modeIndicator" />
 
-      {/* Draw-mode quick bar — visible only in draw mode (CSS) */}
+      {/* Draw-mode quick bar: visible only in draw mode (CSS) */}
       <div id="drawQuickBar">
         <button id="drawExitBtn" aria-label="Exit draw mode">
           ← Exit draw mode

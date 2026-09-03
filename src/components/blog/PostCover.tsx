@@ -37,7 +37,7 @@ function inferMotif(post: BlogPost): CoverMotif {
 }
 
 /* Small helpers so every motif draws in the same hand. Straight connectors are
-   NOT filtered — #rough erases axis-aligned strokes (known_patterns.md Bug 7). */
+   NOT filtered: #rough erases axis-aligned strokes (known_patterns.md Bug 7). */
 const Node = ({ x, y, w, h, solid }: { x: number; y: number; w: number; h: number; solid?: boolean }) => (
   <rect className={solid ? 'pc-node-box pc-node-box--solid' : 'pc-node-box'} x={x} y={y} width={w} height={h} rx={4} />
 )
@@ -62,7 +62,7 @@ function Pipeline({ seed }: { seed: string }) {
         </g>
       ))}
       <Head x={112} y={90} />
-      {/* the processing stage — inked, because it's the point of the article */}
+      {/* the processing stage: inked, because it's the point of the article */}
       <Node x={114} y={60} w={72} h={60} solid />
       <Line x1={186} y1={90} x2={214} y2={90} />
       <Head x={220} y={90} />
@@ -85,13 +85,13 @@ function Comparison({ seed }: { seed: string }) {
   return (
     <>
       <Node x={18} y={76} w={56} h={28} />
-      {/* rejected path — faded */}
+      {/* rejected path: faded */}
       <path className="pc-link pc-link--faded" d="M 74 84 C 110 56, 130 46, 158 46" fill="none" />
       <g className="pc-faded">
         <Node x={162} y={30} w={78} h={32} />
       </g>
       <Line x1={240} y1={46} x2={262} y2={46} dashed />
-      {/* chosen path — inked */}
+      {/* chosen path: inked */}
       <path className="pc-link" d="M 74 96 C 110 124, 130 134, 158 134" fill="none" />
       <Head x={158} y={134} />
       <Node x={162} y={118} w={78} h={32} solid />
@@ -144,7 +144,7 @@ function Timeline({ seed }: { seed: string }) {
 
 /* ---- labelled schematic: the article's real chain ----------------------- */
 /* When a post supplies `coverNodes`, the cover stops being decorative and
-   becomes a summary — named components, an inked focal node, and the headline
+   becomes a summary: named components, an inked focal node, and the headline
    metric. This is what makes a cover legible to someone who hasn't read the
    post yet, which is the whole point when it's shared. */
 function LabelledFlow({ nodes, metric }: { nodes: string[]; metric?: string }) {

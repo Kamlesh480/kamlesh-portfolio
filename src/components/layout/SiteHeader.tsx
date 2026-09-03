@@ -52,7 +52,7 @@ export default function SiteHeader() {
               className={`nav-item${active ? ' is-active' : ''}`}
               href={route.path}
             >
-              {route.label}
+              {route.navLabel ?? route.label}
               {ul && (
                 <svg className="ul" viewBox={ul.viewBox} preserveAspectRatio="none" aria-hidden="true">
                   <path d={ul.d} style={{ '--len': String(ul.len) } as React.CSSProperties} />
@@ -76,7 +76,7 @@ export default function SiteHeader() {
         </svg>
       </button>
 
-      {/* The header's bottom edge. Uses .nav-rule, NOT .rule — `.rule` is
+      {/* The header's bottom edge. Uses .nav-rule, NOT .rule: `.rule` is
           hidden by default (stroke-dashoffset) and only revealed by the Home
           hero's .ink/.settled choreography, so it would draw nothing here. */}
       <svg className="nav-rule" viewBox="0 0 1500 14" preserveAspectRatio="none" aria-hidden="true">
@@ -92,7 +92,7 @@ export default function SiteHeader() {
             style={{ transitionDelay: mobileOpen ? `${i * 0.05}s` : '0s' }}
             onClick={() => setMobileOpen(false)}
           >
-            {route.label}
+            {route.navLabel ?? route.label}
           </Link>
         ))}
       </div>

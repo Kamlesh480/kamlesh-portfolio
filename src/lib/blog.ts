@@ -62,7 +62,7 @@ function parseFile(filename: string): BlogPost | null {
     if (looksLikeCodename) {
       console.warn(
         `[blog] Slug "${slug}" looks like an internal codename or is very short. ` +
-          `URLs rank on keywords — prefer 3–6 descriptive words from the article's topic. ` +
+          `URLs rank on keywords: prefer 3–6 descriptive words from the article's topic. ` +
           `Set \`slug:\` in frontmatter to control it independently of the filename.`
       )
     }

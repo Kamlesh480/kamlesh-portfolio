@@ -46,7 +46,7 @@ export default function BlogSearch({ posts }: { posts: IndexedPost[] }) {
         id="blog-search-input"
         type="search"
         className="blog-search-input"
-        placeholder="Search notes — try “pipeline”, “python”, “cost”…"
+        placeholder="Search notes: try “pipeline”, “python”, “cost”…"
         value={q}
         onChange={(e) => setQ(e.target.value)}
         autoComplete="off"

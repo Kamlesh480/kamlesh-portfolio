@@ -25,17 +25,17 @@ const capabilities: { icon: SketchIconName; title: string; body: string }[] = [
   {
     icon: 'server',
     title: 'Backend & Data Platforms',
-    body: 'Python, Django, FastAPI — and the data layer underneath: Trino, Iceberg, ClickHouse, BigQuery, Spark. Systems that stay deterministic at a billion events a month.',
+    body: 'Python, Django, FastAPI, and the data layer underneath: Trino, Iceberg, ClickHouse, BigQuery, Spark. Systems that stay deterministic at a billion events a month.',
   },
   {
     icon: 'spark',
     title: 'AI Infrastructure',
-    body: 'Production LLM pipelines, not API wrappers — self-hosted vLLM inference, prompt-scoped extraction, and the cost engineering that makes 5B tokens/month affordable.',
+    body: 'Production LLM pipelines, not API wrappers: self-hosted vLLM inference, prompt-scoped extraction, and the cost engineering that makes 5B tokens/month affordable.',
   },
   {
     icon: 'layers',
     title: 'Full-Stack Product',
-    body: 'When it matters, I own the whole thing: Next.js frontends, Stripe billing, RBAC, GCP infrastructure, CI/CD — from architecture decision to the metric that proves it shipped.',
+    body: 'When it matters, I own the whole thing: Next.js frontends, Stripe billing, RBAC, GCP infrastructure, CI/CD: from architecture decision to the metric that proves it shipped.',
   },
 ]
 
@@ -131,7 +131,7 @@ export default function HomeSections() {
           needs to actually work?
         </h2>
         <p className="page-lede" style={{ maxWidth: '48ch' }}>
-          I&apos;m open to senior backend, platform, and full-stack roles — and to
+          I&apos;m open to senior backend, platform, and full-stack roles, and to
           founding-engineer engagements where the product doesn&apos;t exist yet.
         </p>
         <div className="cta-buttons">

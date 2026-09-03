@@ -14,8 +14,8 @@ function OidcBefore() {
     <Diagram
       viewBox="0 4 660 330"
       minWidth={460}
-      title="The previous request path: a browser calls a server-side Next.js proxy, which performs a three-step token exchange — platform OIDC token, then an STS exchange, then a Cloud Run identity token — before the request reaches the private, IAM-enforced Cloud Run service and the Django app. The exchange added roughly 200 to 400 milliseconds to every request."
-      caption="Fig. 1 — Before: three token hops stood between the proxy and the application, on every request."
+      title="The previous request path: a browser calls a server-side Next.js proxy, which performs a three-step token exchange: platform OIDC token, then an STS exchange, then a Cloud Run identity token: before the request reaches the private, IAM-enforced Cloud Run service and the Django app. The exchange added roughly 200 to 400 milliseconds to every request."
+      caption="Fig. 1. Before: three token hops stood between the proxy and the application, on every request."
     >
       <Box x={16} y={116} w={112} h={56} label="Browser" />
       <Arrow from={{ x: 128, y: 144 }} to={{ x: 162, y: 144 }} />
@@ -44,7 +44,7 @@ function LoadBalancerAfter() {
       viewBox="0 4 660 344"
       minWidth={460}
       title="The new request path: API traffic goes browser to Next.js proxy to an HTTPS load balancer, while admin traffic goes through an identity-aware SSO gate to the same load balancer. The balancer routes through a serverless network endpoint group to Cloud Run, whose ingress accepts load-balancer traffic only, so the direct service URL is blocked."
-      caption="Fig. 2 — After: one controlled entry point. No identity token is minted anywhere in the request path."
+      caption="Fig. 2. After: one controlled entry point. No identity token is minted anywhere in the request path."
     >
       {/* API path */}
       <Box x={16} y={44} w={130} h={54} label="Browser" sub="API calls" />
@@ -82,8 +82,8 @@ function SerpBatchBefore() {
     <Diagram
       viewBox="0 4 660 260"
       minWidth={440}
-      title="The previous collection design: the whole keyword batch is posted to vendors at once, and nothing is usable until every job in the batch has finished — a wait of two to three days before any data flows."
-      caption="Fig. 1 — Before: one batch, one wait. The slowest job set the pace for all of them."
+      title="The previous collection design: the whole keyword batch is posted to vendors at once, and nothing is usable until every job in the batch has finished: a wait of two to three days before any data flows."
+      caption="Fig. 1. Before: one batch, one wait. The slowest job set the pace for all of them."
     >
       <Box x={16} y={92} w={132} h={62} label="Keyword batch" />
       <Arrow from={{ x: 148, y: 123 }} to={{ x: 184, y: 123 }} />
@@ -108,8 +108,8 @@ function SerpEventDrivenAfter() {
     <Diagram
       viewBox="0 4 660 320"
       minWidth={460}
-      title="The rebuilt design: Redis holds a status record for every keyword — whether it has been posted, whether its callback has arrived, and whether it has been processed onward. When a vendor callback arrives it becomes a task on a RabbitMQ queue, workers pick it up immediately, and the keyword's status is updated. Each keyword flows independently instead of waiting for the batch."
-      caption="Fig. 2 — After: state per keyword, work triggered per callback. Nothing waits for the batch."
+      title="The rebuilt design: Redis holds a status record for every keyword: whether it has been posted, whether its callback has arrived, and whether it has been processed onward. When a vendor callback arrives it becomes a task on a RabbitMQ queue, workers pick it up immediately, and the keyword's status is updated. Each keyword flows independently instead of waiting for the batch."
+      caption="Fig. 2. After: state per keyword, work triggered per callback. Nothing waits for the batch."
     >
       {/* outbound */}
       <Box x={16} y={44} w={118} h={54} label="Keywords" />
@@ -133,11 +133,74 @@ function SerpEventDrivenAfter() {
   )
 }
 
+/* ---- Two-level cache: timeline holds IDs, content lives once ----------- */
+function FeedTwoLevelCache() {
+  return (
+    <Diagram
+      viewBox="0 4 600 292"
+      minWidth={440}
+      title="A two-level cache for a news feed. Each user's timeline is a Redis sorted set holding only post IDs, scored by timestamp. A second, shared cache holds one copy of each post's content, keyed by post ID. Reading a feed fetches a page of IDs from the timeline, then batch-fetches those posts from the content cache, falling back to the post store only on a miss."
+      caption="Fig. 1. The timeline stores IDs; the content is cached once and shared. Editing a post touches one key, not every follower's timeline."
+    >
+      <Box x={16} y={42} w={104} h={56} label="Feed read" sub="GET /feed" />
+      <Arrow from={{ x: 120, y: 70 }} to={{ x: 156, y: 70 }} />
+
+      <Group x={148} y={30} w={228} h={104} label="1 · timeline per user" />
+      <Box x={162} y={48} w={200} h={44} label="ZSET user:42:feed" sub="post IDs by time" />
+      <Note x={162} y={112} text="~8 bytes each · trimmed to N" />
+
+      {/* kept to the right of the group label below, which the centre would cross */}
+      <Connector from={{ x: 340, y: 134 }} to={{ x: 340, y: 166 }} bend={0} />
+
+      <Group x={148} y={166} w={228} h={104} label="2 · content, cached once" />
+      <Box x={162} y={184} w={200} h={44} label="HASH post:{id}" sub="one copy per post" />
+      <Note x={162} y={248} text="TTL / LRU: hot window only" />
+
+      <Arrow from={{ x: 376, y: 206 }} to={{ x: 424, y: 206 }} label="miss" />
+      <Cylinder x={424} y={172} w={128} h={72} label="Post store" sub="source of truth" />
+    </Diagram>
+  )
+}
+
+/* ---- Hybrid fan-out: push for most, pull for the huge accounts --------- */
+function FeedHybridFanout() {
+  return (
+    <Diagram
+      viewBox="0 4 680 316"
+      minWidth={470}
+      title="Hybrid fan-out. When an ordinary account posts, a worker pushes the post ID into each follower's precomputed timeline, so reads are a single lookup. Accounts above a follower threshold are skipped by that push; their posts are pulled live at read time and merged into the timeline instead, so one post never triggers millions of writes."
+      caption="Fig. 2. Push on write for ordinary accounts; pull at read time for the few with enormous follower counts. The read path merges both."
+    >
+      <Box x={16} y={20} w={116} h={56} label="New post" />
+      <Arrow from={{ x: 132, y: 48 }} to={{ x: 168, y: 48 }} />
+      <Queue x={168} y={22} w={132} h={52} label="fan-out queue" />
+      <Arrow from={{ x: 300, y: 48 }} to={{ x: 344, y: 48 }} />
+      <Box x={344} y={16} w={150} h={64} label="Push worker" sub="ordinary accounts" />
+      <Arrow from={{ x: 494, y: 48 }} to={{ x: 540, y: 48 }} />
+      <Box x={540} y={16} w={116} h={64} label="Timelines" sub="precomputed" />
+
+      <Note x={168} y={104} text="skipped for accounts above the follower threshold" />
+
+      <Box x={16} y={196} w={116} h={64} label="Feed read" sub="GET /feed" />
+      <Arrow from={{ x: 132, y: 228 }} to={{ x: 176, y: 228 }} />
+      <Box x={176} y={196} w={150} h={64} label="Merge" sub="pushed + pulled" />
+      <Note x={16} y={172} text="read = precomputed IDs + live pulls" />
+
+      {/* both reads terminate on a real box: no arrow into empty space */}
+      <Arrow from={{ x: 326, y: 212 }} to={{ x: 536, y: 88 }} />
+      <Arrow from={{ x: 326, y: 244 }} to={{ x: 536, y: 262 }} label="pull at read" />
+      <Box x={540} y={230} w={116} h={64} label="Big accounts" sub="fetched live" />
+    </Diagram>
+  )
+}
+
 const MAP: Record<string, () => React.ReactElement> = {
   'oidc-before': OidcBefore,
   'load-balancer-after': LoadBalancerAfter,
   'serp-batch-before': SerpBatchBefore,
   'serp-event-driven-after': SerpEventDrivenAfter,
+  'feed-two-level-cache': FeedTwoLevelCache,
+  'feed-hybrid-fanout': FeedHybridFanout,
 }
 
 export function blogDiagram(slug: string): React.ReactElement | null {

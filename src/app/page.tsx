@@ -12,7 +12,7 @@ export default function HomePage() {
       <PageSchema
         path="/"
         type="ProfilePage"
-        name="Kamlesh Chhipa — Backend & AI Infrastructure Engineer"
+        name="Kamlesh Chhipa: Backend & AI Infrastructure Engineer"
         description="Backend and full-stack engineer in Bengaluru with 4+ years building large-scale data platforms and production LLM infrastructure."
       />
       <HeroSection />

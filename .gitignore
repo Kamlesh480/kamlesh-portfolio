@@ -46,3 +46,8 @@ next-env.d.ts
 # sanitised article in src/content/blog/.
 /*.png
 /Backend Infrastructure Migration*
+
+# Interview transcript — contains employer, interviewer and third-party
+# company confidential detail. Source material only; never commit.
+/develoepr_03-09-2026.txt
+/*.txt

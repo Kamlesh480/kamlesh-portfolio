@@ -6,14 +6,13 @@ description: "Every API call minted a fresh identity token through a three-step 
 date: "2026-08-06"
 category: "Infrastructure"
 tags: ["gcp", "cloud-run", "load-balancer", "oidc", "nextjs", "django", "security"]
-featured: true
 cover: "comparison"
 coverTitle: "One entry point"
 coverNodes: ["Browser", "Proxy", "Load balancer", "Cloud Run"]
 coverMetric: "200–400ms removed"
 ---
 
-A private Cloud Run service is easy to reach from a laptop and surprisingly awkward to reach from a serverless frontend. The service enforces IAM, so every caller needs a valid Google identity token — and if your frontend runs on someone else's platform, getting one means a token exchange on **every single request**.
+A private Cloud Run service is easy to reach from a laptop and surprisingly awkward to reach from a serverless frontend. The service enforces IAM, so every caller needs a valid Google identity token, and if your frontend runs on someone else's platform, getting one means a token exchange on **every single request**.
 
 That exchange was costing 200–400ms per API call. This is how it came out of the request path, and what replaced it.
 
@@ -27,9 +26,9 @@ That exchange was costing 200–400ms per API call. This is how it came out of t
 
 The frontend was a Next.js app with a server-side proxy route. Cloud Run was fully private, so before the proxy could forward anything it had to prove who it was:
 
-1. **Platform OIDC token** — minted server-side by the hosting platform via Workload Identity Federation
-2. **STS exchange** — that token swapped at Google's Security Token Service for a short-lived credential
-3. **Cloud Run identity token** — a final token scoped to the exact service URL, set as the `Authorization` header
+1. **Platform OIDC token**: minted server-side by the hosting platform via Workload Identity Federation
+2. **STS exchange**, that token swapped at Google's Security Token Service for a short-lived credential
+3. **Cloud Run identity token**: a final token scoped to the exact service URL, set as the `Authorization` header
 
 Cloud Run's IAM check validated the token, then handed the request to Django.
 
@@ -75,11 +74,11 @@ Workable for an engineer. Useless for anyone else on the team.
 
 Listing the problems separately makes the shape of the fix obvious:
 
-- **Latency** — 200–400ms of token exchange on every request
-- **Coupling** — platform-specific OIDC logic living in the frontend codebase
-- **Fragility** — a failed exchange surfaced as an opaque `403` with no indication of which of the three steps broke
-- **Access** — no admin URL a non-engineer could open
-- **Portability** — the auth path was tied to one hosting provider
+- **Latency**: 200–400ms of token exchange on every request
+- **Coupling**: platform-specific OIDC logic living in the frontend codebase
+- **Fragility**: a failed exchange surfaced as an opaque `403` with no indication of which of the three steps broke
+- **Access**: no admin URL a non-engineer could open
+- **Portability**: the auth path was tied to one hosting provider
 
 Every one of those traces back to the same root cause: **authentication was happening in the request path instead of at the network boundary.**
 
@@ -111,7 +110,7 @@ headers.set('X-User-Token', `Bearer ${userJwt}`)
 
 ## The setting that makes this possible
 
-The interesting part is how Cloud Run stops checking IAM. The obvious move — granting `allUsers` the invoker role — is blocked outright in many organisations by a **Domain Restricted Sharing** org policy. That policy exists for good reason and you should not go looking for a way around it.
+The interesting part is how Cloud Run stops checking IAM. The obvious move, granting `allUsers` the invoker role, is blocked outright in many organisations by a **Domain Restricted Sharing** org policy. That policy exists for good reason and you should not go looking for a way around it.
 
 Google's supported answer is a service-level flag:
 
@@ -123,7 +122,7 @@ gcloud run services update my-backend \
 ```
 
 :::note Why this isn't "making it public"
-`--no-invoker-iam-check` disables the invoker check **at the container level** without ever adding `allUsers` to the IAM policy — so it doesn't violate the org policy. It's only safe when paired with the second flag: `--ingress=internal-and-cloud-load-balancing` means the service accepts traffic *only* from the load balancer. Set the first flag without the second and you have genuinely published an open endpoint.
+`--no-invoker-iam-check` disables the invoker check **at the container level** without ever adding `allUsers` to the IAM policy, so it doesn't violate the org policy. It's only safe when paired with the second flag: `--ingress=internal-and-cloud-load-balancing` means the service accepts traffic *only* from the load balancer. Set the first flag without the second and you have genuinely published an open endpoint.
 :::
 
 The two flags are a pair. The ingress restriction is what turns "no IAM check" from a hole into a boundary.
@@ -136,7 +135,7 @@ Four resources sit between DNS and the container, and each exists for one reason
 | --- | --- |
 | Serverless NEG | The adapter that lets a load balancer target a Cloud Run service at all |
 | Backend service | Wraps the NEG; where timeouts and logging attach |
-| URL map | Routes paths — the hook for adding more services later |
+| URL map | Routes paths: the hook for adding more services later |
 | HTTPS proxy + managed cert | Terminates SSL; the certificate auto-renews |
 
 One gotcha worth knowing: **Google-managed certificates cannot provision while the hostname is proxied by a CDN.** The validation reaches the CDN edge instead of the load balancer and the certificate sits in `PROVISIONING` indefinitely. Point DNS straight at the load balancer IP until the certificate goes `ACTIVE`, then re-enable proxying if you need it.
@@ -155,7 +154,7 @@ That produces defence in depth, with each layer doing one job:
 
 | Layer | Protects | Mechanism |
 | --- | --- | --- |
-| Identity-aware proxy | `/admin/` | SSO — organisation account required |
+| Identity-aware proxy | `/admin/` | SSO: organisation account required |
 | Cloud Run ingress | Every endpoint | Load-balancer traffic only; direct URL refused |
 | Application JWT | API endpoints | Signed token, validated per request |
 | Django admin auth | `/admin/` views | Superuser credentials, after SSO |
@@ -178,4 +177,4 @@ Two independent identity checks now guard admin, and neither requires anyone to 
 
 **Provision certificates before moving traffic.** The DNS-versus-CDN interaction costs an hour if you hit it unaware and nothing if you sequence it correctly.
 
-**Expect the cleanup to outlive the migration.** The custom auth header exists because of a constraint that no longer applies. It still works, so it stays — for now. Infrastructure changes leave archaeology in the application layer, and it's worth writing down why, before the reason is forgotten.
+**Expect the cleanup to outlive the migration.** The custom auth header exists because of a constraint that no longer applies. It still works, so it stays, for now. Infrastructure changes leave archaeology in the application layer, and it's worth writing down why, before the reason is forgotten.

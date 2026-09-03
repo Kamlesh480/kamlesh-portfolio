@@ -212,6 +212,18 @@ root layout ABOVE `SiteHeader`. Adding news = one entry in the content file.
   so a plain fill renders as a visibly lighter band. See `theme_and_styling.md`.
 - `SiteChrome` stays OUTSIDE `.site-top` — it must remain a direct child of `<body>`.
 
+## Header nav labels
+A route's header text comes from `navLabel ?? label`. It exists because the nav is horizontally
+tight — "Engineering Notes" fits the footer and breadcrumb trail but not a 6-item nav row, so
+`/blog` carries `navLabel: 'Blog'`. Adding a 7th header item needs re-measuring against the
+brand wordmark at ~900px, where clearance is smallest before the hamburger takes over.
+
+## Featured post
+`getFeaturedPost()` is `posts.find(p => p.featured) ?? posts[0]`, and posts are sorted newest
+first — so with NO post carrying `featured: true`, the newest is automatically the hero card on
+`/blog`. That is the current, deliberate state: pinning a post would freeze an older one at the
+top and push the newest into the grid below. Only set `featured` to override that on purpose.
+
 ## Footer
 `SiteFooter` renders columns from `footerGroups` + each route's `group` field in `routes.ts`.
 Adding a page to the footer = set `group` on its route; the component never changes.

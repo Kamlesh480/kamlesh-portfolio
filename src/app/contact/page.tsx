@@ -6,7 +6,7 @@ import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
 
 const PAGE_DESCRIPTION =
-  'Get in touch with Kamlesh Chhipa — open to Senior Backend, Platform, and Full-Stack engineering roles in product-led, AI-driven teams.'
+  'Get in touch with Kamlesh Chhipa: open to Senior Backend, Platform, and Full-Stack engineering roles in product-led, AI-driven teams.'
 
 export const metadata = pageMetadata({
   title: 'Contact',
@@ -26,7 +26,7 @@ export default function ContactPage() {
       <div className="eyebrow">Contact</div>
       <h1 className="page-title">Let&apos;s talk about what you&apos;re building.</h1>
       <p className="page-lede">
-        Open to Senior Backend / Platform / Full-Stack roles — and always happy to hear about
+        Open to Senior Backend / Platform / Full-Stack roles, and always happy to hear about
         a hard data or infrastructure problem, even if it&apos;s just to talk shop.
       </p>
 
@@ -48,7 +48,7 @@ export default function ContactPage() {
           </a>
         </div>
         <p style={{ color: 'var(--graphite-s)', fontStyle: 'italic', maxWidth: '50ch' }}>
-          These links work even with JavaScript off — no form required.
+          These links work even with JavaScript off: no form required.
         </p>
       </RevealSection>
 

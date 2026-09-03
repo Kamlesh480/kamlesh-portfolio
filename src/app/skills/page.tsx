@@ -32,7 +32,7 @@ export default function SkillsPage() {
       <div className="eyebrow">Skills &amp; Expertise</div>
       <h1 className="page-title">A capability map, not a keyword list.</h1>
       <p className="page-lede">
-        Organized the way I actually use them — grounded in shipped work, not a resume
+        Organized the way I actually use them: grounded in shipped work, not a resume
         keyword sweep. Four categories, each backed by production experience.
       </p>
 

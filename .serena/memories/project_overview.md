@@ -60,8 +60,9 @@ interactive reader originally scoped).
 
 `/architecture` and `/blog` were both placeholders and are now real: `/architecture` renders
 decision records from `src/content/decisions.ts`; `/blog` is a full markdown blog (see
-`architecture.md` §Engineering Notes). Both stay deliberately footer-only — the header nav is
-capped at 5 items.
+`architecture.md` §Engineering Notes). `/blog` is now in the header nav too (6 items, verified
+to stay on one row down to the 880px hamburger breakpoint) using its `navLabel` of "Blog";
+`/architecture` remains footer-only.
 
 ## Brand Assets
 See `brand_assets.md` for the full KC monogram system (favicon, OG image, logo lockups).

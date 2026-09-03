@@ -18,6 +18,9 @@ export interface SiteRoute {
   inHeader: boolean
   /** Shown in the footer's sitemap columns. */
   inFooter: boolean
+  /** Shorter label for the header nav, where horizontal space is tight.
+   *  Falls back to `label`. */
+  navLabel?: string
   /** Which footer column. Omit and the route is left out of the columns. */
   group?: FooterGroup
   changeFrequency: ChangeFrequency
@@ -45,7 +48,7 @@ export const routes: SiteRoute[] = [
   { path: '/skills', label: 'Skills', inHeader: true, inFooter: true, group: 'work', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/contact', label: 'Contact', inHeader: true, inFooter: true, group: 'about', changeFrequency: 'yearly', priority: 0.5 },
   { path: '/architecture', label: 'Architecture', inHeader: false, inFooter: true, group: 'work', changeFrequency: 'monthly', priority: 0.7 },
-  { path: '/blog', label: 'Engineering Notes', inHeader: false, inFooter: true, group: 'writing', changeFrequency: 'weekly', priority: 0.6 },
+  { path: '/blog', label: 'Engineering Notes', navLabel: 'Blog', inHeader: true, inFooter: true, group: 'writing', changeFrequency: 'weekly', priority: 0.6 },
   { path: '/resume', label: 'Resume', inHeader: false, inFooter: true, group: 'about', changeFrequency: 'yearly', priority: 0.7 },
 ]
 

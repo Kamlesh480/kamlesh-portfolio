@@ -8,7 +8,7 @@ import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
 
 const PAGE_DESCRIPTION =
-  'Download Kamlesh Chhipa’s résumé (PDF) or read the summary — 4+ years backend and full-stack engineering, currently building LLM infrastructure at BrightEdge.'
+  'Download Kamlesh Chhipa’s résumé (PDF) or read the summary: 4+ years backend and full-stack engineering, currently building LLM infrastructure at BrightEdge.'
 
 export const metadata = pageMetadata({
   title: 'Resume',
@@ -25,7 +25,7 @@ export default function ResumePage() {
       <h1 className="page-title">The short version, and the PDF.</h1>
       <p className="page-lede">
         Backend Software Engineer (SDE-II) with 4+ years building large-scale data platforms
-        and LLM-driven systems. Below is a quick summary — the full résumé is one click away.
+        and LLM-driven systems. Below is a quick summary: the full résumé is one click away.
       </p>
 
       <div style={{ marginBottom: 'clamp(32px,5vh,56px)' }}>

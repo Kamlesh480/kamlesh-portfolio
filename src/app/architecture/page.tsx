@@ -10,7 +10,7 @@ import PageSchema from '@/components/seo/PageSchema'
 import { pageMetadata } from '@/lib/seo'
 
 const PAGE_DESCRIPTION =
-  'Architecture decision records from Kamlesh Chhipa — the constraints, trade-offs and measured results behind LLM infrastructure and data pipelines at scale.'
+  'Architecture decision records from Kamlesh Chhipa: the constraints, trade-offs and measured results behind LLM infrastructure and data pipelines at scale.'
 
 export const metadata = pageMetadata({
   title: 'Architecture',
@@ -32,17 +32,17 @@ const principles: { icon: SketchIconName; title: string; body: string }[] = [
   {
     icon: 'cloud',
     title: 'Unit economics are a design input',
-    body: 'At a billion events and five billion tokens a month, the monthly bill is an output of the architecture, not a finance problem discovered later. The two largest wins I have shipped — 62% off AI processing, a five-figure monthly saving on data processing — were both design decisions, not optimisations bolted on afterwards.',
+    body: 'At a billion events and five billion tokens a month, the monthly bill is an output of the architecture, not a finance problem discovered later. The two largest wins I have shipped: 62% off AI processing, a five-figure monthly saving on data processing: were both design decisions, not optimisations bolted on afterwards.',
   },
   {
     icon: 'layers',
     title: 'Invariants get enforced, not documented',
-    body: 'A rule that lives only in a wiki page is a rule that a new engineer will break on their first sprint. When a booking identifier turned out to repeat across accounts, the fix was not a note — it was an explicit account-scoping rule applied to every query path, including raw SQL.',
+    body: 'A rule that lives only in a wiki page is a rule that a new engineer will break on their first sprint. When a booking identifier turned out to repeat across accounts, the fix was not a note: it was an explicit account-scoping rule applied to every query path, including raw SQL.',
   },
   {
     icon: 'pipeline',
     title: 'Assume dirty data and duplicate messages',
-    body: 'Collected data is gated on row counts, null rates, and duplicate checks before it reaches production, with alerts when a gate fails. Billing webhooks assume every event arrives twice. Neither assumption is pessimism — both are just what happens at volume.',
+    body: 'Collected data is gated on row counts, null rates, and duplicate checks before it reaches production, with alerts when a gate fails. Billing webhooks assume every event arrives twice. Neither assumption is pessimism: both are just what happens at volume.',
   },
   {
     icon: 'server',
@@ -64,7 +64,7 @@ const patterns = [
   },
   {
     title: 'Event-driven collection',
-    body: 'FastAPI in front, RabbitMQ between, Redis-backed workers under Argo Workflows behind — so collection throughput scales with workers instead of request handlers.',
+    body: 'FastAPI in front, RabbitMQ between, Redis-backed workers under Argo Workflows behind, so collection throughput scales with workers instead of request handlers.',
   },
   {
     title: 'Quality gates before production',
@@ -89,7 +89,7 @@ export default function ArchitecturePage() {
           <div className="eyebrow">Architecture</div>
           <h1 className="page-title">How I actually think about systems.</h1>
           <p className="page-lede">
-            Every system below already shipped. This page is the reasoning underneath it — the
+            Every system below already shipped. This page is the reasoning underneath it: the
             constraint that forced the decision, the options that were genuinely on the table,
             what I gave up to pick one, and the number that proved it worked.
           </p>
@@ -139,7 +139,7 @@ export default function ArchitecturePage() {
           The trade-offs, written down
         </SectionHeading>
         <p className="prose" style={{ maxWidth: '72ch', marginBottom: 'clamp(24px,4vh,40px)' }}>
-          A decision with no cost attached isn’t a decision — it’s a preference. Each record below
+          A decision with no cost attached isn’t a decision: it’s a preference. Each record below
           names what was given up, not just what was gained.
         </p>
       </RevealSection>
